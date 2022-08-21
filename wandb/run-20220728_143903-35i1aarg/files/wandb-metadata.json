@@ -1,0 +1,21 @@
+{
+    "os": "Linux-5.15.0-41-generic-x86_64-with-glibc2.35",
+    "python": "3.10.4",
+    "heartbeatAt": "2022-07-28T18:39:09.718522",
+    "startedAt": "2022-07-28T18:39:03.805295",
+    "docker": null,
+    "cpu_count": 4,
+    "cuda": null,
+    "args": null,
+    "state": "running",
+    "program": "Full_Notebook.ipynb",
+    "root": "/home/deepzoo/Desktop/HahnAI",
+    "git": {
+        "remote": "https://github.com/williamedwardhahn/HahnAI.git",
+        "commit": "2a8543f1543745c54342da7946cec6c4676ea974"
+    },
+    "email": "williamedwardhahn@gmail.com",
+    "host": "DZ1",
+    "username": "deepzoo",
+    "executable": "/usr/bin/python3"
+}

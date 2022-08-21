@@ -1,0 +1,59 @@
+Exception in thread ChkStopThr:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1009, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 946, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 170, in check_status
+    status_response = self._interface.communicate_stop_status()
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface.py", line 127, in communicate_stop_status
+    resp = self._communicate_stop_status(status)
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 395, in _communicate_stop_status
+    resp = self._communicate(req, local=True)
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 226, in _communicate
+    return self._communicate_async(rec, local=local).get(timeout=timeout)
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 231, in _communicate_async
+    raise Exception("The wandb backend process has shutdown")
+Exception: The wandb backend process has shutdown
+Exception in thread NetStatThr:
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1009, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 946, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 152, in check_network_status
+    status_response = self._interface.communicate_network_status()
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface.py", line 138, in communicate_network_status
+    resp = self._communicate_network_status(status)
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 405, in _communicate_network_status
+    resp = self._communicate(req, local=True)
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 226, in _communicate
+    return self._communicate_async(rec, local=local).get(timeout=timeout)
+  File "/home/deepzoo/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 231, in _communicate_async
+    raise Exception("The wandb backend process has shutdown")
+Exception: The wandb backend process has shutdown
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: wandb in /home/deepzoo/.local/lib/python3.10/site-packages (0.12.21)
+Requirement already satisfied: requests<3,>=2.0.0 in /usr/lib/python3/dist-packages (from wandb) (2.25.1)
+Requirement already satisfied: sentry-sdk>=1.0.0 in /home/deepzoo/.local/lib/python3.10/site-packages (from wandb) (1.9.0)
+Requirement already satisfied: six>=1.13.0 in /usr/lib/python3/dist-packages (from wandb) (1.16.0)
+Requirement already satisfied: promise<3,>=2.0 in /home/deepzoo/.local/lib/python3.10/site-packages (from wandb) (2.3)
+Requirement already satisfied: pathtools in /home/deepzoo/.local/lib/python3.10/site-packages (from wandb) (0.1.2)
+Requirement already satisfied: docker-pycreds>=0.4.0 in /home/deepzoo/.local/lib/python3.10/site-packages (from wandb) (0.4.0)
+Requirement already satisfied: psutil>=5.0.0 in /home/deepzoo/.local/lib/python3.10/site-packages (from wandb) (5.9.1)
+Requirement already satisfied: PyYAML in /usr/lib/python3/dist-packages (from wandb) (5.4.1)
+Requirement already satisfied: Click!=8.0.0,>=7.0 in /usr/lib/python3/dist-packages (from wandb) (8.0.3)
+Requirement already satisfied: shortuuid>=0.5.0 in /home/deepzoo/.local/lib/python3.10/site-packages (from wandb) (1.0.9)
+Requirement already satisfied: GitPython>=1.0.0 in /home/deepzoo/.local/lib/python3.10/site-packages (from wandb) (3.1.27)
+Requirement already satisfied: protobuf<4.0dev,>=3.12.0 in /usr/lib/python3/dist-packages (from wandb) (3.12.4)
+Requirement already satisfied: setproctitle in /home/deepzoo/.local/lib/python3.10/site-packages (from wandb) (1.3.0)
+Requirement already satisfied: setuptools in /home/deepzoo/.local/lib/python3.10/site-packages (from wandb) (45.0.0)
+Requirement already satisfied: gitdb<5,>=4.0.1 in /home/deepzoo/.local/lib/python3.10/site-packages (from GitPython>=1.0.0->wandb) (4.0.9)
+Requirement already satisfied: certifi in /home/deepzoo/.local/lib/python3.10/site-packages (from sentry-sdk>=1.0.0->wandb) (2022.6.15)
+Requirement already satisfied: urllib3>=1.10.0 in /usr/lib/python3/dist-packages (from sentry-sdk>=1.0.0->wandb) (1.26.5)
+Requirement already satisfied: smmap<6,>=3.0.1 in /home/deepzoo/.local/lib/python3.10/site-packages (from gitdb<5,>=4.0.1->GitPython>=1.0.0->wandb) (5.0.0)
+1.6160975694656372
+0.16821084916591644
+0.11651286482810974
+0.10512005537748337
+0.0995057225227356
