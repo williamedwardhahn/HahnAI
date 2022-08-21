@@ -1,0 +1,186 @@
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Configure stats pid to 1270603
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Loading settings from /home/deepzoo/.config/wandb/settings
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Loading settings from /home/deepzoo/Desktop/HahnAI/wandb/settings
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program': '<python with no main file>'}
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Applying login settings: {'api_key': '***REDACTED***'}
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_init.py:_log_setup():461] Logging user logs to /home/deepzoo/Desktop/HahnAI/wandb/run-20220728_143344-1qnr5w28/logs/debug.log
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_init.py:_log_setup():462] Logging internal logs to /home/deepzoo/Desktop/HahnAI/wandb/run-20220728_143344-1qnr5w28/logs/debug-internal.log
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_init.py:_jupyter_setup():411] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x7fc3f9bbda80>
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_init.py:init():495] calling init triggers
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_init.py:init():498] wandb.init called with sweep_config: {}
+config: {}
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [wandb_init.py:init():548] starting backend
+2022-07-28 14:33:44,012 INFO    MainThread:1270603 [backend.py:_multiprocessing_setup():97] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2022-07-28 14:33:44,046 INFO    MainThread:1270603 [backend.py:ensure_launched():217] starting backend process...
+2022-07-28 14:33:44,048 INFO    MainThread:1270603 [backend.py:ensure_launched():222] started backend process with pid: 1270928
+2022-07-28 14:33:44,048 INFO    MainThread:1270603 [wandb_init.py:init():558] backend started and connected
+2022-07-28 14:33:44,059 INFO    MainThread:1270603 [wandb_run.py:_label_probe_notebook():1084] probe notebook
+2022-07-28 14:33:44,062 INFO    MainThread:1270603 [wandb_init.py:init():634] updated telemetry
+2022-07-28 14:33:44,069 INFO    MainThread:1270603 [wandb_init.py:init():665] communicating run to backend with 30 second timeout
+2022-07-28 14:33:44,993 INFO    MainThread:1270603 [wandb_run.py:_on_init():1919] communicating current version
+2022-07-28 14:33:45,141 INFO    MainThread:1270603 [wandb_run.py:_on_init():1923] got version response 
+2022-07-28 14:33:45,141 INFO    MainThread:1270603 [wandb_init.py:init():700] starting run threads in backend
+2022-07-28 14:33:45,197 INFO    MainThread:1270603 [wandb_run.py:_console_start():1893] atexit reg
+2022-07-28 14:33:45,197 INFO    MainThread:1270603 [wandb_run.py:_redirect():1766] redirect: SettingsConsole.WRAP
+2022-07-28 14:33:45,197 INFO    MainThread:1270603 [wandb_run.py:_redirect():1803] Wrapping output streams.
+2022-07-28 14:33:45,198 INFO    MainThread:1270603 [wandb_run.py:_redirect():1827] Redirects installed.
+2022-07-28 14:33:45,198 INFO    MainThread:1270603 [wandb_init.py:init():732] run started, returning control to user process
+2022-07-28 14:33:45,198 INFO    MainThread:1270603 [wandb_config.py:__setitem__():150] config set L = 0.1 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fc3fd7cd480>>
+2022-07-28 14:33:45,199 INFO    MainThread:1270603 [wandb_run.py:_config_callback():1131] config_cb L 0.1 None
+2022-07-28 14:33:45,199 INFO    MainThread:1270603 [wandb_config.py:__setitem__():150] config set b = 1024 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fc3fd7cd480>>
+2022-07-28 14:33:45,199 INFO    MainThread:1270603 [wandb_run.py:_config_callback():1131] config_cb b 1024 None
+2022-07-28 14:33:45,199 INFO    MainThread:1270603 [wandb_config.py:__setitem__():150] config set epochs = 10000 - <bound method Run._config_callback of <wandb.sdk.wandb_run.Run object at 0x7fc3fd7cd480>>
+2022-07-28 14:33:45,199 INFO    MainThread:1270603 [wandb_run.py:_config_callback():1131] config_cb epochs 10000 None
+2022-07-28 14:33:45,223 INFO    MainThread:1270603 [wandb_init.py:_pause_backend():374] pausing backend
+2022-07-28 14:33:45,223 INFO    MainThread:1270603 [jupyter.py:save_ipynb():377] not saving jupyter notebook
+2022-07-28 14:33:58,928 INFO    MainThread:1270603 [wandb_init.py:_resume_backend():383] resuming backend
+2022-07-28 14:33:58,930 INFO    MainThread:1270603 [wandb_init.py:_pause_backend():374] pausing backend
+2022-07-28 14:33:58,930 INFO    MainThread:1270603 [jupyter.py:save_ipynb():377] not saving jupyter notebook
+2022-07-28 14:34:07,250 INFO    MainThread:1270603 [wandb_init.py:_resume_backend():383] resuming backend
+2022-07-28 14:34:07,278 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Configure stats pid to 1270603
+2022-07-28 14:34:07,278 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Loading settings from /home/deepzoo/.config/wandb/settings
+2022-07-28 14:34:07,278 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Loading settings from /home/deepzoo/Desktop/HahnAI/wandb/settings
+2022-07-28 14:34:07,278 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2022-07-28 14:34:07,278 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program': '<python with no main file>'}
+2022-07-28 14:34:07,278 INFO    MainThread:1270603 [wandb_setup.py:_flush():76] Applying login settings: {'api_key': '***REDACTED***'}
+2022-07-28 14:34:07,279 INFO    MainThread:1270603 [wandb_init.py:_log_setup():461] Logging user logs to /home/deepzoo/Desktop/HahnAI/wandb/run-20220728_143407-2qeotn3j/logs/debug.log
+2022-07-28 14:34:07,279 INFO    MainThread:1270603 [wandb_init.py:_log_setup():462] Logging internal logs to /home/deepzoo/Desktop/HahnAI/wandb/run-20220728_143407-2qeotn3j/logs/debug-internal.log
+2022-07-28 14:34:07,279 INFO    MainThread:1270603 [wandb_init.py:init():495] calling init triggers
+2022-07-28 14:34:07,279 INFO    MainThread:1270603 [wandb_init.py:init():498] wandb.init called with sweep_config: {}
+config: {}
+2022-07-28 14:34:07,279 INFO    MainThread:1270603 [wandb_init.py:init():514] re-initializing run, found existing run on stack: 1qnr5w28
+2022-07-28 14:34:07,280 INFO    MainThread:1270603 [wandb_run.py:_finish():1680] finishing run williamedwardhahn/Simple_Linear_SGD_Book_2/1qnr5w28
+2022-07-28 14:34:07,280 INFO    MainThread:1270603 [jupyter.py:save_history():435] not saving jupyter history
+2022-07-28 14:34:07,281 INFO    MainThread:1270603 [jupyter.py:save_ipynb():377] not saving jupyter notebook
+2022-07-28 14:34:07,281 INFO    MainThread:1270603 [wandb_init.py:_jupyter_teardown():393] cleaning up jupyter logic
+2022-07-28 14:34:07,281 INFO    MainThread:1270603 [wandb_run.py:_atexit_cleanup():1862] got exitcode: 0
+2022-07-28 14:34:07,282 INFO    MainThread:1270603 [wandb_run.py:_restore():1834] restore
+2022-07-28 14:34:07,728 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 642
+  total_bytes: 642
+}
+
+2022-07-28 14:34:08,019 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 642
+  total_bytes: 642
+}
+
+2022-07-28 14:34:09,011 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 2
+}
+pusher_stats {
+  uploaded_bytes: 642
+  total_bytes: 668
+}
+
+2022-07-28 14:34:09,112 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 642
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:09,214 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 642
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:09,316 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 642
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:09,417 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 642
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:09,518 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 1119
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:09,620 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 8820
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:09,723 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 8820
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:09,824 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 8820
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:09,926 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 8820
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:10,027 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 8820
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:10,156 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 8820
+  total_bytes: 8820
+}
+
+2022-07-28 14:34:10,666 INFO    MainThread:1270603 [wandb_run.py:_on_finish():1991] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 8820
+  total_bytes: 8820
+}
+local_info {
+}
+
+2022-07-28 14:34:11,840 INFO    MainThread:1270603 [wandb_run.py:_footer_history_summary_info():3099] rendering history
+2022-07-28 14:34:11,840 INFO    MainThread:1270603 [wandb_run.py:_footer_history_summary_info():3131] rendering summary
+2022-07-28 14:34:11,842 INFO    MainThread:1270603 [wandb_run.py:_footer_sync_info():3055] logging synced files
