@@ -11,7 +11,7 @@ site_path = "/home/hahn/Desktop/HahnAI/"
 
 #Google sheet urls
 
-url_blog    = "https://docs.google.com/spreadsheets/d/1FPFwKLErquSq9yXQZOOQo2BqhAZ3I8pJLBPA34ZdKyw/edit?resourcekey#gid=745755078"
+url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8TfnImP5uZ2JhQYecjHK4/edit#gid=745755078"
 
 df_blog     = get_database(url_blog)
 
