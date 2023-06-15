@@ -16,10 +16,58 @@ url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8Tf
 df_blog     = get_database(url_blog)
 
 
+last = len(df_blog)
+
+
+foot = '''
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    let nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    let firstPage = baseURL + "blog.html";
+    let lastPage = baseURL + "blog{last}" + ".html"; //replace {last} with your last page number
+
+    let navigationHTML = `
+        <nav>
+            <a href="${firstPage}" class="first">First</a>
+            <a href="${prevPage}" class="previous">Previous</a>
+            <a href="${nextPage}" class="next">Next</a>
+            <a href="${lastPage}" class="last">Last</a>
+        </nav>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    for (let i = 0; i < sections.length; i++) {
+        sections[i].innerHTML += navigationHTML;
+    }
+}
+</script>
+</body>
+</html>'''
+
 
 #####################################################################################
 
-for i in range(len(df_blog)):
+for i in range(last):
 
     source_blog = head + logo
     
