@@ -81,7 +81,7 @@ for i in range(len(df_blog)):
     
     source_blog += blog.substitute(title=df_blog["Post Title"][i],image=photo_url,content=df_blog["Post Text"][i]) + blog_foot 
 
-    source_blog    += "<br><br><br>" + foot
+    source_blog    += "<br><br><br>" +foot
         
     print(source_blog,    file=open(site_path + f"blog{i}.html",    'w'))
     
