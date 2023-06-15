@@ -7,7 +7,7 @@ import pandas as pd
 import os
 from elements import *
 
-site_path = "/home/hahn/Desktop/HahnAI/"    
+site_path = "/home/hahn/Desktop/HahnAI/blog/"    
 
 #Google sheet urls
 
