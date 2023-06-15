@@ -15,7 +15,7 @@ url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8Tf
 
 df_blog     = get_database(url_blog)
 
-source_blog = head + logo
+source_blog = head #+ logo
 
 #####################################################################################
 
