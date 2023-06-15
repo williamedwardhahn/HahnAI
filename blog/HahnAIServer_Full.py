@@ -16,8 +16,7 @@ url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8Tf
 df_blog     = get_database(url_blog)
 
 
-last = len(df_blog)
-
+last = len(df_blog)-1
 
 foot = f'''
 <footer id="footer">
@@ -67,7 +66,7 @@ function generateNavigation() {{
 
 #####################################################################################
 
-for i in range(last):
+for i in range(len(df_blog)):
 
     source_blog = head + logo
     
