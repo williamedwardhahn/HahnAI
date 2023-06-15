@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body onload="generateNavigation()">
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<div class="image fit">
+<img src="https://mpcrlab.com/images/logos/MPCR-Captioned.jpeg" alt="" />
+</div>
+</section>
+
+<section id="main">
+<div class="inner">
+<h4>Sound Analysis</h4>
+<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=1Lbnu-Dclkc-GITFnQX9imJIQHPGZlgju" alt="" /></span>The cocktail party effect refers to the human brain’s ability to selectively tune into a particular conversation amidst many competing conversations and significant background noise. The separation and grouping of acoustic data streams is called auditory scene analysis. Given the current trends in big data it will be come increasingly more important to selectively and dynamically attend to salient subsets of the data. Perceptual binding of music and speech amidst competing background noise is something that the brain can do almost effortlessly but for only a single steam at a time. Machine techniques should allow for the segmentation and binding of multiple streams concurrently.</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    let nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    let firstPage = baseURL + "blog-1.html";
+    let lastPage = baseURL + "blog" + 3 + ".html"; 
+
+    let navigationHTML = `
+        <nav>
+            <a href="${firstPage}" class="first">First</a>
+            <a href="${prevPage}" class="previous">Previous</a>
+            <a href="${nextPage}" class="next">Next</a>
+            <a href="${lastPage}" class="last">Last</a>
+        </nav>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    for (let i = 0; i < sections.length; i++) {
+        sections[i].innerHTML += navigationHTML;
+    }
+}
+</script>
+</body>
+</html>
