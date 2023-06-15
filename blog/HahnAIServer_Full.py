@@ -43,7 +43,7 @@ function generateNavigation() {
     let prevPage = baseURL + "blog" + prevPageNumber + ".html";
     let nextPage = baseURL + "blog" + nextPageNumber + ".html";
     let firstPage = baseURL + "blog.html";
-    let lastPage = baseURL + "blog"''' + str(5) + '''".html"; 
+    let lastPage = baseURL + "blog" + 5 + ".html"; 
 
     let navigationHTML = `
         <nav>
