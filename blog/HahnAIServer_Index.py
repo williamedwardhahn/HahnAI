@@ -27,6 +27,7 @@ for i in range(len(df_blog)):
     
     source_blog += blog.substitute(title=df_blog["Post Title"][i],image=photo_url,content=df_blog["Post Text"][i][:500]) + blog_foot 
 
+    source_blog += "<a href = 'www.hahn.ai'>Read More</a>"
 
 source_blog    += "<br><br><br>" +foot
 
