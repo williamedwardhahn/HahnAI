@@ -15,11 +15,13 @@ url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8Tf
 
 df_blog     = get_database(url_blog)
 
-source_blog = head + logo
+
 
 #####################################################################################
 
 for i in range(len(df_blog)):
+
+    source_blog = head + logo
     
     # if df_blog["Status"][i] == 1:
         
@@ -27,11 +29,9 @@ for i in range(len(df_blog)):
     
     source_blog += blog.substitute(title=df_blog["Post Title"][i],image=photo_url,content=df_blog["Post Text"][i]) + blog_foot 
 
-
-source_blog    += "<br><br><br>" +foot
-
-            
-print(source_blog,    file=open(site_path + "blog.html",    'w'))
+    source_blog    += "<br><br><br>" +foot
+        
+    print(source_blog,    file=open(site_path + f"blog_{i}.html",    'w'))
     
     
 os.chdir(site_path)    
