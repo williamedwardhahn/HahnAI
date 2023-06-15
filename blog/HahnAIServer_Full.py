@@ -49,7 +49,7 @@ function generateNavigation() {{
     let lastPage = baseURL + "blog" + {last} + ".html"; 
 
     let navigationHTML = `
-        <center><nav>
+        <br><br><br><center><nav>
             <a href="${{firstPage}}" class="first">First</a>
             <a href="${{prevPage}}" class="previous">Previous</a>
             <a href="${{nextPage}}" class="next">Next</a>
