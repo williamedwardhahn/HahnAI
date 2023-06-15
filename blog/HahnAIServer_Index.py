@@ -31,7 +31,7 @@ for i in range(len(df_blog)):
 source_blog    += "<br><br><br>" +foot
 
             
-print(source_blog,    file=open(site_path + "blog.html",    'w'))
+print(source_blog,    file=open(site_path + "blog-1.html",    'w'))
     
     
 os.chdir(site_path)    
