@@ -21,7 +21,7 @@
 <section id="main">
 <div class="inner">
 <h4>Motor Cognition</h4>
-<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=1g-Sr5GXfr6K4pAYL2wkiwaqhC2V0LqYT" alt="" /></span>Motor cognition is the notion that understanding is often grounded in our action capabilities. The roots of the word perception translate to “grasping with mind”. Our ability to move and interact within our environment shapes our mental representations. Often complex behaviors can be derived from simple mechanical linkages, suggesting that seemingly cognitive tasks can be accomplished with simple action-perception loops, i.e. Braitenberg vehicles. Going beyond sensory input, motor cognition cons</p>
+<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=1g-Sr5GXfr6K4pAYL2wkiwaqhC2V0LqYT" alt="" /></span>Motor cognition is the notion that understanding is often grounded in our action capabilities. The roots of the word perception translate to “grasping with mind”. Our ability to move and interact within our environment shapes our mental representations. Often complex behaviors can be derived from simple mechanical linkages, suggesting that seemingly cognitive tasks can be accomplished with simple action-perception loops, i.e. Braitenberg vehicles. Going beyond sensory input, motor cognition cons <br> <a href = 'blog0.html'>Read More</a></p>
 				
 </div>
 </section>
@@ -30,7 +30,7 @@
 <section id="main">
 <div class="inner">
 <h4>Texture Recognition</h4>
-<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=10XKuiUouZ2euQ_mGCgL5_5bz4E3nZyHm" alt="" /></span>Natural images can often be decomposed into cartoon and texture. While much work has been done on edge detection, of equal importance is the ability to recognize and classify different texture patterns. From terrain estimation for autonomous vehicles to medical image analysis, the ability to identify and segment complex textures represents a major challenge for existing image processing techniques. Inspired by the human visual system, sparse dictionary modeling has shown to yield state of the ar</p>
+<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=10XKuiUouZ2euQ_mGCgL5_5bz4E3nZyHm" alt="" /></span>Natural images can often be decomposed into cartoon and texture. While much work has been done on edge detection, of equal importance is the ability to recognize and classify different texture patterns. From terrain estimation for autonomous vehicles to medical image analysis, the ability to identify and segment complex textures represents a major challenge for existing image processing techniques. Inspired by the human visual system, sparse dictionary modeling has shown to yield state of the ar <br> <a href = 'blog1.html'>Read More</a></p>
 				
 </div>
 </section>
@@ -39,7 +39,7 @@
 <section id="main">
 <div class="inner">
 <h4>Sound Analysis</h4>
-<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=1Lbnu-Dclkc-GITFnQX9imJIQHPGZlgju" alt="" /></span>The cocktail party effect refers to the human brain’s ability to selectively tune into a particular conversation amidst many competing conversations and significant background noise. The separation and grouping of acoustic data streams is called auditory scene analysis. Given the current trends in big data it will be come increasingly more important to selectively and dynamically attend to salient subsets of the data. Perceptual binding of music and speech amidst competing background noise is so</p>
+<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=1Lbnu-Dclkc-GITFnQX9imJIQHPGZlgju" alt="" /></span>The cocktail party effect refers to the human brain’s ability to selectively tune into a particular conversation amidst many competing conversations and significant background noise. The separation and grouping of acoustic data streams is called auditory scene analysis. Given the current trends in big data it will be come increasingly more important to selectively and dynamically attend to salient subsets of the data. Perceptual binding of music and speech amidst competing background noise is so <br> <a href = 'blog2.html'>Read More</a></p>
 				
 </div>
 </section>
@@ -48,7 +48,7 @@
 <section id="main">
 <div class="inner">
 <h4>Video AI</h4>
-<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=1vGoMQmSA2rVuyBWLNdXDmiBv2f6R5ZQE" alt="" /></span>It would take an individual over 5 million years to watch the amount of video that will cross the internet each month in 2018, by then, every second, nearly a million minutes of video content will cross the network. Closed circuit television cameras networks have become ubiquitous in many major cities yet most of the data goes unexamined. Video will be in the range of 80 to 90 percent of global internet traffic by 2018. Without automated means to sort and analyze this video data we will be unabl</p>
+<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=1vGoMQmSA2rVuyBWLNdXDmiBv2f6R5ZQE" alt="" /></span>It would take an individual over 5 million years to watch the amount of video that will cross the internet each month in 2018, by then, every second, nearly a million minutes of video content will cross the network. Closed circuit television cameras networks have become ubiquitous in many major cities yet most of the data goes unexamined. Video will be in the range of 80 to 90 percent of global internet traffic by 2018. Without automated means to sort and analyze this video data we will be unabl <br> <a href = 'blog3.html'>Read More</a></p>
 				
 </div>
 </section>
@@ -56,7 +56,7 @@
 <br><br><br>
 <footer id="footer">
 <div class="copyright">
-&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+&copy; MPCR Lab <a href="https://mpcrlab.com">Main Site</a>.
 </div>
 </footer>
 <script src="assets/js/jquery.min.js"></script>
@@ -64,36 +64,5 @@
 <script src="assets/js/skel.min.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
-<script>
-function generateNavigation() {
-    let currentURL = window.location.href;
-    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
-    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
-    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
-
-    let prevPageNumber = currentPageNumber - 1;
-    let nextPageNumber = currentPageNumber + 1;
-
-    let prevPage = baseURL + "post" + prevPageNumber + ".html";
-    let nextPage = baseURL + "post" + nextPageNumber + ".html";
-    let firstPage = baseURL + "post1.html";
-    let lastPage = baseURL + "post{last}" + ".html"; //replace {last} with your last page number
-
-    let navigationHTML = `
-        <nav>
-            <a href="${firstPage}" class="first">First</a>
-            <a href="${prevPage}" class="previous">Previous</a>
-            <a href="${nextPage}" class="next">Next</a>
-            <a href="${lastPage}" class="last">Last</a>
-        </nav>
-    `;
-
-    // Add the navigation to the end of each section
-    let sections = document.getElementsByTagName('section');
-    for (let i = 0; i < sections.length; i++) {
-        sections[i].innerHTML += navigationHTML;
-    }
-}
-</script>
 </body>
 </html>
