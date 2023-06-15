@@ -49,12 +49,12 @@ function generateNavigation() {{
     let lastPage = baseURL + "blog" + {last} + ".html"; 
 
     let navigationHTML = `
-        <nav>
+        <center><nav>
             <a href="${{firstPage}}" class="first">First</a>
             <a href="${{prevPage}}" class="previous">Previous</a>
             <a href="${{nextPage}}" class="next">Next</a>
             <a href="${{lastPage}}" class="last">Last</a>
-        </nav>
+        </nav></center>
     `;
 
     // Add the navigation to the end of each section
