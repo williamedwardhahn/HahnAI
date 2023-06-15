@@ -5,7 +5,7 @@
 #####################################################################################
 import pandas as pd
 import os
-from elements import *
+from elements_full import *
 
 site_path = "/home/hahn/Desktop/HahnAI/blog/"    
 
