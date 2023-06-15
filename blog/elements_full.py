@@ -27,7 +27,7 @@ head = '''<!DOCTYPE HTML>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="stylesheet" href="assets/css/main.css" />
 </head>
-<body>
+<body onload="generateNavigation()">
 <header id="header">
 <a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
 </header>
