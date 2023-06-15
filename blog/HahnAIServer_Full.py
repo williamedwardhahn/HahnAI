@@ -73,7 +73,7 @@ function generateNavigation() {{
 
 for i in range(len(df_blog)):
 
-    source_blog = head + logo
+    source_blog = head #+ logo
     
     # if df_blog["Status"][i] == 1:
         
