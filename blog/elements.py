@@ -30,9 +30,6 @@ head = '''<!DOCTYPE HTML>
 <body>
 <header id="header">
 <a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
-<nav>
-<a href="#menu">Menu</a>
-</nav>
 </header>
 '''
 
