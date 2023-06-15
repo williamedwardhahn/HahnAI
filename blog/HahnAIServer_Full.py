@@ -31,7 +31,7 @@ foot = '''
 <script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
 <script>
-function generateNavigation() {{
+function generateNavigation() {
     let currentURL = window.location.href;
     let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
     let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
@@ -43,23 +43,23 @@ function generateNavigation() {{
     let prevPage = baseURL + "blog" + prevPageNumber + ".html";
     let nextPage = baseURL + "blog" + nextPageNumber + ".html";
     let firstPage = baseURL + "blog.html";
-    let lastPage = baseURL + "blog" + {str(last)} + ".html"; 
+    let lastPage = baseURL + "blog" + 5 + ".html"; 
 
     let navigationHTML = `
         <nav>
-            <a href="${{firstPage}}" class="first">First</a>
-            <a href="${{prevPage}}" class="previous">Previous</a>
-            <a href="${{nextPage}}" class="next">Next</a>
-            <a href="${{lastPage}}" class="last">Last</a>
+            <a href="${firstPage}" class="first">First</a>
+            <a href="${prevPage}" class="previous">Previous</a>
+            <a href="${nextPage}" class="next">Next</a>
+            <a href="${lastPage}" class="last">Last</a>
         </nav>
     `;
 
     // Add the navigation to the end of each section
     let sections = document.getElementsByTagName('section');
-    for (let i = 0; i < sections.length; i++) {{
+    for (let i = 0; i < sections.length; i++) {
         sections[i].innerHTML += navigationHTML;
-    }}
-}}
+    }
+}
 </script>
 </body>
 </html>'''
