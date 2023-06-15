@@ -15,7 +15,6 @@ url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8Tf
 
 df_blog     = get_database(url_blog)
 
-
 last = len(df_blog)-1
 
 foot = f'''
@@ -38,9 +37,14 @@ function generateNavigation() {{
 
     let prevPageNumber = currentPageNumber - 1;
     let nextPageNumber = currentPageNumber + 1;
-
+    let nextPage;
+    
     let prevPage = baseURL + "blog" + prevPageNumber + ".html";
-    let nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    if (nextPageNumber > {last}) {{
+        nextPage = baseURL + "blog" + {last} + ".html";
+    }} else {{
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }}
     let firstPage = baseURL + "blog-1.html";
     let lastPage = baseURL + "blog" + {last} + ".html"; 
 
@@ -62,6 +66,7 @@ function generateNavigation() {{
 </script>
 </body>
 </html>'''
+
 
 
 #####################################################################################
