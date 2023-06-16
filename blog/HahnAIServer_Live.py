@@ -1,13 +1,15 @@
-# SandboxDB Server v2
+# Hahn AI Blog Engine
 # William Edward Hahn
 # All Rights Reserved
 # This program writes HTML files to a webserver folder by scraping google sheets urls
+# 6/14/23
 #####################################################################################
 import pandas as pd
 import os
-import pandas as pd
 from string import Template
 
+site_path = "/home/hahn/Desktop/HahnAI/blog/"    
+url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8TfnImP5uZ2JhQYecjHK4/edit#gid=745755078"
 
 def get_database(url):
     url_head = "https://docs.google.com/spreadsheets/d/"
@@ -61,24 +63,13 @@ foot = '''
 
 
 blog = Template(blog)
- 
 
-site_path = "/home/hahn/Desktop/HahnAI/blog/"    
+df_blog  = get_database(url_blog)
 
-#Google sheet urls
-
-url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8TfnImP5uZ2JhQYecjHK4/edit#gid=745755078"
-
-df_blog     = get_database(url_blog)
-
-source_blog = head #+ logo
-
-#####################################################################################
+source_blog = head
 
 for i in range(len(df_blog)):
     
-    # if df_blog["Status"][i] == 1:
-        
     photo_url = "https://drive.google.com/uc?export=download&id=" + str(df_blog["Post Image"][i]).split('=')[1]
     
     source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i],image=photo_url,content=df_blog["Post Text"][i][:800]) + blog_foot 
@@ -119,7 +110,6 @@ blog = '''
 '''
 
 blog = Template(blog)
-
 
 last = len(df_blog)-1
 
@@ -173,15 +163,11 @@ function generateNavigation() {{
 </body>
 </html>'''
 
-
-
 #####################################################################################
 
 for i in range(len(df_blog)):
 
-    source_blog = head #+ logo
-    
-    # if df_blog["Status"][i] == 1:
+    source_blog = head 
         
     photo_url = "https://drive.google.com/uc?export=download&id=" + str(df_blog["Post Image"][i]).split('=')[1]
     
