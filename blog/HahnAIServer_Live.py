@@ -118,21 +118,8 @@ blog = '''
 <p><span class="image left"><img src="$image" alt="" /></span>$content</p>
 '''
 
-blog_foot = '''				
-</div>
-</section>
-<br>
-'''
+blog = Template(blog)
 
-blog    = Template(blog)
-
-site_path = "/home/hahn/Desktop/HahnAI/blog/"    
-
-#Google sheet urls
-
-url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8TfnImP5uZ2JhQYecjHK4/edit#gid=745755078"
-
-df_blog     = get_database(url_blog)
 
 last = len(df_blog)-1
 
