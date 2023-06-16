@@ -50,7 +50,7 @@ blog_foot = '''
 foot = '''
 <footer id="footer">
 <div class="copyright">
-&copy; MPCR Lab <a href="https://mpcrlab.com">Main Site</a>.
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
 </div>
 </footer>
 <script src="assets/js/jquery.min.js"></script>
