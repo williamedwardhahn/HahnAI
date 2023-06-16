@@ -182,7 +182,7 @@ blog = '''
 <section id="main">
 <div class="inner">
 <a href = 'blog$i.html'><h4>$title</h4></a>
-<p><span class="image left"><a href = 'blog$i.html'><img src="$image" alt="" /></a></span>$content <br> <a href = 'blog$i.html'>Read More</a></p>
+<p><span class="image left"><a href = 'blog$i.html'><img src="$image" alt="" /></a> </span>$content <br> <a href = 'blog$i.html'>Read More</a></p>
 '''
 
 blog_foot = '''				
