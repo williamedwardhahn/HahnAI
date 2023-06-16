@@ -72,7 +72,7 @@ for i in range(len(df_blog)):
     
     photo_url = "https://drive.google.com/uc?export=download&id=" + str(df_blog["Post Image"][i]).split('=')[1]
     
-    source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i],image=photo_url,content=df_blog["Post Text"][i][:300]) + blog_foot 
+    source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i],image=photo_url,content=df_blog["Post Text"][i][:800]) + blog_foot 
 
 
 source_blog    += "<br><br><br><br><br><br>" +foot
