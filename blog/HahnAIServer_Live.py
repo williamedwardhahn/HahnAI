@@ -173,7 +173,8 @@ generateNavigation();
 </html>'''
 
 
-for i in range(len(df_blog)):
+for i in reversed(range(len(df_blog))):
+
     print(df_blog["Post Title"][i])
 
     source_blog = head 
