@@ -23,6 +23,17 @@ def get_database(url):
 head = '''<!DOCTYPE HTML>
 <html>
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
 <title>Hahn AI</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,6 +44,8 @@ head = '''<!DOCTYPE HTML>
 <a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
 </header>
 '''
+
+
 
 blog = '''
 <section id="main">
@@ -88,19 +101,7 @@ print(source_blog,    file=open(site_path + "index.html",    'w'))
 #####################################################################################
 
     
-head = '''<!DOCTYPE HTML>
-<html>
-<head>
-<title>Hahn AI</title>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="assets/css/main.css" />
-</head>
-<body onload="generateNavigation()">
-<header id="header">
-<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
-</header>
-'''
+
 
 blog = '''
 <section id="main">
