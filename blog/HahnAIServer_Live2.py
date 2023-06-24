@@ -25,18 +25,13 @@ def get_database(url):
     
     
 def download_image(image_id, filename):
+    print("Downloading...")
     url = f'https://drive.google.com/uc?export=download&id={image_id}'
+    print(url)
     response = requests.get(url)
-    if response.status_code == 200:  # check that the request was successful
-        with open(filename, 'wb') as file:
-            file.write(response.content)
-        print(f"{filename} downloaded.")
-    else:
-        print(f"Error: Unable to download {filename}. Status code {response.status_code}.")
-        print("Response text:")
-        print(response.text)
-
-
+    with open(filename, 'wb') as file:
+        file.write(response.content)
+    print("Download Complete.")
 
 
 
