@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>Ladder of Consciousness: Leibniz's Representation Hierarchy</h4>
+<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=16SMSwDslPMb89SYA5x1gN3qrnk3HOxTG" alt="" /></span>In the quest to understand the essence of consciousness, few thinkers have offered more nuanced perspectives than German polymath Gottfried Wilhelm Leibniz. Whereas Rene Descartes famously distilled existence into his aphorism "I think, therefore I am," Leibniz responded with a different kind of cogito: "I represent that I represent, therefore I represent."
+
+This Leibnizian definition of consciousness implies a hierarchy of representation, allowing for an empirical dissection of consciousness from the seemingly inanimate to the sophistication of human awareness.
+
+<br><br>
+<b>The Inanimate and the Sensation</b>
+
+Leibniz posits that objects incapable of representing stimuli, like a stone, exist at the bottom of this hierarchy. They undergo events but express no discernible response. Conversely, even the most humble of plants can represent stimuli. They exhibit a basic kind of representation or "sensation," responding distinctly to environmental cues. For example, an onion sprouting roots toward the earth (geotropism) or leaves toward light (phototropism) demonstrates an ability to sense.
+
+<br><br>
+<b>Memory: The Response to Sensation</b>
+
+Moving up the hierarchy, we encounter organisms capable of representing responses to sensation through memory. Creatures like worms, fish, and frogs remember food sources or potential mates, exhibiting an evolutionary leap from sensation alone.
+
+<br><br>
+<b>Definition: A Level Up from Memory</b>
+
+Yet, these animals lack the ability to represent their responses to memory. This ability, called definition, is found in certain reptiles, such as alligators, that can differentiate between specific partners, demonstrating an awareness beyond mere instinctual response.
+
+<br><br>
+<b>Distinction: Beyond Simple Definitions</b>
+
+The next step up in the hierarchy involves representing definitions, a capacity Leibniz attributes to distinction. Birds like parrots exemplify this. They can associate different objects with the same label, understanding the abstract concept of "cupness," for instance. Pigeons can differentiate between paintings by Picasso and Magritte, extending their capacity for representation.
+
+<br><br>
+<b>Methodology: The Threshold of Human Consciousness</b>
+
+Even with their impressive cognitive capabilities, animals like parrots and pigeons can't fully represent their distinctions. This brings us to methodology, a function unique to humans in Leibniz's hierarchy. We not only generate and recognize distinctions but also critique and interpret them. Hence, we demonstrate an ability to consider and analyze our thoughts within a broader context.
+
+<br><br>
+<b>The Apex of Representation: From Philosophy to Psychology</b>
+
+Leibniz's hierarchy doesn't stop at methodology. Humans can represent their methodologies in philosophy, dramas, politics, and psychology, each level up involving an increasing degree of abstraction and self-awareness. But the hierarchy doesn't have a defined end. To go beyond psychology, we may require an even more advanced definition of representation, bringing us full circle to the ongoing philosophical discourse about the nature of consciousness.
+
+<br><br>
+Leibniz's model presents consciousness as an unfolding drama of representation, from the primitive to the profound. It provides us with a roadmap to navigate the labyrinth of consciousness, illuminating our understanding of cognition across the biological spectrum. The quest continues, offering a tantalizing glimpse into the myriad potentials for consciousness in this ever-evolving universe.</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 10) {
+        nextPage = baseURL + "blog" + 10 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog-1.html";
+    let lastPage = baseURL + "blog" + 10 + ".html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
