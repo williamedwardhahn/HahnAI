@@ -24,19 +24,18 @@ def get_database(url):
     return df
     
     
-import requests
-import shutil
-
 def download_image(image_id, filename):
     url = f'https://drive.google.com/uc?export=download&id={image_id}'
-    response = requests.get(url, stream=True)
-    if response.status_code == 200:
+    response = requests.get(url)
+    if response.status_code == 200:  # check that the request was successful
         with open(filename, 'wb') as file:
-            response.raw.decode_content = True
-            shutil.copyfileobj(response.raw, file)
-            print("Image successfully Downloaded: ", filename)
+            file.write(response.content)
+        print(f"{filename} downloaded.")
     else:
-        print("Image Couldn't be retreived")
+        print(f"Error: Unable to download {filename}. Status code {response.status_code}.")
+        print("Response text:")
+        print(response.text)
+
 
 
 
