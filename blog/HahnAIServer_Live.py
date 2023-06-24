@@ -166,6 +166,8 @@ function generateNavigation() {{
     sections[0].innerHTML += navigationHTML;
     
 }}
+// Call the function here
+generateNavigation();
 </script>
 </body>
 </html>'''
