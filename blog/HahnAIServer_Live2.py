@@ -10,7 +10,8 @@ from string import Template
 import requests
 from PIL import Image
 
-site_path = "/home/hahn/Desktop/HahnAI/blog/"    
+site_path = "/home/hahn/Desktop/HahnAI/blog/"
+image_path ="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/"
 url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8TfnImP5uZ2JhQYecjHK4/edit#gid=745755078"
 
 def get_database(url):
@@ -112,7 +113,7 @@ for i in reversed(range(len(df_blog))):
     download_image(image_id, image_filename)
     compress_image(image_filename)
 
-    photo_url = site_path + "compressed_" + image_filename  # use compressed image
+    photo_url = image_path + "compressed_" + image_filename  # use compressed image
 
     source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i][:800]) + blog_foot 
     
@@ -206,7 +207,7 @@ for i in range(len(df_blog)):
     download_image(image_id, image_filename)
     compress_image(image_filename)
 
-    photo_url = site_path + "compressed_" + image_filename  # use compressed image
+    photo_url = image_path + "compressed_" + image_filename  # use compressed image
 
     source_blog += blog.substitute(title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i]) + blog_foot 
     
