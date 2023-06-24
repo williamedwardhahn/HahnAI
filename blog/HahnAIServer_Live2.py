@@ -24,11 +24,20 @@ def get_database(url):
     return df
     
     
+import requests
+import shutil
+
 def download_image(image_id, filename):
     url = f'https://drive.google.com/uc?export=download&id={image_id}'
-    response = requests.get(url)
-    with open(filename, 'wb') as file:
-        file.write(response.content)
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        with open(filename, 'wb') as file:
+            response.raw.decode_content = True
+            shutil.copyfileobj(response.raw, file)
+            print("Image successfully Downloaded: ", filename)
+    else:
+        print("Image Couldn't be retreived")
+
 
 
 
@@ -114,7 +123,7 @@ for i in reversed(range(len(df_blog))):
     image_filename = f'image_{i}.jpeg' 
 
     download_image(image_id, image_filename)
-    print("DL")
+
     compress_image(image_filename)
 
     photo_url = image_path + "compressed_" + image_filename  # use compressed image
@@ -209,9 +218,11 @@ for i in range(len(df_blog)):
     print(df_blog["Post Title"][i])
 
     image_id = str(df_blog["Post Image"][i]).split('=')[1]
+    
     image_filename = f'image_{i}.jpeg'  # systematic filename
 
     download_image(image_id, image_filename)
+
     compress_image(image_filename)
 
     photo_url = image_path + "compressed_" + image_filename  # use compressed image
