@@ -90,9 +90,9 @@ function generateNavigation() {
 
     // Add the navigation to the end of each section
     let sections = document.getElementsByTagName('section');
-    for (let i = 0; i < sections.length; i++) {
-        sections[i].innerHTML += navigationHTML;
-    }
+    
+    sections[0].innerHTML += navigationHTML;
+    
 }
 </script>
 </body>
