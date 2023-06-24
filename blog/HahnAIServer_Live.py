@@ -85,7 +85,7 @@ df_blog  = get_database(url_blog)
 
 source_blog = head
 
-for i in range(len(df_blog)):
+for i in reversed(range(len(df_blog))):
     
     photo_url = "https://drive.google.com/uc?export=download&id=" + str(df_blog["Post Image"][i]).split('=')[1]
     
@@ -173,7 +173,7 @@ generateNavigation();
 </html>'''
 
 
-for i in reversed(range(len(df_blog))):
+for i in range(len(df_blog)):
 
     print(df_blog["Post Title"][i])
 
