@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>Understanding the Consciousness of Complex Systems: A Journey from Digital to Analog Approximation</h4>
+<p><span class="image left"><img src="https://drive.google.com/uc?export=download&id=1zO2qz0-BBcGnWbhAnjU-ZVQeJDaJZm7U" alt="" /></span><b>Complexity in Computational Systems</b>
+<br><br>
+As our world grows increasingly connected and digitized, our computational systems are reaching unprecedented levels of complexity. Systems once relatively simple to understand, such as a desktop computer or a smartphone, have evolved into large-scale, intricate networks involving billions of processing units, memory elements, and interconnections. These systems, much like a complex ecosystem, now demonstrate intricate behavior and adaptation mechanisms that bear a striking resemblance to the intricate patterns found in natural systems - from the inner workings of a single cell, to the sprawling branches of a tree, to the complex social and physical dynamics of an entire city.
+
+<br><br>
+
+<b>A New Paradigm: Analog Dynamical Systems</b>
+<br><br>
+Given this evolution, many researchers suggest that we are approaching a point where conventional digital understanding is no longer sufficient. Instead, we must consider these computational systems as analog dynamical systems. In simple terms, an analog system is a set of mathematical equations that describe the behavior of a system as it changes over time. These equations are continuous, capturing the fact that real-world systems often change in a smooth, uninterrupted fashion, without the "stepwise" changes associated with digital systems.
+
+<br><br>
+
+To capture the fleeting yet significant transformations occurring within these complex computational systems, we need to pay close attention to the rate of change, denoted by 'dt'. In the world of analog dynamical systems, 'dt' is crucial because, as it changes, so does the nature of the dynamics. If the actions - such as flops or memory accesses - happen fast enough, we see different effects, just like in dynamical systems. These can range from fixed points and limit cycles to chaotic behaviors.
+
+<br><br>
+
+<b>The Quickening: A Threshold in Complexity</b>
+<br><br>
+As the pace of change within computational systems quickens, an interesting phenomenon occurs. When memory alteration occurs rapidly enough, a state known as the 'Quickening' emerges. The Quickening is a turning point where the system transitions from a steady, predictable state to a more unpredictable, chaotic one. This shift, akin to phase transitions in physics, reveals a whole new landscape of potential behaviors for the system - akin to what we observe in complex biological entities like a mycelium network or a city.
+
+<br><br>
+
+<b>Can a Tree or a City be Conscious?</b>
+<br><br>
+In trying to understand the consciousness of a tree, a mycelium network, or a city, we have to think about what consciousness means. Traditional notions of consciousness are usually restricted to humans and some animals, largely due to our capacity for self-awareness and cognitive processing. However, in the context of systems theory and cybernetics, we could see these entities as "conscious" in a different way.
+
+<br><br>
+
+Just like a human body is an intricate system where cells, tissues, organs, and organ systems interact and coordinate to sustain life, a tree, a mycelium network, or a city can be thought of as complex systems too. They have their own form of "communication," adaptation, and growth mechanisms which could, by some definitions, be considered a form of consciousness.
+
+<br><br>
+
+<b>From Digital to Analog: A Matter of Scale</b>
+<br><br>
+The transition from viewing our computational systems through a digital lens to an analog one is essentially a matter of scale. Imagine a house made from Lego bricks. Up close, the digital nature of the Lego bricks is clear and distinct. However, when you increase the number of bricks, making them smaller and increasing their interconnections, from a distance the house starts to look smooth, just like a real house would. This is the transition from digital to analog: a transformation that allows us to better appreciate the complex, dynamic, and interdependent nature of the world's most intricate systems, both natural and artificial.
+
+<br><br>
+
+As we continue to create and manipulate complex systems, it is essential to equip ourselves with the necessary tools to comprehend them fully. This evolution necessitates not only a shift in our computational methods but also a fundamental rethinking of how we perceive consciousness, complexity, and interconnectivity in the world around us. In essence, the move from digital to analog understanding represents a significant paradigm shift in our approach to understanding complexity, one that brings us closer to the intricate dynamical behaviors observed in nature.</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 8) {
+        nextPage = baseURL + "blog" + 8 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog-1.html";
+    let lastPage = baseURL + "blog" + 8 + ".html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    for (let i = 0; i < sections.length; i++) {
+        sections[i].innerHTML += navigationHTML;
+    }
+}
+</script>
+</body>
+</html>
