@@ -107,10 +107,14 @@ source_blog = head
 
 
 for i in reversed(range(len(df_blog))):
+
+    print(df_blog["Post Title"][i])
+
     image_id = str(df_blog["Post Image"][i]).split('=')[1]
-    image_filename = f'image_{i}.jpeg'  # systematic filename
+    image_filename = f'image_{i}.jpeg' 
 
     download_image(image_id, image_filename)
+    print("DL")
     compress_image(image_filename)
 
     photo_url = image_path + "compressed_" + image_filename  # use compressed image
@@ -201,6 +205,9 @@ generateNavigation();
 
 
 for i in range(len(df_blog)):
+
+    print(df_blog["Post Title"][i])
+
     image_id = str(df_blog["Post Image"][i]).split('=')[1]
     image_filename = f'image_{i}.jpeg'  # systematic filename
 
