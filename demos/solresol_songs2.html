@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #song { font-size: 40px; margin-top: 50px; text-align: center; }
+        #note { font-size: 40px; margin-top: 50px; text-align: center; }
+        #message { font-size: 30px; margin-top: 50px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div id="song"></div>
+    <div id="note"></div>
+    <div id="message"></div>
+    <select id="waveform">
+        <option value="sine">Piano (Sine)</option>
+        <option value="triangle">Flute (Triangle)</option>
+    </select>
+
+    <script>
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88]; // Frequencies for C4, D4, E4, F4, G4, A4, B4
+        const solresol = ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Si', 'Pause'];
+        const songs = [
+            { name: 'Happy Birthday', notes: '112--163--112--196--1' },
+            { name: 'Twinkle Twinkle Little Star', notes: '1155334--4433221--5544332--5544332--1155334--4433221' },
+            // add more songs here
+        ];
+
+        let currentSong = songs[Math.floor(Math.random() * songs.length)];
+        let currentNoteIndex = 0;
+
+        document.getElementById('song').textContent = currentSong.name;
+        document.getElementById('note').textContent = currentSong.notes[currentNoteIndex] === '-' ? solresol[7] : solresol[currentSong.notes[currentNoteIndex] - 1];
+
+        function playTone(frequency, waveform) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = waveform;
+            oscillator.frequency.value = frequency;
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+            gainNode.gain.setValueAtTime(0, now);
+            gainNode.gain.linearRampToValueAtTime(1, now + 0.1); // Attack
+            gainNode.gain.linearRampToValueAtTime(0.3, now + 0.3); // Decay
+            gainNode.gain.linearRampToValueAtTime(0.3, now + 0.7); // Sustain
+            gainNode.gain.linearRampToValueAtTime(0, now + 1); // Release
+
+            oscillator.start();
+
+            // Stop the oscillator after 1 second
+            setTimeout(() => oscillator.stop(), 1000);
+        }
+
+        window.addEventListener('keydown', function(event) {
+            if ((event.keyCode >= 49 && event.keyCode <= 55) || event.keyCode === 56) {
+                let inputNote = event.keyCode === 56 ? '-' : event.keyCode - 49;
+                let waveform = document.getElementById('waveform').value;
+                document.getElementById('message').textContent = inputNote === '-' ? solresol[7] : solresol[inputNote];
+
+                if (inputNote !== '-') playTone(notes[inputNote], waveform);
+
+                if ((inputNote === '-' && currentSong.notes[currentNoteIndex] === '-') ||
+                    (inputNote !== '-' && inputNote === currentSong.notes[currentNoteIndex] - 1)) {
+                    document.getElementById('message').textContent = 'Correct!';
+                    currentNoteIndex++;
+                    if (currentNoteIndex >= currentSong.notes.length) {
+                        currentSong = songs[Math.floor(Math.random() * songs.length)];
+                        currentNoteIndex = 0;
+                        document.getElementById('song').textContent = currentSong.name;
+                    }
+                    document.getElementById('note').textContent = currentSong.notes[currentNoteIndex] === '-' ? solresol[7] : solresol[currentSong.notes[currentNoteIndex] - 1];
+                } else {
+                    document.getElementById('message').textContent = 'Incorrect, try again';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
