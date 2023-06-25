@@ -44,8 +44,8 @@ def compress_image(image_path):
 head = '''<!DOCTYPE HTML>
 <html>
 <head>
-<link rel="icon" type="../image/png" href="images/favicon-32x32.png" sizes="32x32" />
-<link rel="icon" type="../image/png" href="images/favicon-16x16.png" sizes="16x16" />
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
 <script>
