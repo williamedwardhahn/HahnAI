@@ -19,39 +19,41 @@
     <rect x="400" y="0" />
   </svg>
   <script>
-    var correctSelections = 0;
-    var totalSelections = 0;
-    var colors = [];
-    var differentIndex;
-
+    let correctSelections = 0;
+    let totalSelections = 0;
+    let colors = [];
+    let differentIndex;
+  
     function generateColor() {
       return [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)];
     }
-
+  
     function adjustColor(color, difficulty) {
       return color.map(x => Math.max(0, Math.min(x + Math.floor(Math.random() * difficulty * 2) - difficulty, 255)));
     }
-
+  
     function selectColor(index) {
-      if(index == differentIndex) {
-        document.getElementById('feedback').textContent = 'Correct!';
+      if (index === differentIndex) {
         correctSelections++;
+        totalSelections++;
+        document.getElementById('feedback').textContent = 'Correct!';
+        document.getElementById('score').textContent = correctSelections;
+        document.getElementById('total').textContent = totalSelections;
+        generateGame();
       } else {
+        totalSelections++;
         document.getElementById('feedback').textContent = 'Incorrect!';
+        document.getElementById('total').textContent = totalSelections;
       }
-      totalSelections++;
-      document.getElementById('score').textContent = correctSelections;
-      document.getElementById('total').textContent = totalSelections;
-      updateColors();
     }
-
-    function updateColors() {
-      var baseColor = generateColor();
+  
+    function generateGame() {
+      let baseColor = generateColor();
       colors = [baseColor, baseColor, baseColor];
       differentIndex = Math.floor(Math.random() * 3);
-      var difficulty = Math.max(5, 20 - Math.floor(correctSelections / 5));
+      let difficulty = Math.max(5, 20 - Math.floor(correctSelections / 5));
       colors[differentIndex] = adjustColor(baseColor, difficulty);
-
+      
       document.querySelectorAll('#colorPanel rect').forEach(function(rect, i) {
         rect.style.fill = 'rgb(' + colors[i].join(',') + ')';
         rect.onclick = function() {
@@ -59,22 +61,16 @@
         };
       });
     }
-
+  
     document.addEventListener('keydown', function(event) {
-      switch (event.keyCode) {
-        case 37: // Left arrow key
-          selectColor(0);
-          break;
-        case 40: // Down arrow key
-          selectColor(1);
-          break;
-        case 39: // Right arrow key
-          selectColor(2);
-          break;
+      let keys = {37: 0, 40: 1, 39: 2};
+      if (keys[event.keyCode] !== undefined) {
+        event.preventDefault();
+        selectColor(keys[event.keyCode]);
       }
     });
-
-    updateColors();
+  
+    generateGame(); // Generate the initial game state
   </script>
 </body>
 </html>
