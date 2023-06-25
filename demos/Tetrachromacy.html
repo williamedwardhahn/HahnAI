@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tetrachromacy Test</title>
+  <style>
+    #colorPanel rect {
+      width: 200px;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tetrachromacy Test</h1>
+  <p id="feedback">Click on the square that looks different.</p>
+  <p>Your score: <span id="score">0</span>/<span id="total">0</span></p>
+  <svg id="colorPanel" width="600" height="200" viewBox="0 0 600 200">
+    <rect x="0" y="0" />
+    <rect x="200" y="0" />
+    <rect x="400" y="0" />
+  </svg>
+  <script>
+    var correctSelections = 0;
+    var totalSelections = 0;
+    var colors = [];
+    var differentIndex;
+
+    function generateColor() {
+      return [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)];
+    }
+
+    function adjustColor(color, difficulty) {
+      return color.map(x => Math.max(0, Math.min(x + Math.floor(Math.random() * difficulty * 2) - difficulty, 255)));
+    }
+
+    function selectColor(index) {
+      if(index == differentIndex) {
+        document.getElementById('feedback').textContent = 'Correct!';
+        correctSelections++;
+      } else {
+        document.getElementById('feedback').textContent = 'Incorrect!';
+      }
+      totalSelections++;
+      document.getElementById('score').textContent = correctSelections;
+      document.getElementById('total').textContent = totalSelections;
+      updateColors();
+    }
+
+    function updateColors() {
+      var baseColor = generateColor();
+      colors = [baseColor, baseColor, baseColor];
+      differentIndex = Math.floor(Math.random() * 3);
+      var difficulty = Math.max(5, 20 - Math.floor(correctSelections / 5));
+      colors[differentIndex] = adjustColor(baseColor, difficulty);
+
+      document.querySelectorAll('#colorPanel rect').forEach(function(rect, i) {
+        rect.style.fill = 'rgb(' + colors[i].join(',') + ')';
+        rect.onclick = function() {
+          selectColor(i);
+        };
+      });
+    }
+
+    document.addEventListener('keydown', function(event) {
+      switch (event.keyCode) {
+        case 37: // Left arrow key
+          selectColor(0);
+          break;
+        case 40: // Down arrow key
+          selectColor(1);
+          break;
+        case 39: // Right arrow key
+          selectColor(2);
+          break;
+      }
+    });
+
+    updateColors();
+  </script>
+</body>
+</html>
+
