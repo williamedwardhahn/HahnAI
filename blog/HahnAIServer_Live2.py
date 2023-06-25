@@ -25,13 +25,11 @@ def get_database(url):
     
     
 def download_image(image_id, filename):
-    print("Downloading...")
     url = f'https://drive.google.com/uc?export=download&id={image_id}'
-    print(url)
     response = requests.get(url)
     with open(filename, 'wb') as file:
         file.write(response.content)
-    print("Download Complete.")
+
 
 
 
