@@ -126,6 +126,7 @@ for i in reversed(range(len(df_blog))):
     source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i][:800]) + blog_foot 
     
     
+    
 
 source_blog    += "<br><br><br><br><br><br>" +foot
 
@@ -183,11 +184,13 @@ function generateNavigation() {{
     }} else {{
         nextPage = baseURL + "blog" + nextPageNumber + ".html";
     }}
-    let firstPage = baseURL + "blog-1.html";
-    let lastPage = baseURL + "blog" + {last} + ".html"; 
+    let firstPage = baseURL + "blog0.html";
+    let lastPage = baseURL + "blog" + {last} + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
 
     let navigationHTML = `
         <br><br><br><center><nav>
+            <a href="${{indexPage}}" class="index">Index</a>  |
             <a href="${{firstPage}}" class="first">First</a>  |  
             <a href="${{prevPage}}" class="previous">Previous</a>  |  
             <a href="${{nextPage}}" class="next">Next</a>  | 
@@ -221,7 +224,9 @@ for i in range(len(df_blog)):
 
     photo_url = image_path + "compressed_" + image_filename  # use compressed image
 
-    source_blog += blog.substitute(title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i]) + blog_foot 
+    source_blog += blog.substitute(title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i]) + blog_foot
+    
+    source_blog    += "<br><br><br>" + foot 
     
     print(source_blog,    file=open(site_path + f"blog{i}.html",    'w'))
     
