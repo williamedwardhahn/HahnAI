@@ -27,6 +27,7 @@ def get_database(url):
 def download_image(image_id, filename):
     url = f'https://drive.google.com/uc?export=download&id={image_id}'
     response = requests.get(url)
+    #print(response.text)
     with open(filename, 'wb') as file:
         file.write(response.content)
 
@@ -215,13 +216,11 @@ for i in range(len(df_blog)):
     
     image_filename = f'image_{i}.jpeg'  # systematic filename
 
-    download_image(image_id, image_filename)
-
-    compress_image(image_filename)
-
     photo_url = image_path + "compressed_" + image_filename  # use compressed image
 
     source_blog += blog.substitute(title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i]) + blog_foot 
+    
+    print(source_blog,    file=open(site_path + f"blog{i}.html",    'w'))
     
 #####################################################################################
     
