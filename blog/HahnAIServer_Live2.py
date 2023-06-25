@@ -208,7 +208,10 @@ generateNavigation();
 </html>'''
 
 
+
 for i in range(len(df_blog)):
+
+    source_blog = head
 
     print(df_blog["Post Title"][i])
 
