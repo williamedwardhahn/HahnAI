@@ -23,16 +23,12 @@ def get_database(url):
     df = pd.read_csv(url_csv, sep=',', skiprows=0)
     return df
     
-    
 def download_image(image_id, filename):
     url = f'https://drive.google.com/uc?export=download&id={image_id}'
     response = requests.get(url)
     #print(response.text)
     with open(filename, 'wb') as file:
         file.write(response.content)
-
-
-
 
 def compress_image(image_path):
     if os.path.getsize(image_path) > 0:  # Check if file is not empty
@@ -109,7 +105,6 @@ df_blog  = get_database(url_blog)
 
 source_blog = head
 
-
 for i in reversed(range(len(df_blog))):
 
     print(df_blog["Post Title"][i])
@@ -125,16 +120,10 @@ for i in reversed(range(len(df_blog))):
 
     source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i][:800]) + blog_foot 
     
-    
-    
+source_blog    += 6*"<br>" +foot
 
-source_blog    += "<br><br><br><br><br><br>" +foot
-
-            
 print(source_blog,    file=open(site_path + "blog-1.html",    'w'))
 print(source_blog,    file=open(site_path + "index.html",    'w'))
-
-
 
 #####################################################################################
 #####################################################################################
@@ -185,7 +174,7 @@ function generateNavigation() {{
         nextPage = baseURL + "blog" + nextPageNumber + ".html";
     }}
     let firstPage = baseURL + "blog0.html";
-    let lastPage = baseURL + "blog" + {last} + ".html";
+    let lastPage  = baseURL + "blog" + {last} + ".html";
     let indexPage = baseURL + "blog-1.html"; 
 
     let navigationHTML = `
@@ -226,12 +215,18 @@ for i in range(len(df_blog)):
 
     source_blog += blog.substitute(title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i]) + blog_foot
     
-    source_blog    += "<br><br><br>" + foot 
+    source_blog    += 3*"<br>" + foot 
     
     print(source_blog,    file=open(site_path + f"blog{i}.html",    'w'))
     
 #####################################################################################
     
+    
+    
+    
+#####################################################################################
+# Push to GitHub
+#####################################################################################    
 os.chdir(site_path)    
 os.system("git add . ")  
 os.system("git commit -m 'update'")  
