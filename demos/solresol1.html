@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/tone@13.8.6/build/Tone.min.js"></script>
+        <style>
+            #note { font-size: 40px; margin-top: 50px; text-align: center; }
+            #input { font-size: 30px; margin-top: 50px; text-align: center; }
+            #message { font-size: 30px; margin-top: 50px; text-align: center; }
+        </style>
+    </head>
+    <body>
+        <div id="note"></div>
+        <div id="input"></div>
+        <div id="message"></div>
+        <script>
+            const synth = new Tone.Synth().toDestination();
+            const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'];
+            const solresol = ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Si'];
+
+            let currentNote = Math.floor(Math.random() * 7);
+            document.getElementById('note').textContent = solresol[currentNote];
+
+            window.addEventListener('keydown', function(event) {
+                if (event.keyCode >= 49 && event.keyCode <= 55) {
+                    let inputNote = event.keyCode - 49;
+                    document.getElementById('input').textContent = solresol[inputNote];
+
+                    synth.triggerAttackRelease(notes[inputNote], "8n");
+
+                    if (inputNote === currentNote) {
+                        document.getElementById('message').textContent = 'Correct!';
+                        currentNote = Math.floor(Math.random() * 7);
+                        document.getElementById('note').textContent = solresol[currentNote];
+                    } else {
+                        document.getElementById('message').textContent = 'Incorrect, try again';
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
+
