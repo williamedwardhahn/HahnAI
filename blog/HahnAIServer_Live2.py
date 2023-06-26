@@ -120,7 +120,7 @@ for i in reversed(range(len(df_blog))):
 
     photo_url = image_path + "compressed_" + image_filename  # use compressed image
 
-    source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i][:800]) + blog_foot 
+    source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i][:700]) + blog_foot 
     
 source_blog    += 6*"<br>" +foot
 
