@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #song { font-size: 40px; margin-top: 50px; text-align: center; }
+        #note { font-size: 40px; margin-top: 50px; text-align: center; }
+        #message { font-size: 30px; margin-top: 50px; text-align: center; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.30/Tone.min.js"></script>
+</head>
+<body>
+    <div id="song"></div>
+    <div id="note"></div>
+    <div id="message"></div>
+
+    <script>
+        const reverb = new Tone.Reverb().toDestination();
+        const synth = new Tone.Synth({
+            oscillator: {
+                type: 'triangle'
+            },
+            envelope: {
+                attack: 0.005,
+                decay: 0.1,
+                sustain: 0.3,
+                release: 1
+            }
+        }).connect(reverb);
+        reverb.generate();
+
+        const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88]; // Frequencies for C4, D4, E4, F4, G4, A4, B4
+        const solresol = ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Si', 'Pause'];
+
+        const songs = [
+            { name: 'Happy Birthday', notes: '112--163--112--196--1' },
+            { name: 'Twinkle Twinkle Little Star', notes: '1155334--4433221--5544332--5544332--1155334--4433221' },
+            { name: 'Ode to Joy', notes: '3345543--3345543--5543321--5543321--1123455--44333221--4433221--4433221' },
+            { name: 'The Itsy Bitsy Spider', notes: '1231--3231--56--1231--3231--34' },
+            { name: 'Frère Jacques', notes: '1231--1231--34--34--345--345--141--141' },
+            { name: 'Old MacDonald Had a Farm', notes: '33455331--1123221--33455331--1123221' },
+            { name: 'Row, Row, Row Your Boat', notes: '12321--43234--123--43234' },
+            { name: 'London Bridge is Falling Down', notes: '123454321--11223321--123454321--11223321' },
+            { name: 'Yankee Doodle', notes: '3344334--443321--4433221--3344334--443321--4433221' },
+            { name: 'Baa, Baa, Black Sheep', notes: '1155334--4433221--5544332--5544332--1155334--4433221' }
+        ];
+
+        let currentSong = songs[Math.floor(Math.random() * songs.length)];
+        let currentNoteIndex = 0;
+
+        document.getElementById('song').textContent = currentSong.name;
+        document.getElementById('note').textContent = currentSong.notes[currentNoteIndex] === '-' ? solresol[7] : solresol[currentSong.notes[currentNoteIndex] - 1];
+
+        function playTone(frequency) {
+            synth.triggerAttackRelease(frequency, '8n');
+        }
+
+        window.addEventListener('keydown', function(event) {
+            if ((event.keyCode >= 49 && event.keyCode <= 55) || event.keyCode === 56) {
+                let inputNote = event.keyCode === 56 ? '-' : event.keyCode - 49;
+                document.getElementById('message').textContent = inputNote === '-' ? solresol[7] : solresol[inputNote];
+
+                if (inputNote !== '-') playTone(notes[inputNote]);
+
+                if ((inputNote === '-' && currentSong.notes[currentNoteIndex] === '-') ||
+                    (inputNote !== '-' && inputNote === currentSong.notes[currentNoteIndex] - 1)) {
+                    document.getElementById('message').textContent = 'Correct!';
+                    currentNoteIndex++;
+                    if (currentNoteIndex >= currentSong.notes.length) {
+                        currentSong = songs[Math.floor(Math.random() * songs.length)];
+                        currentNoteIndex = 0;
+                        document.getElementById('song').textContent = currentSong.name;
+                    }
+                    document.getElementById('note').textContent = currentSong.notes[currentNoteIndex] === '-' ? solresol[7] : solresol[currentSong.notes[currentNoteIndex] - 1];
+                } else {
+                    document.getElementById('message').textContent = 'Incorrect, try again';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

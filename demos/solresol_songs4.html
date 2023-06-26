@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #song { font-size: 40px; margin-top: 50px; text-align: center; }
+        #note { font-size: 40px; margin-top: 50px; text-align: center; }
+        #message { font-size: 30px; margin-top: 50px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div id="song"></div>
+    <div id="note"></div>
+    <div id="message"></div>
+
+    <audio id="C4" src="./notes/C4.mp3"></audio>
+    <audio id="D4" src="./notes/D4.mp3"></audio>
+    <audio id="E4" src="./notes/E4.mp3"></audio>
+    <audio id="F4" src="./notes/F4.mp3"></audio>
+    <audio id="G4" src="./notes/G4.mp3"></audio>
+    <audio id="A4" src="./notes/A4.mp3"></audio>
+    <audio id="B4" src="./notes/B4.mp3"></audio>0
+
+    <script>
+        const notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'];
+        const solresol = ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Si', 'Pause'];
+
+        const songs = [
+    { name: 'Happy Birthday', notes: '112143112154' },
+    { name: 'Twinkle Twinkle Little Star', notes: '1155654433221' },
+    { name: 'Ode to Joy', notes: '334554321123322' },
+    { name: 'The Itsy Bitsy Spider', notes: '1244312323221' },
+    { name: 'Mary Had a Little Lamb', notes: '3212333223321555' },
+    { name: 'Old MacDonald Had a Farm', notes: '553432233211' },
+    { name: 'Row, Row, Row Your Boat', notes: '123123345' },
+    { name: 'London Bridge is Falling Down', notes: '554365432321' },
+    { name: 'Jingle Bells', notes: '3335331244444' },
+    { name: 'The Star-Spangled Banner', notes: '5112143654322345544321' }
+];
+
+        let currentSong = songs[Math.floor(Math.random() * songs.length)];
+        let currentNoteIndex = 0;
+
+        document.getElementById('song').textContent = currentSong.name;
+        document.getElementById('note').textContent = currentSong.notes[currentNoteIndex] === '-' ? solresol[7] : solresol[currentSong.notes[currentNoteIndex] - 1];
+
+        function playTone(note) {
+            const audio = document.getElementById(note);
+            audio.currentTime = 0;
+            audio.play();
+        }
+
+        window.addEventListener('keydown', function(event) {
+            if ((event.keyCode >= 49 && event.keyCode <= 55) || event.keyCode === 56) {
+                let inputNote = event.keyCode === 56 ? '-' : event.keyCode - 49;
+                document.getElementById('message').textContent = inputNote === '-' ? solresol[7] : solresol[inputNote];
+
+                if (inputNote !== '-') playTone(notes[inputNote]);
+
+                if ((inputNote === '-' && currentSong.notes[currentNoteIndex] === '-') ||
+                    (inputNote !== '-' && inputNote === currentSong.notes[currentNoteIndex] - 1)) {
+                    document.getElementById('message').textContent = 'Correct!';
+                    currentNoteIndex++;
+                    if (currentNoteIndex >= currentSong.notes.length) {
+                        currentSong = songs[Math.floor(Math.random() * songs.length)];
+                        currentNoteIndex = 0;
+                        document.getElementById('song').textContent = currentSong.name;
+                    }
+                    document.getElementById('note').textContent = currentSong.notes[currentNoteIndex] === '-' ? solresol[7] : solresol[currentSong.notes[currentNoteIndex] - 1];
+                } else {
+                    document.getElementById('message').textContent = 'Incorrect, try again';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
