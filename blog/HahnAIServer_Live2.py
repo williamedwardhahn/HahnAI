@@ -110,11 +110,13 @@ for i in reversed(range(len(df_blog))):
     print(df_blog["Post Title"][i])
 
     image_id = str(df_blog["Post Image"][i]).split('=')[1]
-    image_filename = f'image_{i}.jpeg' 
+    image_filename = f'image_{i}.jpeg'
+    
+    if not os.path.exists(image_filename): 
 
-    download_image(image_id, image_filename)
+	    download_image(image_id, image_filename)
 
-    compress_image(image_filename)
+	    compress_image(image_filename)
 
     photo_url = image_path + "compressed_" + image_filename  # use compressed image
 
