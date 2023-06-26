@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>When Large Language Models Meet DNA: Towards a New Era of Information Storage</h4>
+<p><span class="image left"><img src="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/compressed_image_14.jpeg" alt="" /></span>In the past few years, we have witnessed breathtaking advancements in artificial intelligence and machine learning models. Especially noteworthy is the evolution of Large Language Models (LLMs) like GPT-4. These are sophisticated algorithms that can understand, generate, and interact in human-like language, performing a wide variety of tasks from translation to generating high-quality content. <br><br>
+
+One of the most exciting recent developments in this field is the significant decrease in the size of these models. Today's LLMs now require only 1 gigabyte (GB) of memory. To put this in perspective, it approaches the size of the human genome, which takes up just under 800 megabytes (MB). Yes, you read that right. The intricate algorithm, mimicking human language processing, is now similar in size to the blueprint that builds and sustains every human being. But that's not the end of the story. <br><br>
+
+<b>Are Business Cards Made of DNA the Future?</b> <br><br>
+
+Danny Hillis, a pioneer in the field of computer science, presented an intriguing concept during one of his talks. Back in 1994 he "took this code – the code has standard letters that we use for symbolizing it – and I wrote my business card onto a piece of DNA and amplified it 10 to the 22 times…a hundred million copies of my business card". By converting the information of his business card into a DNA sequence, he managed to produce an enormous number of copies using standard DNA amplification techniques. <br><br>
+
+This experiment raises an interesting point about the potential of DNA as a storage medium. Unlike traditional storage devices that deteriorate over time, DNA can remain stable for thousands of years. Plus, it's incredibly space-efficient – a gram of DNA can hold up to 215 petabytes (215 million GB) of data. With our LLMs shrinking in size, it's not far-fetched to imagine a future where we might be able to encode these models into DNA. <br><br>
+
+<b>Is Our DNA Already an LLM?</b> <br><br>
+
+This brings us to an even more fascinating question: could our DNA already contain something like a large language model? It's a thought-provoking idea, given the parallels between the workings of an LLM and the functions of our genome. <br><br>
+
+LLMs process and generate language based on the patterns they've learned from vast amounts of text data. Similarly, our genome uses the language of DNA – a four-letter code comprising adenine (A), cytosine (C), guanine (G), and thymine (T) – to build and regulate our bodies. Just as an LLM learns from patterns in data, our genome has been shaped by billions of years of evolution, learning and adapting to different environments. <br><br>
+
+The human genome contains about 20,000-25,000 protein-coding genes, but these only make up about 1% of the total genome. The rest, often referred to as "junk DNA," was once thought to be non-functional. But recent research suggests that much of this DNA plays critical roles in regulating gene expression – perhaps another parallel with how an LLM uses learned patterns to generate meaningful output. <br><br>
+
+However, it's important to note that while there are intriguing similarities, our understanding of both LLMs and human genomics has a long way to go. While we're making great strides in reducing the size of LLMs and exploring the mysteries of our genome, we're not at a point where we can confirm the existence of a "genomic language model." But it's a tantalizing prospect that underscores the interdisciplinary beauty of cutting-edge science. <br><br>
+
+<b>A Future Where Biology and AI Merge</b> <br><br>
+
+The exploration of such ideas signifies a future where the boundaries between biology and artificial intelligence become increasingly blurred. Encoding LLMs into DNA could open up entirely new avenues for information storage, while the possible existence of a 'genomic language model' could revolutionize our understanding of ourselves and the nature of intelligence. As we continue to learn and make advancements, the convergence of these two fields may give birth to technologies and insights beyond our current comprehension. One thing is for certain: this thrilling journey of discovery is only just beginning.</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 14) {
+        nextPage = baseURL + "blog" + 14 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + 14 + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${indexPage}" class="index">Index</a>  |
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
