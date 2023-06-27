@@ -7,8 +7,11 @@
 import pandas as pd
 import os
 from string import Template
+import requests
+from PIL import Image
 
-site_path = "/home/hahn/Desktop/HahnAI/blog/"    
+site_path = "/home/hahn/Desktop/HahnAI/blog/"
+image_path ="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/"
 url_blog    = "https://docs.google.com/spreadsheets/d/12Aq-6jKjghX7TxJJPdAdVR8TfnImP5uZ2JhQYecjHK4/edit#gid=745755078"
 
 def get_database(url):
@@ -20,9 +23,26 @@ def get_database(url):
     df = pd.read_csv(url_csv, sep=',', skiprows=0)
     return df
     
+def download_image(image_id, filename):
+    url = f'https://drive.google.com/uc?export=download&id={image_id}'
+    response = requests.get(url)
+    #print(response.text)
+    with open(filename, 'wb') as file:
+        file.write(response.content)
+
+def compress_image(image_path):
+    if os.path.getsize(image_path) > 0:  # Check if file is not empty
+        picture = Image.open(image_path).convert("RGB")
+        picture.save("compressed_" + image_path, "JPEG", optimize=True, quality=30)
+    else:
+        print(f"Image file {image_path} is empty. Skipping compression.")
+  
+    
 head = '''<!DOCTYPE HTML>
 <html>
 <head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
 <script>
@@ -86,19 +106,26 @@ df_blog  = get_database(url_blog)
 source_blog = head
 
 for i in reversed(range(len(df_blog))):
+
+    print(df_blog["Post Title"][i])
+
+    image_id = str(df_blog["Post Image"][i]).split('=')[1]
+    image_filename = f'image_{i}.jpeg'
     
-    photo_url = "https://drive.google.com/uc?export=download&id=" + str(df_blog["Post Image"][i]).split('=')[1]
+    if not os.path.exists(image_filename): 
+
+	    download_image(image_id, image_filename)
+
+	    compress_image(image_filename)
+
+    photo_url = image_path + "compressed_" + image_filename  # use compressed image
+
+    source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i][:800]) + blog_foot 
     
-    source_blog += blog.substitute(i = i, title=df_blog["Post Title"][i],image=photo_url,content=df_blog["Post Text"][i][:800]) + blog_foot 
+source_blog    += 6*"<br>" +foot
 
-
-source_blog    += "<br><br><br><br><br><br>" +foot
-
-            
 print(source_blog,    file=open(site_path + "blog-1.html",    'w'))
 print(source_blog,    file=open(site_path + "index.html",    'w'))
-
-
 
 #####################################################################################
 #####################################################################################
@@ -148,11 +175,13 @@ function generateNavigation() {{
     }} else {{
         nextPage = baseURL + "blog" + nextPageNumber + ".html";
     }}
-    let firstPage = baseURL + "blog-1.html";
-    let lastPage = baseURL + "blog" + {last} + ".html"; 
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + {last} + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
 
     let navigationHTML = `
         <br><br><br><center><nav>
+            <a href="${{indexPage}}" class="index">Index</a>  |
             <a href="${{firstPage}}" class="first">First</a>  |  
             <a href="${{prevPage}}" class="previous">Previous</a>  |  
             <a href="${{nextPage}}" class="next">Next</a>  | 
@@ -173,25 +202,36 @@ generateNavigation();
 </html>'''
 
 
+
 for i in range(len(df_blog)):
+
+    source_blog = head
 
     print(df_blog["Post Title"][i])
 
-    source_blog = head 
-        
-    photo_url = "https://drive.google.com/uc?export=download&id=" + str(df_blog["Post Image"][i]).split('=')[1]
+    image_id = str(df_blog["Post Image"][i]).split('=')[1]
     
-    source_blog += blog.substitute(title=df_blog["Post Title"][i],image=photo_url,content=df_blog["Post Text"][i]) + blog_foot 
+    image_filename = f'image_{i}.jpeg'  # systematic filename
 
-    source_blog    += "<br><br><br>" + foot
-        
+    photo_url = image_path + "compressed_" + image_filename  # use compressed image
+
+    source_blog += blog.substitute(title=df_blog["Post Title"][i], image=photo_url, content=df_blog["Post Text"][i]) + blog_foot
+    
+    source_blog    += 3*"<br>" + foot 
+    
     print(source_blog,    file=open(site_path + f"blog{i}.html",    'w'))
-
     
 #####################################################################################
     
+    
+    
+    
+#####################################################################################
+# Push to GitHub
+#####################################################################################    
 os.chdir(site_path)    
-os.system("git add . ")  
+os.system("git add . ")
+os.system("git add .. ")    
 os.system("git commit -m 'update'")  
 os.system("git push origin main ")    
     
