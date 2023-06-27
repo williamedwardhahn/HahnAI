@@ -10,6 +10,7 @@
             width: 200px;
             height: 200px;
             border-radius: 5px;
+            cursor: pointer;
         }
     </style>
     <script>
@@ -934,6 +935,18 @@ zinnwaldite_brown,"Zinnwaldite Brown",#2c1608,44,22,8`;
                     }
                     else messageElement.innerText = 'Incorrect!';
                     break;
+            }
+        });
+
+        // Touch events
+        document.getElementById('colorOptions').addEventListener('click', function(e) {
+            let messageElement = document.getElementById('message');
+            let index = Array.from(this.children).indexOf(e.target);
+            if(index === correctIndex) {
+                messageElement.innerText = 'Correct!';
+                newColor();
+            } else {
+                messageElement.innerText = 'Incorrect!';
             }
         });
     </script>
