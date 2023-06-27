@@ -937,6 +937,17 @@ zinnwaldite_brown,"Zinnwaldite Brown",#2c1608,44,22,8`;
                     break;
             }
         });
+
+        // Touch events
+        document.getElementById('colorOptions').addEventListener('click', function(e) {
+            let messageElement = document.getElementById('message');
+            let index = Array.from(this.children).indexOf(e.target);
+            if(index === correctIndex) {
+                messageElement.innerText = 'Correct!';
+                newColor();
+            }
+            else messageElement.innerText = 'Incorrect!';
+        });
     </script>
 </body>
 </html>
