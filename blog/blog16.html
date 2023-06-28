@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>Bits with Bite: When Power Meets Computation</h4>
+<p><span class="image left"><img src="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/compressed_image_16.jpeg" alt="" /></span>Typically, when we consider computation, we focus on the number crunching, the logic gates and the nanosecond operations of our devices. But what happens when we blur the boundaries and consider the energy associated with our computations? From a Wi-Fi router to a gargantuan powerplant, all involve a degree of computation, but the energy they consume varies wildly. With increasing interest in low-power, green devices, it's intriguing to consider the flip side of the equation. This brings us to the revolutionary concept of "bits with bite" where computer chips are not just measured in volts, but in megavolts and gigavolts. This is the frontier where computation meets power on an unprecedented scale.<br><br>
+
+<b>The Energy-Computation Divide</b><br><br>
+
+The divide between energy and computation has been long established. A power plant may run on a relatively simple circuit but operates with enormous quantities of energy. Conversely, an iPhone, a high-computation device, carries out billions of calculations per second, but with minimal energy consumption. This dichotomy has been a foundation of our technological progress, but what if we broke down this barrier?<br><br>
+
+<b>The Confluence of Power and Computation</b><br><br>
+
+The concept of "bits with bite" challenges the conventional wisdom by integrating power and computation. Here, the operations carried out by computer chips are not only measured in terms of their logic capacity but also the sheer amount of energy involved. This intriguing blend of high-power operations and advanced computing could be the key to a new generation of technology.<br><br>
+
+<b>When Wi-Fi Meets Tesla Coils</b><br><br>
+
+To delve into this idea, let's imagine an unprecedented merger - Wi-Fi and Tesla coils. A Tesla coil, as a high-voltage transformer circuit, has a remarkably different function than a Wi-Fi router. Yet, combining them under the paradigm of "bits with bite" creates new possibilities for power transmission and data processing. Such an amalgamation would harness the power capacity of the Tesla coil with the computing capability of Wi-Fi technology. This could open up novel ways to transmit energy, data, or even both simultaneously, through the same channel.<br><br>
+
+<b>Powering Up Advanced Technologies</b><br><br>
+
+As we venture into the realm of advanced technologies such as nuclear fusion or quantum computing, power and computation are becoming increasingly intertwined. For example, harnessing nuclear fusion for practical use requires not just extraordinary amounts of power, but also complex computations to control and optimize the process. In such scenarios, high-powered computing in the form of "bits with bite" becomes indispensable.<br><br>
+
+<b>Final Thoughts</b><br><br>
+
+The idea of "bits with bite", where computation and power intertwine, could revolutionize our approach to technology. It challenges our understanding of the separation between energy and computation, blending them in ways we are just beginning to explore. As we strive for sustainable and advanced technologies, we must consider this fusion of power and computation not as opposite ends of a spectrum, but as integral elements of a unified whole. A future where your device isn't just smart, but also powerful in a literal sense, might not be as far-fetched as it seems.
+</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 16) {
+        nextPage = baseURL + "blog" + 16 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + 16 + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${indexPage}" class="index">Index</a>  |
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
