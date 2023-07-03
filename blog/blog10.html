@@ -90,13 +90,13 @@ function generateNavigation() {
     let nextPage;
     
     let prevPage = baseURL + "blog" + prevPageNumber + ".html";
-    if (nextPageNumber > 20) {
-        nextPage = baseURL + "blog" + 20 + ".html";
+    if (nextPageNumber > 21) {
+        nextPage = baseURL + "blog" + 21 + ".html";
     } else {
         nextPage = baseURL + "blog" + nextPageNumber + ".html";
     }
     let firstPage = baseURL + "blog0.html";
-    let lastPage  = baseURL + "blog" + 20 + ".html";
+    let lastPage  = baseURL + "blog" + 21 + ".html";
     let indexPage = baseURL + "blog-1.html"; 
 
     let navigationHTML = `
