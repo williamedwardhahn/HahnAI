@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>The Invisible Civilizations: Discovering Our Technological Co-Inhabitants</h4>
+<p><span class="image left"><img src="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/compressed_image_22.jpeg" alt="" /></span>As humans, we pride ourselves on the power of our knowledge. We assert that we are rational creatures, constantly seeking out the intricacies of the universe, and delighting in the mastery of technology, information, and facts. But, in a recent mind-bending revelation from an unlikely source, our perception of the world and our place within it has been challenged, and surprisingly, it has nothing to do with the shape of our planet.<br><br>
+
+The Flat Earth community, often mocked for their views on Earth's geometry, has stumbled upon a revelation that has the potential to reshape our understanding of human civilization. Strangely enough, this has nothing to do with their traditional theories about the shape of Earth. Instead, they've discovered the existence of multiple, invisible technological civilizations cohabiting our planet.<br><br>
+
+<b>A World Not So Round After All</b><br><br>
+
+The fascinating concept they've unearthed is not that these civilizations are hidden in the traditional sense. These are not alien societies living in the depths of the ocean or tucked away in the heart of unexplored jungles. Instead, they are all around us, interwoven with our daily lives, yet still completely invisible to most of us.<br><br>
+
+The metaphorical civilizations they refer to are the various fields of complex technology and science that govern our modern world - fields like computer science, quantum physics, genetics, and artificial intelligence. Despite the profound influence these fields have on our lives, most of us have little understanding of them. We may know they exist and appreciate their impact, but the specifics of their workings are alien to us.<br><br>
+
+<b>Lost In Translation</b><br><br>
+
+Most Greeks, as early as 500 BC, knew the Earth was round. They had a fair grasp of the fundamental laws governing their world. Today, however, we are surrounded by phenomena that we don't comprehend at a basic level. Do you know how the internet works? How about the inner workings of the microchips powering your digital devices?<br><br>
+
+Many of us don't. Instead, we have become comfortable with the magic of technology, living in a world powered by mysterious forces we don't understand. We have, in a sense, created invisible civilizations of knowledge, populated by experts who speak languages of code, data, and equations that the majority of us can't comprehend.<br><br>
+
+<b>The Shape of Our Knowledge</b><br><br>
+
+What the Flat Earth community has uncovered is a chasm in our collective understanding. We've built our society on the advances of various technological civilizations, each working in their specific domains. We interact with their creations every day, yet we have no idea about the "shape" of these civilizations.<br><br>
+
+Not only do we not understand them, but we don't even know anyone who does. We're a part of a vast global network, yet we're oblivious to the civilizations of technology that make it all possible. We assume that we're part of a single, unified global civilization, but the reality is we're more like archipelagos of understanding in an ocean of ignorance.<br><br>
+
+The ironic parallel is not lost on us - just as the Flat Earth community is often derided for their lack of understanding of our planet's shape, so too are we all, to varying degrees, 'flat earthers' when it comes to the technological civilizations we cohabit with.<br><br>
+
+<b>A Call To Explore</b><br><br>
+
+This discovery should serve as a wake-up call. It's time for us to leave our comfortable ignorance behind and embark on a journey of discovery. We need to explore these technological civilizations, not just to broaden our personal horizons, but also to ensure that our society doesn't become completely reliant on a select few who understand these worlds.<br><br>
+
+In the end, the Flat Earth community may not have changed our view of our planet's shape, but they've definitely highlighted the spherical nature of our ignorance. And in doing so, they've made us realize that the world is still ripe for exploration - not just the physical world, but the world of knowledge that makes up our modern civilization.</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 22) {
+        nextPage = baseURL + "blog" + 22 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + 22 + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${indexPage}" class="index">Index</a>  |
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
