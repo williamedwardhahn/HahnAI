@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>A Classic Prescient Vision: 'World on a Wire' and Its Influence on Modern Science Fiction</h4>
+<p><span class="image left"><img src="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/compressed_image_24.jpeg" alt="" /></span>Decades before we became familiar with the concept of living in a simulation, the concept was vividly portrayed in the intriguing 1973 German science fiction film "World on a Wire" (original title: "Welt am Draht").<br><br>
+
+<b>The Plot:</b>
+
+The story unfolds in a high-tech company where a supercomputer hosts a city populated with 9,000 "identity units" - simulated beings who live, work, and are unaware of their virtual existence. When the director of the program mysteriously dies, his successor, Dr. Fred Stiller, begins to unravel the existential nightmare that they have created. As the reality around him becomes increasingly uncertain, Stiller must grapple with the fear that he might also be a simulated being within a higher-level simulation.<br><br>
+
+<b>A Visionary Concept:</b>
+
+For its time, "World on a Wire" was revolutionary. It broached themes and concepts that have since been explored in movies like "The Matrix," "Inception," and series like HBO's "Westworld." The idea that we might all be living in a computer simulation has become a common trope, but back in 1973, it was a bold and visionary concept. "World on a Wire" dove headfirst into this novel idea and explored questions of identity, consciousness, and the nature of reality that science fiction has been grappling with ever since.<br><br>
+
+<b>Influence and Legacy:</b>
+
+What makes "World on a Wire" particularly influential is its intellectual rigor. It is not just a sci-fi thriller but a philosophical treatise that uses the science fiction genre to explore deep questions about the nature of reality. It has set the stage for many other films, such as "Blade Runner," to use the genre for a similar purpose.
+
+Stylistically, Fassbinder's film is also a precursor to modern cyberpunk aesthetics, with its vision of a future dominated by corporations and technology. Its blend of film noir and science fiction aesthetics can be seen in later works such as Ridley Scott's "Blade Runner" and the Wachowski's "The Matrix".<br><br>
+
+While the technological aspects of the film might seem dated by today's standards, its philosophical underpinnings are more relevant than ever. As we delve deeper into the world of virtual reality and artificial intelligence, the questions posed by "World on a Wire" - about identity, consciousness, and what it means to be human - have become even more pertinent.<br><br>
+
+<b>Rediscovery:</b>
+
+Despite its significance, "World on a Wire" was largely forgotten for many years, likely due to its initial release as a made-for-television movie. It was only in 2010, following a digital restoration and re-release, that it was rediscovered by a broader audience and recognized for its visionary power.<br><br>
+
+<b>Final Thoughts:</b>
+
+"World on a Wire" may not have the cultural recognition of "The Matrix" or "Blade Runner", but its influence on science fiction is undeniable. By daring to ask tough questions about reality, consciousness, and technology, it has left a lasting legacy on the genre. For anyone with an interest in science fiction or philosophy, "World on a Wire" is essential viewing - a classic that is both a product of its time and far ahead of it.</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 24) {
+        nextPage = baseURL + "blog" + 24 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + 24 + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${indexPage}" class="index">Index</a>  |
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
