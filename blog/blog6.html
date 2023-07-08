@@ -73,13 +73,13 @@ function generateNavigation() {
     let nextPage;
     
     let prevPage = baseURL + "blog" + prevPageNumber + ".html";
-    if (nextPageNumber > 32) {
-        nextPage = baseURL + "blog" + 32 + ".html";
+    if (nextPageNumber > 33) {
+        nextPage = baseURL + "blog" + 33 + ".html";
     } else {
         nextPage = baseURL + "blog" + nextPageNumber + ".html";
     }
     let firstPage = baseURL + "blog0.html";
-    let lastPage  = baseURL + "blog" + 32 + ".html";
+    let lastPage  = baseURL + "blog" + 33 + ".html";
     let indexPage = baseURL + "blog-1.html"; 
 
     let navigationHTML = `
