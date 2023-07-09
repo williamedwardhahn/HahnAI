@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>The AI John Henry: What We Get Wrong About Artificial Intelligence</h4>
+<p><span class="image left"><img src="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/compressed_image_34.jpeg" alt="" /></span>In the folklore of America, the character of John Henry stands tall, hammer in hand, the embodiment of human grit and determination. Henry, a steel-driving man, competed against a steam-powered machine in a contest of strength and endurance. Despite his victory, Henry's story ended in tragedy, his life given in the name of human prowess. Today, we find ourselves in a similar race, not with steel-driving machines but with artificial intelligence (AI). However, we may be miscalculating our comparisons - and understanding this miscalibration is critical.<br><br>
+<b>The Fault in Our Comparisons</b><br><br>
+Let's take chess and Go as examples - two ancient board games that have become symbolic battlefields for humans and AI. Deep Blue defeated chess grandmaster Garry Kasparov in 1997, while AlphaGo triumphed over Go champion Lee Sedol in 2016. These AI victories sent shockwaves around the world, leading many to question whether these were signs of the impending AI 'doomsday'. But here's where we falter: we're not comparing like with like.<br><br>
+When we measure AI against the very best of humanity, we're missing a fundamental point. The majority of humans do not even know how to play chess or Go, let alone compete at the grandmaster level. Our comparisons should not be made against the upper echelons of human talent, but rather against the average individual.<br><br>
+<b>AI’s Skill Level and Pace of Improvement</b><br><br>
+Looking at AI's skills and improvement rate, the difference becomes even more glaring. Large Language Models (LLMs) like OpenAI’s GPT-4 can already program in two dozen different computer languages. In contrast, less than half of 1 percent of the global human population can program at all. From this perspective, AI's capabilities already surpass that of the vast majority of humans.<br><br>
+In terms of pace, AI improvement is exponential. Each new model we develop is faster, more efficient, and more knowledgeable than the last, capable of learning and integrating new information at a rate that is simply impossible for a human. The technology behind these AI advancements is evolving rapidly, whereas human evolution on a genetic level takes millennia.<br><br>
+<b>The AI Challenge: Where We Stand</b><br><br>
+The current AI challenge isn’t about replicating the absolute pinnacle of human skill and creativity; it's about matching and exceeding the capabilities of an average person in a wide array of tasks. In many respects, we're already there. AI can translate languages, recommend products, diagnose diseases, and write code more accurately and faster than most humans.<br><br>
+In our quest for AI supremacy, we should take a lesson from John Henry’s tale. It's not about individual races or battles, but the broader trend of technology advancement. The comparison should not be AI versus the top echelons of human achievement, but AI versus the broad swath of humanity. If we understand this, we'll be better equipped to shape AI's trajectory in a way that augments human potential rather than supplants it.<br><br>
+Our misinterpretations about AI's capabilities and development pace may lead to unnecessary fear and resistance. Instead, let's channel our energy towards constructive dialogue about the ethical implications of AI, the potential for job displacement, and how we can best integrate this remarkable technology into our society.<br><br>
+Like John Henry, we face a formidable adversary. But unlike Henry, we have the chance to change the narrative, to ensure that the rise of AI doesn't end in a human tragedy but leads to a future where man and machine work together, each enhancing the other’s capabilities for a more prosperous world.</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 34) {
+        nextPage = baseURL + "blog" + 34 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + 34 + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${indexPage}" class="index">Index</a>  |
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
