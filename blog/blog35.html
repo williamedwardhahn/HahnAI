@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>Decoding Mathematics: From Hilbert's Dream to Turing's Machine</h4>
+<p><span class="image left"><img src="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/compressed_image_35.jpeg" alt="" /></span>Mathematics, often perceived as the definitive realm of absolute truths, has been facing an existential crisis for the past few decades. The objective clarity that once defined mathematics is now being upended by the challenges of distinguishing right from wrong within its abstract sphere. This is a subject that has captivated mathematicians since the early 20th century, leading to groundbreaking research and even birthing a new realm of mathematics.<br><br>
+A notable contribution to this puzzle was made by the duo of Bertrand Russell and Alfred North Whitehead, whose monumental work, <b>"Principia Mathematica,"</b> aimed to simplify mathematical concepts by breaking them down into smaller, logical pieces. Their ambitious endeavor, while falling short of completely demystifying mathematics, had a profound influence on the field, laying groundwork that inspired mathematicians like David Hilbert and Kurt Gödel.<br><br>
+Hilbert, an influential mathematician whose name remains rather unfamiliar to most, further refined Russell's pursuit by proposing three foundational requirements for a comprehensive mathematical system: consistency, completeness, and decidability. He believed that a robust mathematical system must never contradict itself, must offer proof for every true statement, and must possess a defined method to determine whether an assertion is provable.<br><br>
+Yet Gödel, another towering figure in mathematics, challenged Hilbert's hypothesis, proving that no mathematical system can simultaneously achieve consistency and completeness. This stunning revelation was articulated through <b>Gödel's incompleteness theorem</b>, an ingenious paradox stating, in essence, that an assertion declaring itself unprovable could indeed be true but unprovable, revealing the system as incomplete, or false and provable, therefore making the system inconsistent.<br><br>
+This pivotal insight into the foundation of mathematics marked a significant turn, indicating that mathematics is either inconsistent or incomplete—a beautifully confounding theory that revolutionizes our understanding of the field.<br><br>
+Yet the question of decidability—the ability to definitively determine the provability of a mathematical statement—remained unresolved. That is until a young British mathematician named Alan Turing entered the scene.<br><br>
+In his paper <b>"On Computable Numbers,"</b> Turing proposed a revolutionary concept aimed at settling Hilbert's "Entscheidungsproblem" or decision problem. Turing suggested that no single method could address all mathematical problems, which would require an infinite supply of fresh ideas. However, to prove this theory, he had to scrutinize the provability of mathematical assertions, an herculean task that eventually led him to a profound insight—mechanization.<br><br>
+The word 'machine' inspired Turing to imagine a device that could mechanically scan mathematical symbols, read mathematical assertions, and decide whether or not they were provable—thus, the conception of the famous <b>"Turing Machine."</b> This theoretical machine became a fundamental tool in the field of computation and demonstrated that Hilbert's requirements for a mathematical system could not all be satisfied simultaneously.<br><br>
+Turing's innovative approach transformed the perception of mathematics and laid the foundation for the modern world of computation. It is a vivid testament to the ever-evolving and multi-faceted nature of mathematics—a realm that not only unravels the mysteries of numbers but also poses profound questions about the very nature of truth and provability.
+</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 35) {
+        nextPage = baseURL + "blog" + 35 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + 35 + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${indexPage}" class="index">Index</a>  |
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
