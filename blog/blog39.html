@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>Programming vs. Traditional Mathematics: The Reign of the Algorithm</h4>
+<p><span class="image left"><img src="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/compressed_image_39.jpeg" alt="" /></span>In the modern era, where technology reigns supreme, a new kind of mathematical object has emerged as the most vital: the algorithm. It is a shift that is revolutionizing our understanding of mathematics and promises to shape our world in ways that Newton and Leibniz could only dream of. The question then arises: How do traditional mathematics and programming relate to this shift, and what could the future of mathematics look like?<br><br>
+<b>Newton, Leibniz, and the Birth of Notation</b><br><br>
+Newton and Leibniz, the co-creators of calculus, brought about a radical transformation in mathematical thought. They introduced a new language of notation, creating an effective 'user interface' to mathematical thinking. This new system of notation became the springboard for the leaps and bounds of mathematical progress that followed, powering the scientific revolution and the birth of modern physics.<br><br>
+However, these notation systems, as powerful as they were, remained confined within the boundaries of paper and pen. Their static and linear nature limited the extent of mathematical expression. The pursuit of solving complex mathematical problems required a new kind of language - one that could handle the rigors and complexity that traditional mathematics could not.<br><br>
+<b>The Advent of Programming Languages</b><br><br>
+Enter programming languages. Initially, these languages were merely tools for executing instructions on a computer. But as these languages evolved, so too did their capabilities. They began to serve not only as a means to instruct computers but also as a powerful language for expressing complex mathematical ideas.<br><br>
+Languages such as Python have provided an unprecedented level of flexibility and versatility. They allow for the manipulation of vast data sets, complex iterative processes, and recursive functions with a level of simplicity that traditional notation can't match. They are dynamic, adaptable, and multi-dimensional, capable of dealing with the non-linear, the random, and the chaotic - characteristics often present in real-world data.<br><br>
+The simplicity of these languages also provides a better user interface for mathematical thinking. Traditional notation, while elegant, can be daunting to the uninitiated. Programming languages, however, are more approachable and intuitive. They are designed with human users in mind, offering a more accessible entry point to mathematical thinking.<br><br>
+<b>Deep Learning and the AI Revolution</b><br><br>
+The transformative power of programming languages is most evident in the field of artificial intelligence (AI), particularly in deep learning. Deep learning algorithms, constructed using high-level programming languages, are capable of tasks that would have been unimaginable with traditional mathematical techniques.<br><br>
+Deep learning algorithms are akin to a multi-layered labyrinth, with data flowing through a series of interconnected nodes, each performing a mathematical operation. These layers can self-adjust, tuning their internal parameters based on feedback. This dynamic and adaptable nature makes deep learning the ideal tool for dealing with the messy, non-linear data of the real world. In essence, these algorithms have allowed us to distil mathematical wisdom into a form that computers can understand and learn from.<br><br>
+<b>The Future of Mathematics</b><br><br>
+So, what will the future of mathematics look like? It is likely to be a world where algorithms are the most significant mathematical objects, and programming languages become the universal language of mathematics. These languages will continue to evolve, becoming ever more sophisticated and powerful, and will be used to solve increasingly complex mathematical problems.<br><br>
+We might see the creation of new, higher-level languages specifically designed for mathematical thinking. These languages could incorporate the best elements of traditional notation while harnessing the power of computer programming. They could be intuitive and user-friendly, minimizing the learning curve while maximizing expressive power.<br><br>
+The boundary between mathematics and computer science will likely blur further, perhaps to the point of indistinction. Mathematics will no longer be confined to the realm of the abstract but will become increasingly applied and practical, driven by the requirements of fields like AI, data science, and quantum computing.<br><br>
+The algorithm's reign has only just begun. We stand at the precipice of a new era in mathematical thinking. The possibilities are as vast and unexplored as the cosmos that Newton and Leibniz sought to understand. With these new tools in our mathematical arsenal, who knows what heights we might reach?</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 40) {
+        nextPage = baseURL + "blog" + 40 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + 40 + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${indexPage}" class="index">Index</a>  |
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
