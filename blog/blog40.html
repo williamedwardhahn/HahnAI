@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>Rolling the AI Dice: How Random Inputs Drive AI, And How It Mirrors Ancient Divination Techniques</h4>
+<p><span class="image left"><img src="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/compressed_image_40.jpeg" alt="" /></span>It's not easy to imagine that the complex world of artificial intelligence (AI) can share anything in common with ancient techniques of divination such as augury, haruspicy, and anthropomancy. And yet, they do. The bridge between these vastly different practices is the concept of randomness. <br><br>
+<b>The Language of Chance: How AI Uses Randomness</b>
+Artificial intelligence systems, especially Generative Adversarial Networks (GANs) and similar technologies, make extensive use of random inputs to function. These systems typically generate new outputs - like images, text, or other data types - by learning from large databases of information. Here's where the randomness comes in: to kickstart the generation process, these systems often need a random seed or starting point. This could be a random number or a random set of numbers, but it provides a starting point that influences the final result. <br><br>
+These random seeds act as catalysts for creativity in AI, stirring up the pot of possibilities. For example, in a GAN trained to generate images of cats, a random input can determine the unique features of the image generated, like the color of the cat, its breed, or its posture. Despite the large array of possibilities, the system still adheres to the "catness" it learned from the data. This dance between the unexpected and the structured forms the essence of these AI systems. <br><br>
+<b>Augury, Haruspicy, Anthropomancy: The Ancient Algorithms</b>
+Augury, haruspicy, and anthropomancy were methods of divination used by ancient civilizations. Augurs would interpret omens from the behavior of birds, haruspices would read animal entrails, and anthropomancers would divine from human entrails. Though these practices may seem distant and arcane, at their core, they also revolved around interpreting random inputs. <br><br>
+Just as a GAN might generate a unique cat image based on a random input, so an augur might interpret the future based on the random flight pattern of a bird. Though the information source was far less controlled than a dataset, the diviners were, in essence, applying learned patterns to random inputs. Of course, the key difference is that AI is based on statistical learning and verifiable patterns, while ancient divination relied heavily on subjective interpretation and cultural narratives. <br><br>
+<b>AI and Divination: A Fascinating Confluence</b>
+The shared thread between AI and ancient divination practices is the leveraging of randomness within a structured framework to generate new information or insights. This isn't to say AI is a mystical practice - far from it. But the comparison helps us understand the role of randomness in sophisticated machine learning processes and how it sparks creativity and novelty within the bounds of learned patterns. <br><br>
+So next time you see an AI artwork, a predictive text, or a generative music piece, remember: you're witnessing a complex interaction between randomness and structure. And in that dance, you might just catch a fleeting glimpse of ancient augurs, haruspices, and anthropomancers, interpreting the future from the flights of birds and the entrails of beasts. After all, we've always sought to make sense of the world - and the future - in the patterns around us, no matter how random they may seem.</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 40) {
+        nextPage = baseURL + "blog" + 40 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + 40 + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${indexPage}" class="index">Index</a>  |
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
