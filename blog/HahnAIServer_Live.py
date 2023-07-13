@@ -53,44 +53,6 @@ head = '''<!DOCTYPE HTML>
   gtag('config', 'G-ZDVLMSSQ0M');
 </script>
 
-
-<title>Hahn AI</title>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="assets/css/main.css" />
-</head>
-<body>
-<header id="header">
-<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
-</header>
-'''
-
-
-
-blog = '''
-<section id="main">
-<div class="inner">
-<a href = 'blog$i.html'><h4>$title</h4></a>
-<p><span class="image left"><a href = 'blog$i.html'><img src="$image" alt="" /></a> </span>$content <a href = 'blog$i.html'>...Read More</a></p>
-'''
-
-blog_foot = '''				
-</div>
-</section>
-<br>
-'''
-
-foot = '''
-<footer id="footer">
-<div class="copyright">
-&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
-</div>
-</footer>
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/jquery.scrolly.min.js"></script>
-<script src="assets/js/skel.min.js"></script>
-<script src="assets/js/util.js"></script>
-<script src="assets/js/main.js"></script>
 <script>
 function generateNavigation() {
     let currentURL = window.location.href;
@@ -131,6 +93,44 @@ function generateNavigation() {
 // Call the function here
 generateNavigation();
 </script>
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+'''
+
+
+
+blog = '''
+<section id="main">
+<div class="inner">
+<a href = 'blog$i.html'><h4>$title</h4></a>
+<p><span class="image left"><a href = 'blog$i.html'><img src="$image" alt="" /></a> </span>$content <a href = 'blog$i.html'>...Read More</a></p>
+'''
+
+blog_foot = '''				
+</div>
+</section>
+<br>
+'''
+
+foot = '''
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
 </body>
 </html>'''
 
