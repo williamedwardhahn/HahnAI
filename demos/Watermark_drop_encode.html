@@ -177,49 +177,55 @@ function showMixedImage(file1, file2) {
 	var reader1 = new FileReader();
 	var reader2 = new FileReader();
 
-	reader1.onload = function(e) {
-		image1.src = e.target.result;
-	}
+	Promise.all([
+		new Promise((resolve, reject) => {
+			reader1.onload = e => {
+				image1.src = e.target.result;
+				image1.onload = resolve;
+			}
+			reader1.onerror = reject;
+			reader1.readAsDataURL(file1);
+		}),
+		new Promise((resolve, reject) => {
+			reader2.onload = e => {
+				image2.src = e.target.result;
+				image2.onload = resolve;
+			}
+			reader2.onerror = reject;
+			reader2.readAsDataURL(file2);
+		})
+	]).then(() => {
+		canvas.width = image1.width;
+		canvas.height = image1.height;
+		ctx.drawImage(image1, 0, 0);
+		var imageData1 = ctx.getImageData(0, 0, canvas.width, canvas.height);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.drawImage(image2, 0, 0);
+		var imageData2 = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-	reader2.onload = function(e) {
-		image2.src = e.target.result;
-	}
+		var mixedImageData = mixImages(imageData1, imageData2);
+		ctx.putImageData(mixedImageData, 0, 0);
+		var imgView = document.createElement("div");
+		imgView.className = "image-view";
+		mixedPreviewRegion.appendChild(imgView);
+		var img = document.createElement("img");
+		imgView.appendChild(img);
+		img.src = canvas.toDataURL("image/png");
 
-	reader1.readAsDataURL(file1);
-	reader2.readAsDataURL(file2);
-
-	image1.onload = function() {
-		image2.onload = function() {
-			canvas.width = image1.width;
-			canvas.height = image1.height;
-			ctx.drawImage(image1, 0, 0);
-			var imageData1 = ctx.getImageData(0, 0, canvas.width, canvas.height);
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(image2, 0, 0);
-			var imageData2 = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-			var mixedImageData = mixImages(imageData1, imageData2);
-			ctx.putImageData(mixedImageData, 0, 0);
-			var imgView = document.createElement("div");
-			imgView.className = "image-view";
-			mixedPreviewRegion.appendChild(imgView);
-			var img = document.createElement("img");
-			imgView.appendChild(img);
-			img.src = canvas.toDataURL("image/png");
-
-			var unmixedImageData = unmixImage(mixedImageData, imageData1);
-			ctx.putImageData(unmixedImageData, 0, 0);
-			var imgViewUnmix = document.createElement("div");
-			imgViewUnmix.className = "image-view";
-			unmixedPreviewRegion.appendChild(imgViewUnmix);
-			var imgUnmix = document.createElement("img");
-			imgViewUnmix.appendChild(imgUnmix);
-			imgUnmix.src = canvas.toDataURL("image/png");
-		}
-	}
-
-	image1.src = reader1.result;
+		var unmixedImageData = unmixImage(mixedImageData, imageData1);
+		ctx.putImageData(unmixedImageData, 0, 0);
+		var imgViewUnmix = document.createElement("div");
+		imgViewUnmix.className = "image-view";
+		unmixedPreviewRegion.appendChild(imgViewUnmix);
+		var imgUnmix = document.createElement("img");
+		imgViewUnmix.appendChild(imgUnmix);
+		imgUnmix.src = canvas.toDataURL("image/png");
+	}).catch(e => {
+		console.error(e);
+		alert('Error loading images');
+	});
 }
+
 
 var fac = 4; // Set this value to control the level of mixing/unmixing
 
