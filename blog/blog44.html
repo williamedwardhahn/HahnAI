@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZDVLMSSQ0M');
+</script>
+
+
+<title>Hahn AI</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/css/main.css" />
+</head>
+<body>
+<header id="header">
+<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
+</header>
+
+<section id="main">
+<div class="inner">
+<h4>Deep Fakes: A Double-Edged Sword in Criminal Investigations</h4>
+<p><span class="image left"><img src="https://raw.githubusercontent.com/williamedwardhahn/HahnAI/main/blog/compressed_image_44.jpeg" alt="" /></span><br><br>In the golden age of technology, where the frontier between reality and illusion is increasingly blurred, a new player has emerged on the scene: deep fakes. These highly realistic computer-generated images and videos have evolved into a substantial concern, not only for the potential misrepresentation of individuals but also for the potential derailment of criminal justice.
+<b>The Illusion of Crime: Framing Innocents</b>
+<br><br>Deep fakes have become infamously renowned for their ability to fabricate audio and visual content that's nearly indistinguishable from the real thing. Using advanced machine learning algorithms, creators can replace one person's likeness and voice with another's. As a result, they can falsely implicate individuals in crimes they did not commit. These falsifications not only tarnish reputations but can potentially lead to wrongful convictions.
+<br><br>While this risk to personal reputation is alarming, there is a more sinister and complex problem arising from the same technology.
+<b>A More Alarming Threat: Plausible Deniability for Heinous Crimes</b>
+<br><br>Imagine a scenario where there is indisputable evidence of a grave crime - be it child exploitation, terrorism, or cold-blooded murder. The existence of deep fake technology now provides a dark path for those accused, enabling them to argue that the evidence is fabricated.
+<br><br>This defense has the potential to create reasonable doubt in a courtroom, even when the evidence is genuine. It's a chilling thought, where the very technology that can falsely incriminate innocent people can also serve as a shield for those truly guilty of committing horrifying crimes.
+<b>A Distorted Justice System: The Greater Danger</b>
+<br><br>The dilemma posed by deep fakes is not just about damage to reputation or an unjustified arrest; it goes deeper, unraveling the very threads that hold our justice system together. If genuine evidence can be dismissed as a deep fake, it becomes nearly impossible to convict perpetrators of serious crimes. The fear is not hypothetical; it's a tangible threat that can allow the guilty to walk free and continue to harm society.
+<br><br>The legal system will need to adapt and find ways to validate authentic evidence, distinguishing it from deep fake content. This may include developing new forensic techniques, implementing stringent regulations, and enhancing collaboration between tech experts and legal professionals.
+<b>Conclusion</b>
+<br><br>The advent of deep fake technology presents a nuanced challenge to society. While the potential to inflict personal reputations is significant, the more severe danger lies in its ability to obstruct justice for heinous crimes.
+<br><br>As we stand on the precipice of a technological revolution, it is our collective responsibility to ensure that innovation doesn't outpace morality. By understanding the dual-threat posed by deep fakes and working diligently to combat it, we can strive to preserve the integrity of our justice system in this digital age.
+</p>
+				
+</div>
+</section>
+<br>
+<br><br><br>
+<footer id="footer">
+<div class="copyright">
+&copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>.
+</div>
+</footer>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+function generateNavigation() {
+    let currentURL = window.location.href;
+    let baseURL = currentURL.substring(0, currentURL.lastIndexOf("/") + 1);
+    let currentPage = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+    let currentPageNumber = parseInt(currentPage.replace(/\D/g,''));
+
+    let prevPageNumber = currentPageNumber - 1;
+    let nextPageNumber = currentPageNumber + 1;
+    let nextPage;
+    
+    let prevPage = baseURL + "blog" + prevPageNumber + ".html";
+    if (nextPageNumber > 44) {
+        nextPage = baseURL + "blog" + 44 + ".html";
+    } else {
+        nextPage = baseURL + "blog" + nextPageNumber + ".html";
+    }
+    let firstPage = baseURL + "blog0.html";
+    let lastPage  = baseURL + "blog" + 44 + ".html";
+    let indexPage = baseURL + "blog-1.html"; 
+
+    let navigationHTML = `
+        <br><br><br><center><nav>
+            <a href="${indexPage}" class="index">Index</a>  |
+            <a href="${firstPage}" class="first">First</a>  |  
+            <a href="${prevPage}" class="previous">Previous</a>  |  
+            <a href="${nextPage}" class="next">Next</a>  | 
+            <a href="${lastPage}" class="last">Last</a>
+        </nav></center>
+    `;
+
+    // Add the navigation to the end of each section
+    let sections = document.getElementsByTagName('section');
+    
+    sections[0].innerHTML += navigationHTML;
+    
+}
+// Call the function here
+generateNavigation();
+</script>
+</body>
+</html>
