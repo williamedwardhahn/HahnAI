@@ -1,31 +1,5 @@
-
-	<!DOCTYPE HTML>
-	<html>
-	<head>
-	<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
-	<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
-	
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script> 
-	<script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-ZDVLMSSQ0M');</script>
-
-	<title>Hahn AI</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	
-	
-	<body>
-	<header id="header">
-	<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
-	</header>
-
-	<section id="main">
-	<div class="inner">
-	<h4><b>Breathe New Life into Old Circuits: The Rise of Analog AI</b><br><br></h4>
-	<p>
-	<span class="image left"><img src="1/compressed_image8936453.jpg" alt="" /></span>
-	Are we watching a tech revolution start within the once-seemingly obsolete world of analog computing? As we hurtle forward, but also simultaneously hark back, this paradox might just be the latest vanguard in artificial intelligence (AI) technology. Welcome to the captivating realm of Analog AI.<br><br>
+<b>Breathe New Life into Old Circuits: The Rise of Analog AI</b><br><br>
+Are we watching a tech revolution start within the once-seemingly obsolete world of analog computing? As we hurtle forward, but also simultaneously hark back, this paradox might just be the latest vanguard in artificial intelligence (AI) technology. Welcome to the captivating realm of Analog AI.<br><br>
 
 <b>Back to Basics: The Analog Resurgence</b><br><br>
 Digital computing systems, with their binary pulses of ones and zeros, have been the driving force behind the Information Age, propelling everything from our smartphones to the most sophisticated supercomputers. So, why is an antiquated seeming technology from the days of radio valves and phonographs suddenly causing such a buzz?<br><br>
@@ -49,19 +23,3 @@ Despite its promise, the road to fully adopting analog AI is not devoid of speed
 Analog AI, with its intriguing blend of old and new and its potential to coax more power from our devices while lightening their environmental footprint, is a compelling new horizon in artificial intelligence. However, its full-fledged adoption is dependent on overcoming inherent limitations and perfecting integration strategies with existing digital infrastructure.<br><br>
 
 As we continue to push the boundaries of what's possible in AI, analog computing may hold the key to a more sustainable, accessible, and exciting future for the technology. With world-class teams like MIT’s at the helm of this evolution, one can only imagine what innovative shores we could reach with analog AI in our technological armada. From environmental conservation to health advancements and beyond, this could be a journey worth watching.
-	</div>
-	</section>
-	
-	<br><br>
-	<br><br>
-	
-	<footer id="footer"> <div class="copyright"> &copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>. </div> </footer>
-	
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/jquery.scrolly.min.js"></script>
-	<script src="assets/js/skel.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
-	</body>
-	</html>
-	

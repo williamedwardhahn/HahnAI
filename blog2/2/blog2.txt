@@ -1,31 +1,6 @@
+<b>Unveiling Optical AI: The Cutting-edge Fusion of Light and Intelligence</b>
 
-	<!DOCTYPE HTML>
-	<html>
-	<head>
-	<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
-	<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
-	
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script> 
-	<script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-ZDVLMSSQ0M');</script>
-
-	<title>Hahn AI</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	
-	
-	<body>
-	<header id="header">
-	<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
-	</header>
-
-	<section id="main">
-	<div class="inner">
-	<h4><b>Unveiling Optical AI: The Cutting-edge Fusion of Light and Intelligence</b></h4>
-	<p>
-	<span class="image left"><img src="2/compressed_image14986843.jpg" alt="" /></span>
-	Imagine an Artificial Intelligence (AI) system that doesn't utilize electrons to crunch numbers but instead uses light, leading to high-speed data processing and unprecedented energy efficiency. Welcome to the field of optical AI, a burgeoning area of research that promises to transform digital processing by harnessing the speed of light to deliver real-time interactive AI. This cutting-edge fusion of light and intelligence opens a new era of incredibly fast and efficient computation, bringing us one step closer to achieving technological applications once thought to be science fiction.
+Imagine an Artificial Intelligence (AI) system that doesn't utilize electrons to crunch numbers but instead uses light, leading to high-speed data processing and unprecedented energy efficiency. Welcome to the field of optical AI, a burgeoning area of research that promises to transform digital processing by harnessing the speed of light to deliver real-time interactive AI. This cutting-edge fusion of light and intelligence opens a new era of incredibly fast and efficient computation, bringing us one step closer to achieving technological applications once thought to be science fiction.
 
 <br><br>
 <b>A New Era in AI: Optical AI </b>
@@ -53,19 +28,3 @@ As promising as optical AI may seem, implementation challenges exist. Shifting f
 
 <br><br>
 What's unfolding in front of us is the birth of a new era in artificial intelligence: optical AI. The fusion of light and intelligence stands poised to usher in a world where massive computation can occur at the speed of light, promising a leap forward in speed and energy efficiency. Although challenges lie ahead, the potential rewards on the horizon are expansive, bringing us tantalizingly close to a future which we've only dreamed of.
-	</div>
-	</section>
-	
-	<br><br>
-	<br><br>
-	
-	<footer id="footer"> <div class="copyright"> &copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>. </div> </footer>
-	
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/jquery.scrolly.min.js"></script>
-	<script src="assets/js/skel.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
-	</body>
-	</html>
-	
