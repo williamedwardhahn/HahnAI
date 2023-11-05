@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RGB Color Guessing Game</title>
+<style>
+  #colorDisplay, #guessDisplay {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #000;
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .slider-container {
+    margin: 5px 0;
+  }
+  #feedback {
+    margin-top: 10px;
+  }
+</style>
+<script>
+  let targetColor;
+  
+  function generateRandomColor() {
+    return {
+      r: Math.floor(Math.random() * 256),
+      g: Math.floor(Math.random() * 256),
+      b: Math.floor(Math.random() * 256)
+    };
+  }
+
+  function updateDisplayColor(color, elementId) {
+    const colorString = `rgb(${color.r}, ${color.g}, ${color.b})`;
+    document.getElementById(elementId).style.backgroundColor = colorString;
+  }
+
+  function setupGame() {
+    targetColor = generateRandomColor();
+    updateDisplayColor(targetColor, 'colorDisplay');
+    updateDisplayColor({ r: 255, g: 255, b: 255 }, 'guessDisplay'); // Reset the guessed color display
+    document.getElementById('feedback').textContent = ''; // Clear feedback
+    // Reset sliders
+    document.getElementById('r').value = 0;
+    document.getElementById('g').value = 0;
+    document.getElementById('b').value = 0;
+  }
+
+  function checkGuess() {
+    const r = parseInt(document.getElementById('r').value);
+    const g = parseInt(document.getElementById('g').value);
+    const b = parseInt(document.getElementById('b').value);
+    const guess = { r, g, b };
+    updateDisplayColor(guess, 'guessDisplay');
+    
+    const feedbackElement = document.getElementById('feedback');
+    if (r === targetColor.r && g === targetColor.g && b === targetColor.b) {
+      feedbackElement.textContent = 'Correct! You guessed the right color!';
+      feedbackElement.style.color = 'green';
+    } else {
+      feedbackElement.textContent = 'Incorrect, try again.';
+      feedbackElement.style.color = 'red';
+    }
+  }
+
+  function revealColor() {
+    updateDisplayColor(targetColor, 'guessDisplay');
+    document.getElementById('r').value = targetColor.r;
+    document.getElementById('g').value = targetColor.g;
+    document.getElementById('b').value = targetColor.b;
+    document.getElementById('feedback').textContent = 'Revealed the correct color!';
+    document.getElementById('feedback').style.color = 'blue';
+  }
+
+  window.onload = setupGame;
+</script>
+</head>
+<body>
+<h1>RGB Color Guessing Game</h1>
+<div id="colorDisplay" title="Target Color"></div>
+<div id="guessDisplay" title="Your Guess"></div>
+<div class="slider-container">
+  <label for="r">R:</label>
+  <input type="range" id="r" name="r" min="0" max="255" class="slider">
+</div>
+<div class="slider-container">
+  <label for="g">G:</label>
+  <input type="range" id="g" name="g" min="0" max="255" class="slider">
+</div>
+<div class="slider-container">
+  <label for="b">B:</label>
+  <input type="range" id="b" name="b" min="0" max="255" class="slider">
+</div>
+<button onclick="checkGuess()">Guess!</button>
+<button onclick="setupGame()">Play New Round</button>
+<button onclick="revealColor()">Reveal Color</button>
+<div id="feedback"></div>
+</body>
+</html>
+
