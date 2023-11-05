@@ -1,31 +1,6 @@
+<b>Quantum AI: Navigating the Intersection of Two Radical Realities</b><br>
 
-	<!DOCTYPE HTML>
-	<html>
-	<head>
-	<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
-	<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
-	
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script> 
-	<script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-ZDVLMSSQ0M');</script>
-
-	<title>Hahn AI</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	
-	
-	<body>
-	<header id="header">
-	<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
-	</header>
-
-	<section id="main">
-	<div class="inner">
-	<h4><b>Quantum AI: Navigating the Intersection of Two Radical Realities</b><br></h4>
-	<p>
-	<span class="image left"><img src="5/compressed_image15162399.jpg" alt="" /></span>
-	Artificial Intelligence (AI) is an established force for revolutionary change. Quantum computing is the over-the-horizon promise of a computing step-change. Combine these two and we get Quantum Artificial Intelligence (QAI), a concept so dynamic, it's reshaping our understanding of the world. But what exactly is Quantum AI? How does it work? And how is it set to redefine our future? Let's break down these questions. <br><br>
+Artificial Intelligence (AI) is an established force for revolutionary change. Quantum computing is the over-the-horizon promise of a computing step-change. Combine these two and we get Quantum Artificial Intelligence (QAI), a concept so dynamic, it's reshaping our understanding of the world. But what exactly is Quantum AI? How does it work? And how is it set to redefine our future? Let's break down these questions. <br><br>
 
 <b>Unlocking the Quantum World</b><br><br>
 
@@ -52,19 +27,3 @@ The merging of quantum computing and AI holds unprecedented potential. But as wi
 However, these challenges don’t lessen the fascination and promise that Quantum AI embodies. If anything, they inspire scientists and researchers to investigate, experiment, and innovate further. The integration of quantum computing and AI constitutes a formidable technological force, promising to propel us into a future where complex calculations can be crunch time instantaneously, where AI models can be trained rapidly, and where the decision-making process in various industries can be significantly enhanced. <br><br>
 
 Quantum AI, with its thrilling possibilities and mind-boggling complexities, is certainly an underexplored frontier, not just in science, but in our comprehension of reality. While it will require years of research and immense computational advancement to fully realize its potential, it is certain to continue to captivate us, pull us in with its mystery, and push us towards the precipice of a radical reality. Thus, as we continue to decode this ground-breaking amalgamation, one thing stands clear: the impact of Quantum AI on our future will be nothing short of transformative.
-	</div>
-	</section>
-	
-	<br><br>
-	<br><br>
-	
-	<footer id="footer"> <div class="copyright"> &copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>. </div> </footer>
-	
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/jquery.scrolly.min.js"></script>
-	<script src="assets/js/skel.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
-	</body>
-	</html>
-	

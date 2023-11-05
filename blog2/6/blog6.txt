@@ -1,31 +1,6 @@
+<b>An Illuminating Future: The Revolution of Optical Quantum Computing</b><br><br>
 
-	<!DOCTYPE HTML>
-	<html>
-	<head>
-	<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32" />
-	<link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16" />
-	
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script> 
-	<script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-ZDVLMSSQ0M');</script>
-
-	<title>Hahn AI</title>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="stylesheet" href="assets/css/main.css" />
-	</head>
-	
-	
-	<body>
-	<header id="header">
-	<a href="index.html" class="logo"><strong>Hahn</strong> AI</a>
-	</header>
-
-	<section id="main">
-	<div class="inner">
-	<h4><b>An Illuminating Future: The Revolution of Optical Quantum Computing</b><br><br></h4>
-	<p>
-	<span class="image left"><img src="6/compressed_image16162775.jpg" alt="" /></span>
-	Imagine navigating the digital world at the speed of light, harnessing the power to perform complex computations almost instantaneously, or factoring mammoth prime numbers in fractions of seconds that would otherwise take classical computers millennia. Welcome to the glowing horizon of optical quantum computing - where we’re not just bending light to our will; we’re reinventing the very laws of physics that govern the binary digital universe.<br><br>
+Imagine navigating the digital world at the speed of light, harnessing the power to perform complex computations almost instantaneously, or factoring mammoth prime numbers in fractions of seconds that would otherwise take classical computers millennia. Welcome to the glowing horizon of optical quantum computing - where we’re not just bending light to our will; we’re reinventing the very laws of physics that govern the binary digital universe.<br><br>
 
 <b>First Light: Understanding the Basics of Optical Quantum Computing</b><br><br>
 
@@ -56,19 +31,3 @@ Moreover, improving error rates and finding ways to adopt error correction codes
 In spite of the challenges ahead, the trajectory of optical quantum computing burns bright. The promise of this technology exceeds current limitations, igniting the imagination of scientists and tech enthusiasts alike. The brilliance of optical quantum computing isn’t just its speed or power, but its potential to fundamentally change how we perceive and manipulate the digital universe.<br><br>
 
 We’re standing on the brink of a recoillessly radiant evolution that the world has not seen since the dawn of the digital age. Optical quantum computing is not merely a technological upgrade—it’s a shift in paradigm. It is the beacon on the hilltop, casting its warm, scintillating glow onto the still waters of an ocean waiting to be churned. The future may indeed be uncertain, but it's unquestionably bright. Hold tight, for the quantum revolution is just beginning.
-	</div>
-	</section>
-	
-	<br><br>
-	<br><br>
-	
-	<footer id="footer"> <div class="copyright"> &copy; Hahn AI <a href="https://Hahn.ai">Main Site</a>. </div> </footer>
-	
-	<script src="assets/js/jquery.min.js"></script>
-	<script src="assets/js/jquery.scrolly.min.js"></script>
-	<script src="assets/js/skel.min.js"></script>
-	<script src="assets/js/util.js"></script>
-	<script src="assets/js/main.js"></script>
-	</body>
-	</html>
-	
