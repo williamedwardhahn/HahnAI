@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>When Large Language Models Meet DNA: Towards a New Era of Information Storage - Hahn AI</title>
+    <link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-ZDVLMSSQ0M');
+    </script>
+    <style>
+        :root {
+            --bg: #faf8f4;
+            --bg-deep: #f0ece4;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-secondary: #5c5c5c;
+            --text-tertiary: #8a8a8a;
+            --accent: #c46d3b;
+            --accent-glow: rgba(196, 109, 59, 0.15);
+            --accent-light: #e8a87c;
+            --border: rgba(0, 0, 0, 0.06);
+            --border-strong: rgba(0, 0, 0, 0.12);
+            --grain-opacity: 0.03;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0d0d0f;
+                --bg-deep: #141418;
+                --surface: #1a1a20;
+                --text: #e8e4df;
+                --text-secondary: #a09a92;
+                --text-tertiary: #6b665f;
+                --accent: #d4845a;
+                --accent-glow: rgba(212, 132, 90, 0.12);
+                --accent-light: #e8a87c;
+                --border: rgba(255, 255, 255, 0.06);
+                --border-strong: rgba(255, 255, 255, 0.1);
+                --grain-opacity: 0.04;
+            }
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.85;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-weight: 300;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            opacity: var(--grain-opacity);
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px;
+        }
+
+        /* Header */
+        .site-header {
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .logo {
+            text-decoration: none;
+            color: var(--text);
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.6rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.15em;
+        }
+        .logo .mark {
+            color: var(--accent);
+            font-style: italic;
+        }
+        .header-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-tertiary);
+            border: 1px solid var(--border-strong);
+            padding: 0.3em 0.8em;
+            border-radius: 2px;
+        }
+
+        /* Article container */
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2.5rem;
+            flex: 1;
+            position: relative;
+        }
+
+        /* Title block */
+        .title-block {
+            padding: 3rem 0 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .title-block h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            line-height: 1.15;
+            letter-spacing: -0.025em;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.04em;
+        }
+        .meta-divider {
+            width: 24px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        /* Article body with floated image */
+        .post-body {
+            font-size: 1.08rem;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+        }
+        .post-image {
+            float: left;
+            max-width: 280px;
+            width: 40%;
+            margin: 0.3rem 1.8rem 1rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.3s;
+        }
+        .post-image:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        .post-body b {
+            display: inline;
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            color: var(--text);
+        }
+        /* Section headings that appear after <br><br> need clear */
+        .post-body::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+
+        /* Navigation */
+        .post-nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 3rem 0 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            clear: both;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+        }
+        .post-nav a {
+            display: block;
+            padding: 1.2rem 1.5rem;
+            background: var(--bg-deep);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.4;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .post-nav a:hover {
+            border-color: var(--accent);
+            color: var(--text);
+            background: var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .site-footer {
+            text-align: center;
+            padding: 2.5rem 2rem;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            border-top: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .site-footer a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .site-footer a:hover { color: var(--accent-light); }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .site-header { padding: 1rem 1.2rem; }
+            .article-container { padding: 0 1.2rem; }
+            .title-block { padding: 2rem 0 1.5rem; }
+            .post-image {
+                float: none;
+                display: block;
+                max-width: 100%;
+                width: 100%;
+                margin: 0 0 1.5rem 0;
+            }
+            .post-nav { grid-template-columns: 1fr; }
+            .header-tag { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <a href="../index.html" class="logo">Hahn<span class="mark">AI</span></a>
+        <span class="header-tag">Science &middot; AI &middot; Future</span>
+    </header>
+
+    <article class="article-container">
+        <div class="title-block">
+            <h1>When Large Language Models Meet DNA: Towards a New Era of Information Storage</h1>
+            <div class="post-meta">
+                <span>2023-10-26</span>
+                <span class="meta-divider"></span>
+                <span>Hahn AI</span>
+            </div>
+        </div>
+
+        <div class="post-body">
+            <img class="post-image" src="image.jpg" alt="When Large Language Models Meet DNA: Towards a New Era of Information Storage" loading="lazy">
+            In the past few years, we have witnessed breathtaking advancements in artificial intelligence and machine learning models. Especially noteworthy is the evolution of Large Language Models (LLMs) like GPT-4. These are sophisticated algorithms that can understand, generate, and interact in human-like language, performing a wide variety of tasks from translation to generating high-quality content. <br><br>
+
+One of the most exciting recent developments in this field is the significant decrease in the size of these models. Today's LLMs now require only about 1 gigabyte (GB) of memory. To put this in perspective, this isn't much more than the size of the human genome, which takes up just under 0.8 gigabytes (GB). Yes, you read that right. The intricate algorithm, mimicking human language processing, is now similar in size to the blueprint that builds and sustains every human being. But that's not the end of the story. <br><br>
+
+<b>Are Business Cards Made of DNA the Future?</b> <br><br>
+
+Danny Hillis, a pioneer in the field of computer science, presented an intriguing concept during one of his talks. Back in 1994 he "took this code – the code has standard letters that we use for symbolizing it – and I wrote my business card onto a piece of DNA and amplified it 10 to the 22 times…a hundred million copies of my business card". By converting the information of his business card into a DNA sequence, he managed to produce an enormous number of copies using standard DNA amplification techniques. <br><br>
+
+This experiment raises an interesting point about the potential of DNA as a storage medium. Unlike traditional storage devices that deteriorate over time, DNA can remain stable for thousands of years. Plus, it's incredibly space-efficient – a gram of DNA can hold up to 215 petabytes (215 million GB) of data. With our LLMs shrinking in size, it's not far-fetched to imagine a future where we might be able to encode these models into DNA. <br><br>
+
+<b>Is Our DNA Already an LLM?</b> <br><br>
+
+This brings us to an even more fascinating question: could our DNA already contain something like a large language model? It's a thought-provoking idea, given the parallels between the workings of an LLM and the functions of our genome. <br><br>
+
+LLMs process and generate language based on the patterns they've learned from vast amounts of text data. Similarly, our genome uses the language of DNA – a four-letter code comprising adenine (A), cytosine (C), guanine (G), and thymine (T) – to build and regulate our bodies. Just as an LLM learns from patterns in data, our genome has been shaped by billions of years of evolution, learning and adapting to different environments. <br><br>
+
+The human genome contains about 20,000-25,000 protein-coding genes, but these only make up about 1% of the total genome. The rest, often referred to as "junk DNA," was once thought to be non-functional. But recent research suggests that much of this DNA plays critical roles in regulating gene expression – perhaps another parallel with how an LLM uses learned patterns to generate meaningful output. <br><br>
+
+However, it's important to note that while there are intriguing similarities, our understanding of both LLMs and human genomics has a long way to go. While we're making great strides in reducing the size of LLMs and exploring the mysteries of our genome, we're not at a point where we can confirm the existence of a "genomic language model." But it's a tantalizing prospect that underscores the interdisciplinary beauty of cutting-edge science. <br><br>
+
+<b>A Future Where Biology and AI Merge</b> <br><br>
+
+The exploration of such ideas signifies a future where the boundaries between biology and artificial intelligence become increasingly blurred. Encoding LLMs into DNA could open up entirely new avenues for information storage, while the possible existence of a 'genomic language model' could revolutionize our understanding of ourselves and the nature of intelligence. As we continue to learn and make advancements, the convergence of these two fields may give birth to technologies and insights beyond our current comprehension. One thing is for certain: this thrilling journey of discovery is only just beginning.
+        </div>
+
+        <nav class="post-nav">
+            <a href="../14/index.html">&larr; Ghost in the Machine: AI and the Occult</a>
+            <a href="../16/index.html">Echoes of the Past: Tracing Computer Lineage Back to Musical Automata &rarr;</a>
+        </nav>
+    </article>
+
+    <footer class="site-footer">
+        &copy; Hahn AI &mdash; <a href="https://Hahn.ai">Hahn.ai</a>
+    </footer>
+</body>
+</html>
