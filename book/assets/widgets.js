@@ -141,7 +141,7 @@
     const [c, ctx] = canvas(S, S, 'pad');
     c.style.background = '#000'; c.style.cursor = 'crosshair'; c.style.borderRadius = '10px';
     const ink = document.createElement('canvas'); ink.width = ink.height = 280;
-    const ic = ink.getContext('2d');
+    const ic = ink.getContext('2d', { willReadFrequently: true });
     ic.lineCap = ic.lineJoin = 'round'; ic.strokeStyle = '#fff'; ic.lineWidth = 22;
     let last = null, dirty = false;
     function pos(e) { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 280, (e.clientY - r.top) / r.height * 280]; }
@@ -263,6 +263,10 @@
       const im = imgs[name];
       px = b64(im.px); iw = im.w; ih = im.h; color = px.length === iw * ih * 3;
       scale = Math.min(320 / iw, 320 / ih);
+      // the canvas takes the photo's shape, so a wide photo leaves no empty bands
+      const ch = Math.round(ih * scale), dpr = Math.min(2, devicePixelRatio || 1);
+      c.height = ch * dpr; c.H = ch; c.style.aspectRatio = `320 / ${ch}`; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      R = (el.clientWidth || 600) < 520 ? 4 : 7;
       const t = document.createElement('canvas'); t.width = iw; t.height = ih;
       const tc = t.getContext('2d'), d = tc.createImageData(iw, ih);
       for (let i = 0; i < iw * ih; i++) {
@@ -276,9 +280,9 @@
     }
     function val(x, y) { const i = y * iw + x; return color ? [px[i * 3], px[i * 3 + 1], px[i * 3 + 2]] : [px[i]]; }
     function draw() {
-      ctx.clearRect(0, 0, 320, 320);
+      ctx.clearRect(0, 0, 320, c.H);
       ctx.imageSmoothingEnabled = false;
-      const w = iw * scale, hh = ih * scale, ox = (320 - w) / 2, oy = (320 - hh) / 2;
+      const w = iw * scale, hh = ih * scale, ox = (320 - w) / 2, oy = (c.H - hh) / 2;
       ctx.drawImage(off, ox, oy, w, hh);
       const [hx, hy] = hover;
       ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2;
@@ -293,8 +297,9 @@
         mctx.fillRect(i * cs, j * cs, cs - 1, cs - 1);
         const lum = color ? 0.3 * v[0] + 0.59 * v[1] + 0.11 * v[2] : v[0];
         mctx.fillStyle = lum > 128 ? 'rgba(0,0,0,.75)' : 'rgba(255,255,255,.8)';
-        mctx.font = `${color ? 6.5 : 8.5}px "JetBrains Mono", monospace`;
-        if (color) v.forEach((u, k) => mctx.fillText(u, i * cs + cs / 2, j * cs + cs / 2 + (k - 1) * 6.5));
+        const fs = Math.min(color ? cs * 0.27 : cs * 0.4, fpx(m, color ? 6.5 : 8.5));
+        mctx.font = `${fs}px "JetBrains Mono", monospace`;
+        if (color) v.forEach((u, k) => mctx.fillText(u, i * cs + cs / 2, j * cs + cs / 2 + (k - 1) * fs));
         else mctx.fillText(v[0], i * cs + cs / 2, j * cs + cs / 2);
       }
       mctx.strokeStyle = css('--accent'); mctx.lineWidth = 2;
@@ -304,8 +309,8 @@
     }
     function move(e) {
       const r = c.getBoundingClientRect();
-      const sx = (e.clientX - r.left) / r.width * 320, sy = (e.clientY - r.top) / r.height * 320;
-      const w = iw * scale, hh = ih * scale, ox = (320 - w) / 2, oy = (320 - hh) / 2;
+      const sx = (e.clientX - r.left) / r.width * 320, sy = (e.clientY - r.top) / r.height * c.H;
+      const w = iw * scale, hh = ih * scale, ox = (320 - w) / 2, oy = (c.H - hh) / 2;
       hover = [clamp(Math.floor((sx - ox) / scale), 0, iw - 1), clamp(Math.floor((sy - oy) / scale), 0, ih - 1)];
       draw();
     }
@@ -555,7 +560,7 @@
         let x, y, l;
         if (set === 'circles') { l = i % 2; const r = l ? 0.25 + 0.12 * rnd() : 0.62 + 0.15 * rnd(), a = rnd() * 6.283; x = r * Math.cos(a); y = r * Math.sin(a); }
         else if (set === 'xor') { x = rnd() * 2 - 1; y = rnd() * 2 - 1; x += Math.sign(x) * 0.08; y += Math.sign(y) * 0.08; l = x * y > 0 ? 1 : 0; }
-        else if (set === 'spiral') { l = i % 2; const t = (i >> 1) / 100 * 3.2 + 0.3; const r = t / 3.6; x = r * Math.cos(t + l * Math.PI) + gauss() * 0.03; y = r * Math.sin(t + l * Math.PI) + gauss() * 0.03; }
+        else if (set === 'spiral') { l = i % 2; const t = (i >> 1) / 100 * 8 + 0.6; const r = t / 9; x = r * Math.cos(t + l * Math.PI) + gauss() * 0.03; y = r * Math.sin(t + l * Math.PI) + gauss() * 0.03; }
         else { l = i % 2; x = (l ? 0.4 : -0.4) + gauss() * 0.22; y = (l ? 0.3 : -0.3) + gauss() * 0.22; }
         data.push([x, y, l]);
       }
@@ -634,7 +639,8 @@
     function play() {
       if (timer) { cancelAnimationFrame(timer); timer = null; pb.textContent = 'train'; pb.classList.remove('on'); return; }
       pb.textContent = 'pause';
-      const loop = () => { tick(); timer = epoch < 4000 ? requestAnimationFrame(loop) : (play(), null); };
+      const stopAt = epoch + 4000;
+      const loop = () => { tick(); timer = epoch < stopAt ? requestAnimationFrame(loop) : (play(), null); };
       timer = requestAnimationFrame(loop);
     }
     function restart() { if (timer) play(); init(); lastLoss = train(0) || 0; draw(); }
@@ -646,7 +652,7 @@
       data.push([x, y, brush === 'orange' ? 1 : 0]);
       lastLoss = train(0) || 0; draw();
     });
-    el.append(h('div', { class: 'w-row' }, h('div', {}, c, info),
+    el.append(h('div', { class: 'w-row' }, h('div', { style: `max-width:${S}px` }, c, info),
       h('div', { class: 'w-col' },
         h('div', { class: 'w-kv' }, 'data'), chips(['blobs', 'circles', 'xor', 'spiral', 'yours'], set, (s) => { set = s; makeData(); restart(); }),
         h('div', { class: 'w-kv', style: 'margin-top:14px' }, 'click to add'), chips(['orange', 'blue'], brush, (b) => { brush = b; }),
@@ -748,14 +754,15 @@
       const { r, q, s, terms } = compute(pos);
       ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2.5;
       ctx.strokeRect(q * cs - 1, r * cs - 1, K * cs + 1, K * cs + 1);
-      ctx.font = '600 10px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.font = `600 ${Math.min(fpx(c, 10), cs * 0.62)}px "JetBrains Mono", monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       for (let j = 0; j < 3; j++) for (let i = 0; i < 3; i++) {
         const kv = k[j * 3 + i]; if (!kv) continue;
+        ctx.fillStyle = css('--card'); ctx.globalAlpha = 0.85; ctx.fillRect((q + i) * cs + 1, (r + j) * cs + cs * 0.18, cs - 3, cs * 0.64); ctx.globalAlpha = 1;   // a backing so the label reads on black and white
         ctx.fillStyle = kv > 0 ? css('--pos') : css('--neg');
         ctx.fillText(kv > 0 ? '+1' : '−1', (q + i) * cs + cs / 2, (r + j) * cs + cs / 2);
       }
       const ox = N * cs + 40;
-      ctx.fillStyle = ink; ctx.font = '18px "JetBrains Mono", monospace'; ctx.fillText('→', N * cs + 20, (r + 1.5) * cs);
+      ctx.fillStyle = ink; ctx.font = '' + fpx(c, 18) + 'px "JetBrains Mono", monospace'; ctx.fillText('→', N * cs + 20, (r + 1.5) * cs);
       const m = 2.2;
       for (let i = 0; i < M * M; i++) {
         ctx.fillStyle = out[i] == null ? css('--paper-2') : div(out[i] / m);
@@ -771,6 +778,7 @@
     }
     const pb = btn('play', play, 'accent');
     el.append(c, sum, h('div', { class: 'w-ctrl' }, pb, btn('step', step), btn('fill all', () => {
+      if (timer) play();
       for (let p = 0; p < M * M; p++) out[p] = compute(p).s; pos = M * M - 1; draw(); pos = 0;
     })));
     draw(); onTheme(draw);
@@ -935,6 +943,8 @@
       const [y, t, text, href, where] = M[i];
       card.innerHTML = `<div class="tl-cy">${y}</div><div><div class="tl-ct">${t}</div><p>${text}</p><a href="${href}">Build it: ${where} →</a></div>`;
       card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+      const sc = track.parentNode;   // on a phone the strip scrolls: keep the chosen dot in view
+      if (sc && sc.scrollWidth > sc.clientWidth) { const x = dots[i].offsetLeft - sc.clientWidth / 2; sc.scrollTo({ left: Math.max(0, x), behavior: reduced ? 'auto' : 'smooth' }); }
     }
     function stop() { if (auto) { clearInterval(auto); auto = null; } }
     el.append(h('div', { class: 'tl-scroll' }, track), card);
@@ -971,7 +981,7 @@
       ctx.fillStyle = on ? acc : rule;
       ctx.beginPath(); ctx.arc(col / 2, 90, 38, 0, 7); ctx.fill();
       if (on) { ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.arc(col / 2, 90, 58, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
-      ctx.fillStyle = on ? '#fff' : muted; ctx.font = '600 20px "JetBrains Mono", monospace'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = on ? '#fff' : muted; ctx.font = '600 ' + fpx(c, 20) + 'px "JetBrains Mono", monospace'; ctx.textBaseline = 'middle';
       ctx.fillText(on ? '1' : '0', col / 2, 91);
       // 2. graded: a sigmoid with the current point
       const gx = col + 24, gw = col - 48, gy = 30, gh = 120;
@@ -981,7 +991,7 @@
       ctx.stroke();
       const px = gx + (drive / 2 + 0.5) * gw, py = gy + gh - sig(drive * 5) * gh;
       ctx.fillStyle = acc; ctx.beginPath(); ctx.arc(px, py, 6, 0, 7); ctx.fill();
-      ctx.fillStyle = ink; ctx.font = '600 13px "JetBrains Mono", monospace';
+      ctx.fillStyle = ink; ctx.font = '600 ' + fpx(c, 13) + 'px "JetBrains Mono", monospace';
       ctx.fillText(sig(drive * 5).toFixed(2), col * 1.5, 170);
       // 3. spiking: a scrolling spike train and the membrane potential
       const sx = col * 2 + 16, sw = col - 32;
@@ -1022,7 +1032,7 @@
         sctx.fillStyle = x > 0 ? css('--pos') : x < 0 ? css('--neg') : css('--ink');
         sctx.fillRect(i * w + 1.5, 4 + (1 - (x + N) / (2 * N)) * 40, w - 3, 4);
       }
-      sctx.fillStyle = winner ? css('--pos') : css('--neg'); sctx.font = '11px "JetBrains Mono", monospace';
+      sctx.fillStyle = winner ? css('--pos') : css('--neg'); sctx.font = '' + fpx(strip, 11) + 'px "JetBrains Mono", monospace';
       sctx.textAlign = 'left'; sctx.textBaseline = 'top';
       if (games) sctx.fillText(`last game: ${film.length - 1} moves · every frame labeled “${winner ? 'orange' : 'blue'} wins”`, 0, 52);
     }
@@ -1040,7 +1050,7 @@
       }
       ctx.fillStyle = css('--neg'); ctx.fillRect(0, base - 170, bw - 2, 170);
       ctx.fillStyle = css('--pos'); ctx.fillRect(600 - bw + 2, base - 170, bw - 2, 170);
-      ctx.fillStyle = css('--muted'); ctx.font = '10.5px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillStyle = css('--muted'); ctx.font = '' + fpx(c, 10.5) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       ctx.fillText('start', 300, base + 8);
       ctx.textAlign = 'left'; ctx.fillText('blue wins', 0, base + 8);
       ctx.textAlign = 'right'; ctx.fillText('orange wins', 600, base + 8);
@@ -1135,7 +1145,7 @@
         const y0 = top + r * pinH / rows, y1 = r < rows ? top + (r + 1) * pinH / rows : base - 4;
         ctx.beginPath(); ctx.arc(x0 + (next - x0) * f, y0 + (y1 - y0) * f - 4 * Math.sin(Math.PI * f), 3.2, 0, 7); ctx.fill();
       });
-      ctx.fillStyle = css('--ink-2'); ctx.font = '11px "JetBrains Mono", monospace'; ctx.textAlign = 'center';
+      ctx.fillStyle = css('--ink-2'); ctx.font = '' + fpx(c, 11) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center';
       ctx.fillText('0 heads', xAt(rows, 0), Ht - 4); ctx.fillText(`${rows} heads`, xAt(rows, rows), Ht - 4);
       info.innerHTML = `rows <b>${rows}</b> · balls landed <b>${total}</b>`;
     }
@@ -1181,7 +1191,7 @@
       gctx.clearRect(0, 0, 300, 150);
       const lx = (v) => 30 + (Math.log10(v) / 6) * 260, ly = (v) => 75 - (v - Math.PI) * 120;
       gctx.strokeStyle = 'rgba(127,127,127,.5)'; gctx.beginPath(); gctx.moveTo(30, ly(Math.PI)); gctx.lineTo(292, ly(Math.PI)); gctx.stroke();
-      gctx.fillStyle = css('--ink-2'); gctx.font = '10px "JetBrains Mono", monospace';
+      gctx.fillStyle = css('--ink-2'); gctx.font = '' + fpx(g, 10) + 'px "JetBrains Mono", monospace';
       gctx.fillText('π', 18, ly(Math.PI) + 3);
       [1, 100, 10000, 1000000].forEach((v) => gctx.fillText(v >= 1e6 ? '1M' : v >= 1e4 ? '10k' : String(v), lx(v) - 6, 146));
       gctx.strokeStyle = css('--accent'); gctx.lineWidth = 1.5; gctx.beginPath();
@@ -1272,7 +1282,7 @@
     function reset() {
       steps = 0;
       if (mode === 'Life') { A = new Uint8Array(N * N).map(() => Math.random() < 0.28 ? 1 : 0); B = new Uint8Array(N * N); }
-      else if (mode === 'Ripples') { A = new Float32Array(N * N); B = new Float32Array(N * N); [[40, 40], [90, 60], [60, 100]].forEach(([r, q]) => poke(r, q)); }
+      else if (mode === 'Ripples') { A = new Float32Array(N * N); B = new Float32Array(N * N); [[N >> 1, N >> 1]].forEach(([r, q]) => poke(r, q)); }
       else {
         A = new Float32Array(N * N).fill(1); B = new Float32Array(N * N);
         for (let r = 54; r < 74; r++) for (let q = 54; q < 74; q++) { A[r * N + q] = 0.5; B[r * N + q] = 0.25; }
@@ -1297,7 +1307,7 @@
       } else if (mode === 'Ripples') {
         const L = new Float32Array(N * N);
         for (let r = 0; r < N; r++) for (let q = 0; q < N; q++) { const i = r * N + q; L[i] = lap(A, i, r, q) / 2; }
-        for (let i = 0; i < N * N; i++) { B[i] = 0.999 * (B[i] + 0.25 * L[i]); A[i] += B[i]; }
+        for (let i = 0; i < N * N; i++) { B[i] = 0.995 * (B[i] + 0.25 * L[i]); A[i] += B[i]; }
       } else {
         const LU = new Float32Array(N * N), LV = new Float32Array(N * N);
         for (let s = 0; s < 8; s++) {
@@ -1358,7 +1368,7 @@
     function feats(x) { return Wt.map((w, j) => Math.tanh(w * x + Bs[j])); }
     function solve() {
       const r = mulberry(seed * 9973);
-      Wt = Array.from({ length: hN }, () => 0.3 * gauss(r)); Bs = Array.from({ length: hN }, () => -3 + 6 * r());
+      Wt = Array.from({ length: hN }, () => gauss(r)); Bs = Wt.map((w) => -w * (-10 + 20 * r()));   // each one bends somewhere in the range
       const lam = 10 ** ridgeExp, G = Array.from({ length: hN }, () => new Float64Array(hN + 1));
       xs.forEach((x, i) => { const f = feats(x); for (let a = 0; a < hN; a++) { for (let b = 0; b < hN; b++) G[a][b] += f[a] * f[b]; G[a][hN] += f[a] * ys[i]; } });
       for (let a = 0; a < hN; a++) G[a][a] += lam;
@@ -1373,9 +1383,9 @@
     }
     function draw() {
       ctx.clearRect(0, 0, 360, 240);
-      const X = (x) => 20 + (x + 10) / 20 * 330, Y = (y) => 200 - (y + 0.5) / 2 * 180;
+      const X = (x) => 20 + (x + 10) / 20 * 330, Y = (y) => 220 - (y + 0.35) / 1.8 * 200;
       ctx.strokeStyle = 'rgba(127,127,127,.35)'; ctx.lineWidth = 1;
-      for (let j = 0; j < hN; j++) { ctx.beginPath(); for (let k = 0; k <= 200; k++) { const x = -10 + k / 10; const v = Math.tanh(Wt[j] * x + Bs[j]) * 0.4 + 0.5; k ? ctx.lineTo(X(x), Y(v)) : ctx.moveTo(X(x), Y(v)); } ctx.stroke(); }
+      for (let j = 0; j < hN; j++) { ctx.beginPath(); for (let k = 0; k <= 200; k++) { const x = -10 + k / 10; const v = Math.tanh(Wt[j] * x + Bs[j]) * 0.35 + 0.55; k ? ctx.lineTo(X(x), Y(v)) : ctx.moveTo(X(x), Y(v)); } ctx.stroke(); }
       ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2.2; ctx.beginPath();
       for (let k = 0; k <= 400; k++) { const x = -10 + k / 20; const f = feats(x); const v = f.reduce((s, u, j) => s + u * coef[j], 0); const yy = clamp(Y(v), -20, 260); k ? ctx.lineTo(X(x), yy) : ctx.moveTo(X(x), yy); }
       ctx.stroke();
@@ -1472,7 +1482,7 @@
           thctx.fillStyle = '#000'; thctx.fillRect(k * 30, lab * 42, 28, 28);
           drawDigit(thctx, x, k * 30, lab * 42, 28, lab ? css('--neg') : css('--pos'));
         });
-        thctx.fillStyle = css('--ink-2'); thctx.font = '10px "JetBrains Mono", monospace';
+        thctx.fillStyle = css('--ink-2'); thctx.font = '' + fpx(th, 10) + 'px "JetBrains Mono", monospace';
         thctx.fillText(`${names[lab]}: ${ex.filter((e) => e[1] === lab).length}`, 0, lab * 42 + 39);
       });
     }
@@ -1518,10 +1528,12 @@
   /* ---------------- generative: a tiny GAN learns a distribution you draw */
   W.gan1d = (el) => {
     frame(el, 'A tiny GAN learns what you draw',
-      'Drag over the gray bars to draw a target: how often each number from -1 to 1 should come up. Then press <b>play</b>. The generator turns random noise into numbers; the discriminator tries to tell them from samples of your target, and its opinion is the dashed line. Both are small networks trained by gradient descent, against each other. Give it half a minute: the orange histogram of the generator\'s output wobbles toward yours, and never quite settles, because each player keeps answering the other. Sometimes it covers one hill long before the other, the mode collapse of Chapter 19.');
+      'Drag over the gray bars to draw a target: how often each number from -1 to 1 should come up. Then press <b>play</b>. The generator turns random noise into numbers; the discriminator tries to tell them from samples of your target, and its opinion is the dashed line. Both are small networks trained by gradient descent, against each other. Give it half a minute: the orange line, a histogram of the generator\'s output, moves toward yours and never quite settles, because each player keeps answering the other. The dashed line crosses the dotted 0.5 line where the discriminator stops being sure. Watch the gaps: one noise number goes in, so the generator can only stretch and squeeze it, and it leaves a thin bridge of samples between hills. Press <b>new players</b> a few times, and sometimes it piles everything into narrow spikes instead, a small taste of the mode collapse of Chapter 19.');
     const B = 40, Wd = 340, Ht = 220;
     const [c, ctx] = canvas(Wd, Ht);
     let target = new Float32Array(B).map((_, i) => Math.exp(-((i - 11) ** 2) / 24) + Math.exp(-((i - 28) ** 2) / 24));
+    // the generator's histogram is drawn from fixed, evenly spread noise, so the line moves only when the generator does
+    const NQ = 4000, zq = Float64Array.from({ length: NQ }, (_, k) => { const p = (k + 0.5) / NQ, t = Math.sqrt(-2 * Math.log(Math.min(p, 1 - p))), z = t - (2.515517 + 0.802853 * t + 0.010328 * t * t) / (1 + 1.432788 * t + 0.189269 * t * t + 0.001308 * t * t * t); return p < 0.5 ? -z : z; });
     const info = h('div', { class: 'w-kv', style: 'margin-top:8px' });
     const rnd = mulberry(5);
     const g = () => gauss(rnd);
@@ -1544,6 +1556,7 @@
     }
     const gen = (z) => tanh(fwd(G, z).o);
     function trainStep() {
+      if (target.reduce((a, b) => a + b, 0) < 1e-3) return;   // nothing drawn yet: nothing to learn
       const m = 128;
       for (let dk = 0; dk < 5; dk++) {        // discriminator: real -> 1, fake -> 0
         const gd = zero();
@@ -1557,50 +1570,53 @@
       for (let k = 0; k < m; k++) {
         const z = g(), rg = fwd(G, z), x = tanh(rg.o), rd = fwd(D, x);
         const dx = back(D, x, rd, (sig(rd.o) - 1) / m, dummy);
-        back(G, z, rg, dx * (1 - x * x), gg);
+        back(G, z, rg, dx * Math.max(1 - x * x, 0.1), gg);   // keep a little gradient when the output saturates at ±1
       }
-      apply(G, gg, 0.01);
+      apply(G, gg, 0.003);
       step++;
     }
     function draw() {
       ctx.clearRect(0, 0, Wd, Ht);
-      const base = Ht - 24, bw = Wd / B, tmax = Math.max(...target, 1e-6);
-      ctx.fillStyle = 'rgba(127,127,127,.35)';
-      for (let i = 0; i < B; i++) { const hgt = target[i] / tmax * (base - 20); ctx.fillRect(i * bw + 1, base - hgt, bw - 2, hgt); }
+      const base = Ht - 24, bw = Wd / B;
       const hist = new Float32Array(B);
-      for (let k = 0; k < 2000; k++) { const x = gen(g()); hist[Math.min(B - 1, Math.max(0, Math.floor((x + 1) / 2 * B)))]++; }
-      const tsum = target.reduce((a, b) => a + b, 0), scale = (base - 20) / (tmax / tsum * 2000);
+      for (let k = 0; k < NQ; k++) { const x = gen(zq[k]); hist[Math.min(B - 1, Math.max(0, Math.floor((x + 1) / 2 * B)))]++; }
+      const tsum = Math.max(target.reduce((a, b) => a + b, 0), 1e-6), scale = (base - 20) / Math.max(NQ / tsum, ...hist);   // a target bar of 1 fills the height
+      ctx.fillStyle = 'rgba(127,127,127,.35)';
+      for (let i = 0; i < B; i++) { const hgt = target[i] / tsum * NQ * scale; ctx.fillRect(i * bw + 1, base - hgt, bw - 2, hgt); }
       ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2.2; ctx.beginPath();
       for (let i = 0; i < B; i++) { const y = base - hist[i] * scale; i ? ctx.lineTo((i + 0.5) * bw, y) : ctx.moveTo((i + 0.5) * bw, y); }
       ctx.stroke();
+      ctx.strokeStyle = css('--rule'); ctx.lineWidth = 1; ctx.setLineDash([1, 3]); ctx.beginPath(); ctx.moveTo(0, base - 0.5 * (base - 20)); ctx.lineTo(Wd, base - 0.5 * (base - 20)); ctx.stroke();
       ctx.strokeStyle = css('--ink'); ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.beginPath();
       for (let i = 0; i <= 100; i++) { const x = -1 + i / 50, y = base - sig(fwd(D, x).o) * (base - 20); i ? ctx.lineTo((x + 1) / 2 * Wd, y) : ctx.moveTo(0, y); }
       ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = css('--ink-2'); ctx.font = '10px "JetBrains Mono", monospace';
-      ctx.fillText('-1', 2, Ht - 8); ctx.fillText('1', Wd - 10, Ht - 8);
-      info.innerHTML = `step <b>${step}</b> · gray: your target · orange: the generator · dashed: the discriminator's "real" probability`;
+      ctx.fillStyle = css('--ink-2'); ctx.font = fpx(c, 10) + 'px "JetBrains Mono", monospace';
+      ctx.fillText('-1', 2, Ht - 8); ctx.fillText('1', Wd - fpx(c, 10), Ht - 8); ctx.fillText('0.5', 2, base - 0.5 * (base - 20) - 3);
+      let tv = 0; for (let i = 0; i < B; i++) tv += Math.abs(target[i] / tsum - hist[i] / NQ);
+      info.innerHTML = tsum < 1e-3 ? 'the target is empty: drag over the canvas to draw one' : `step <b>${step}</b> · mismatch <b>${(tv / 2).toFixed(2)}</b> (0 is a perfect copy) · gray: your target · orange: the generator · dashed: the discriminator's "real" probability`;
     }
-    let drawing = false;
-    const paint = (e) => {
-      const r = c.getBoundingClientRect(); const i = Math.floor((e.clientX - r.left) / r.width * B);
-      const v = Math.max(0, 1 - (e.clientY - r.top) / r.height * Ht / (Ht - 24));
-      if (i >= 0 && i < B) { target[i] = v; if (i > 0) target[i - 1] = Math.max(target[i - 1] * 0.5, v * 0.5) ; }
-      draw();
+    let drawing = false, lastBin = null;
+    const paint = (e) => {      // the bar's top follows the finger; a fast drag fills every bin it passed
+      const r = c.getBoundingClientRect(), i = clamp(Math.floor((e.clientX - r.left) / r.width * B), 0, B - 1);
+      const y = (e.clientY - r.top) / r.height * Ht, v = clamp((Ht - 24 - y) / (Ht - 44), 0, 1);
+      const from = lastBin == null ? i : lastBin[0], fv = lastBin == null ? v : lastBin[1];
+      for (let j = Math.min(from, i); j <= Math.max(from, i); j++) target[j] = from === i ? v : fv + (v - fv) * (j - from) / (i - from);
+      lastBin = [i, v]; draw();
     };
-    c.addEventListener('pointerdown', (e) => { drawing = true; c.setPointerCapture(e.pointerId); paint(e); });
+    c.addEventListener('pointerdown', (e) => { drawing = true; lastBin = null; c.setPointerCapture(e.pointerId); paint(e); });
     c.addEventListener('pointermove', (e) => { if (drawing) paint(e); });
     c.addEventListener('pointerup', () => { drawing = false; });
     c.style.cursor = 'crosshair';
     function play() {
       if (timer) { cancelAnimationFrame(timer); timer = null; pb.textContent = 'play'; pb.classList.remove('on'); return; }
       pb.textContent = 'pause'; pb.classList.add('on');
-      const loop = () => { for (let k = 0; k < 4; k++) trainStep(); draw(); timer = requestAnimationFrame(loop); };
+      const loop = () => { const t0 = performance.now(); do trainStep(); while (performance.now() - t0 < 9); draw(); timer = requestAnimationFrame(loop); };
       timer = requestAnimationFrame(loop);
     }
     const pb = btn('play', play, 'accent');
     el.append(c, info, h('div', { class: 'w-ctrl' }, pb,
       btn('new players', () => { G = mk(1); D = mk(3); step = 0; draw(); }),
-      btn('clear target', () => { target.fill(0.02); draw(); })));
+      btn('clear target', () => { target.fill(0); draw(); })));
     draw(); onTheme(draw);
   };
 
@@ -1611,16 +1627,17 @@
     const S = b64(D.samples), L = D.sampleLabels, n = L.length, K = 16;
     const X = Array.from({ length: n }, (_, i) => Float64Array.from(S.subarray(i * 784, i * 784 + 784), (v) => v / 255));
     // top-K directions (uncentered, as for the book's linear autoencoder): power iteration on the n x n Gram matrix
-    const Gm = Array.from({ length: n }, (_, i) => Float64Array.from({ length: n }, (_, j) => X[i].reduce((s, v, p) => s + v * X[j][p], 0)));
+    const Gm = Array.from({ length: n }, () => new Float64Array(n));   // plain loops: this runs as the page scrolls
+    for (let i = 0; i < n; i++) for (let j = 0; j <= i; j++) { const a = X[i], b = X[j]; let t = 0; for (let p = 0; p < 784; p++) t += a[p] * b[p]; Gm[i][j] = Gm[j][i] = t; }
     const comps = [];
     const r0 = mulberry(3);
     for (let k = 0; k < K; k++) {
       let u = Float64Array.from({ length: n }, () => r0() - 0.5), lam = 0;
-      for (let it = 0; it < 200; it++) {
+      for (let it = 0; it < 120; it++) {
         const v = new Float64Array(n);
-        for (let i = 0; i < n; i++) { let s = 0; for (let j = 0; j < n; j++) s += Gm[i][j] * u[j]; v[i] = s; }
-        for (const c of comps) { const d = c.u.reduce((s, x, i) => s + x * v[i], 0); for (let i = 0; i < n; i++) v[i] -= d * c.u[i]; }
-        lam = Math.sqrt(v.reduce((s, x) => s + x * x, 0)); u = v.map((x) => x / lam);
+        for (let i = 0; i < n; i++) { let s = 0; const row = Gm[i]; for (let j = 0; j < n; j++) s += row[j] * u[j]; v[i] = s; }
+        for (const c of comps) { let d = 0; for (let i = 0; i < n; i++) d += c.u[i] * v[i]; for (let i = 0; i < n; i++) v[i] -= d * c.u[i]; }
+        lam = 0; for (let i = 0; i < n; i++) lam += v[i] * v[i]; lam = Math.sqrt(lam); u = v.map((x) => x / lam);
       }
       const dir = new Float64Array(784);
       for (let i = 0; i < n; i++) for (let p = 0; p < 784; p++) dir[p] += u[i] * X[i][p];
@@ -1631,7 +1648,7 @@
     const decode = (code) => { const out = new Float64Array(784); code.forEach((a, k) => { for (let p = 0; p < 784; p++) out[p] += a * comps[k].dir[p]; }); return out; };
     let k = 4, current = null;
     const [rc, rctx] = canvas(140, 140), [mc, mctx] = canvas(260, 260);
-    const codeBars = h('div', { class: 'w-kv', style: 'margin-top:6px;word-break:break-all' });
+    const codeBars = h('div', { class: 'w-kv', style: 'margin-top:6px;max-width:260px;overflow-wrap:anywhere' });
     const info = h('div', { class: 'w-kv' });
     const pts = X.map((x) => encode(x, 2));
     const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]);
@@ -1645,7 +1662,7 @@
     function drawMap(mark) {
       mctx.clearRect(0, 0, 260, 260);
       const card = hex(css('--card')), light = (card[0] + card[1] + card[2]) / 3 < 128 ? 66 : 42;   // brighter labels on a dark page
-      mctx.font = '9px "JetBrains Mono", monospace'; mctx.textAlign = 'center'; mctx.textBaseline = 'middle';
+      mctx.font = '600 ' + fpx(mc, 11) + 'px "JetBrains Mono", monospace'; mctx.textAlign = 'center'; mctx.textBaseline = 'middle';
       pts.forEach(([a, b], i) => { const [px, py] = toMap(a, b); mctx.fillStyle = `hsl(${L[i] * 36},60%,${light}%)`; mctx.fillText(String(L[i]), px, py); });
       if (mark) { const [px, py] = toMap(mark[0], mark[1]); mctx.strokeStyle = css('--ink'); mctx.lineWidth = 2; mctx.beginPath(); mctx.arc(px, py, 7, 0, 7); mctx.stroke(); }
     }
@@ -1672,6 +1689,548 @@
         h('div', { class: 'w-ctrl' }, slider('k', 1, K, 1, k, (v) => String(v), (v) => { k = v; update(); })), info),
       h('div', {}, h('div', { class: 'w-kv' }, 'the 120 digits, by the first two code numbers'), mc)));
     drawMap(); p.load(S.subarray(0, 784));
+  };
+
+  /* ---------------- matrix product: every entry is one dot product */
+  W.matmul = (el) => {
+    frame(el, 'Every entry is a dot product',
+      'Point at (or tab to) any number in the answer <b>C = A @ B</b>. Its row of A and its column of B light up, and the sum that made it is spelled out below. Change the sizes: the inner sizes must match, because each row of A is laid against a column of B, number by number.');
+    let n = 2, k = 3, m = 2, A, B, sel = [0, 0];
+    const rnd = mulberry(11);
+    const fill = () => {
+      A = Array.from({ length: n }, () => Array.from({ length: k }, () => Math.floor(rnd() * 7) - 3));
+      B = Array.from({ length: k }, () => Array.from({ length: m }, () => Math.floor(rnd() * 7) - 3));
+    };
+    const area = h('div', { class: 'mm-area' }), sum = h('div', { class: 'w-kv mm-sum' });
+    function grid(M, cls, onCell) {
+      const g = h('div', { class: 'mm-grid ' + cls, style: `grid-template-columns:repeat(${M[0].length},2.4em)` });
+      M.forEach((row, i) => row.forEach((v, j) => {
+        const c = h(onCell ? 'button' : 'span', { class: 'mm-cell', type: onCell ? 'button' : undefined }, String(v));
+        c.dataset.i = i; c.dataset.j = j;
+        if (onCell) { c.addEventListener('pointerenter', () => onCell(i, j)); c.addEventListener('focus', () => onCell(i, j)); c.addEventListener('click', () => onCell(i, j)); }
+        g.append(c);
+      }));
+      return g;
+    }
+    function render() {
+      sel = [Math.min(sel[0], n - 1), Math.min(sel[1], m - 1)];
+      const C = A.map((row) => B[0].map((_, j) => row.reduce((s, a, t) => s + a * B[t][j], 0)));
+      const gA = grid(A, 'mm-a'), gB = grid(B, 'mm-b'), gC = grid(C, 'mm-c', (i, j) => { sel = [i, j]; mark(); });
+      const lab = (t, g, shape) => h('div', { class: 'mm-block' }, h('div', { class: 'w-kv' }, h('b', {}, t), ' ' + shape), g);
+      area.replaceChildren(lab('A', gA, `${n}×${k}`), h('span', { class: 'mm-op' }, '@'), lab('B', gB, `${k}×${m}`), h('span', { class: 'mm-op' }, '='), lab('C', gC, `${n}×${m}`));
+      function mark() {
+        const [i, j] = sel;
+        gA.querySelectorAll('.mm-cell').forEach((c) => c.classList.toggle('on', +c.dataset.i === i));
+        gB.querySelectorAll('.mm-cell').forEach((c) => c.classList.toggle('on', +c.dataset.j === j));
+        gC.querySelectorAll('.mm-cell').forEach((c) => c.classList.toggle('on', +c.dataset.i === i && +c.dataset.j === j));
+        const terms = A[i].map((a, t) => `${a}·${B[t][j] < 0 ? '(' + B[t][j] + ')' : B[t][j]}`);
+        sum.innerHTML = `C[${i}, ${j}] = row ${i} of A · column ${j} of B = ${terms.join(' + ')} = <b>${C[i][j]}</b>`;
+      }
+      mark();
+    }
+    fill();
+    el.append(area, sum, h('div', { class: 'w-ctrl' },
+      slider('rows of A', 1, 4, 1, n, String, (v) => { n = v; fill(); render(); }),
+      slider('inner size', 1, 5, 1, k, String, (v) => { k = v; fill(); render(); }),
+      slider('columns of B', 1, 4, 1, m, String, (v) => { m = v; fill(); render(); }),
+      btn('new numbers', () => { fill(); render(); })));
+    render();
+  };
+
+  /* ---------------- uint8 overflow: brighten the cat */
+  W.overflow = (el) => {
+    frame(el, 'Brighter, and the trap',
+      'Multiply every pixel of the cat by a number. With <b>wrap</b>, the result is stored as an 8-bit integer the way NumPy\'s <code>uint8</code> does: anything past 255 wraps around to the bottom, so bright fur turns dark. With <b>clip</b>, values past 255 are held at 255. Point at the photo to see the arithmetic for one pixel. The histogram shows how many pixels have each brightness.');
+    const { w, h: ht, px } = D.cat, src = b64(px);
+    const [c, ctx] = canvas(w, ht), [hc, hx] = canvas(256, 110);
+    const img = ctx.createImageData(w, ht);
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    const off = document.createElement('canvas'); off.width = w; off.height = ht;
+    let k = 2, mode = 'wrap', probe = null;
+    const info = h('div', { class: 'w-kv' });
+    const f = (v) => { const y = Math.round(v * k); return mode === 'wrap' ? ((y % 256) + 256) % 256 : Math.min(255, y); };
+    function draw() {
+      const hist = new Float32Array(256);
+      for (let i = 0; i < w * ht; i++) for (let ch = 0; ch < 3; ch++) { const v = f(src[i * 3 + ch]); img.data[i * 4 + ch] = v; hist[v]++; }
+      for (let i = 0; i < w * ht; i++) img.data[i * 4 + 3] = 255;
+      off.getContext('2d').putImageData(img, 0, 0);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.drawImage(off, 0, 0);
+      if (probe) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.strokeRect(probe[0] - 3, probe[1] - 3, 6, 6); }
+      hx.clearRect(0, 0, 256, 110);
+      const mx = Math.max(...hist.slice(1, 255), 1);
+      hx.fillStyle = css('--accent');
+      for (let v = 0; v < 256; v++) { const hh = Math.min(1, hist[v] / mx) * 96; hx.fillRect(v, 100 - hh, 1, hh); }
+      hx.fillStyle = css('--ink-2'); hx.font = fpx(hc, 10) + 'px "JetBrains Mono", monospace';
+      hx.fillText('0', 0, 110); hx.fillText('255', 256 - fpx(hc, 20), 110);
+      if (probe) {
+        const i = (probe[1] * w + probe[0]) * 3, r = src[i], y = Math.round(r * k);
+        info.innerHTML = `red channel here: ${r} × ${k} = ${y} → stored as <b>${f(r)}</b>` + (y > 255 ? (mode === 'wrap' ? ` (${y} − 256${y > 511 ? ' − 256' : ''})` : ' (held at 255)') : '');
+      } else info.innerHTML = 'point at the photo';
+    }
+    c.addEventListener('pointermove', (e) => { const r = c.getBoundingClientRect(); probe = [clamp(Math.floor((e.clientX - r.left) / r.width * w), 0, w - 1), clamp(Math.floor((e.clientY - r.top) / r.height * ht), 0, ht - 1)]; draw(); });
+    c.addEventListener('pointerdown', (e) => c.dispatchEvent(new PointerEvent('pointermove', e)));
+    el.append(h('div', { class: 'w-row' }, c, h('div', {}, h('div', { class: 'w-kv' }, 'how many pixels have each value'), hc, info)),
+      h('div', { class: 'w-ctrl' }, slider('multiply by', 0.5, 3, 0.1, k, (v) => v.toFixed(1), (v) => { k = v; draw(); }),
+        chips(['wrap', 'clip'], mode, (v) => { mode = v; draw(); })));
+    draw(); onTheme(draw);
+  };
+
+  /* ---------------- count every picture */
+  W.count = (el) => {
+    frame(el, 'Count every picture',
+      'Click squares to draw a black-and-white picture. Read as a binary number, square by square, it is one picture out of all possible ones, and it lights up in the full list on the right. Each square you add doubles the list. Then try the size and shades sliders to see how fast the count grows.');
+    let n = 3, cells = new Uint8Array(9);
+    const [gc, gx] = canvas(150, 150), [lc, lx] = canvas(320, 160);
+    const info = h('div', { class: 'w-kv' }), big = h('div', { class: 'w-kv' });
+    let side = 28, shades = 256;
+    const index = () => cells.reduce((s, v, i) => s + v * 2 ** (n * n - 1 - i), 0);
+    function draw() {
+      const ink = css('--ink'), card = css('--card'), acc = css('--accent');
+      gx.clearRect(0, 0, 150, 150);
+      const s = 150 / n;
+      for (let i = 0; i < n * n; i++) {
+        gx.fillStyle = cells[i] ? ink : card; gx.fillRect((i % n) * s + 1, ((i / n) | 0) * s + 1, s - 2, s - 2);
+        gx.strokeStyle = css('--rule'); gx.strokeRect((i % n) * s + 1, ((i / n) | 0) * s + 1, s - 2, s - 2);
+      }
+      const total = 2 ** (n * n), cols = n === 3 ? 32 : n === 2 ? 8 : 2, rows = total / cols;
+      const t = Math.min(320 / cols, 160 / rows), q = t / n, me = index();
+      lx.clearRect(0, 0, 320, 160);
+      for (let p = 0; p < total; p++) {
+        const X = (p % cols) * t, Y = ((p / cols) | 0) * t;
+        for (let i = 0; i < n * n; i++) if ((p >> (n * n - 1 - i)) & 1) { lx.fillStyle = ink; lx.fillRect(X + (i % n) * q + 0.5, Y + ((i / n) | 0) * q + 0.5, q - 0.5, q - 0.5); }
+        if (p === me) { lx.strokeStyle = acc; lx.lineWidth = 2; lx.strokeRect(X + 0.5, Y + 0.5, t - 1, t - 1); }
+      }
+      const bits = Array.from(cells).join('');
+      info.innerHTML = `${n}×${n} squares: <b>2<sup>${n * n}</sup> = ${total}</b> pictures · yours is ${bits} in binary = number <b>${me}</b>`;
+      const digits = Math.floor(side * side * Math.log10(shades)) + 1;
+      big.innerHTML = `${side}×${side} pixels with ${shades} shades: ${shades}<sup>${side * side}</sup> pictures, a number with <b>${digits.toLocaleString()}</b> digits` + (digits > 80 ? ' (the universe has about 10<sup>80</sup> atoms)' : '');
+    }
+    gc.style.cursor = 'pointer';
+    gc.addEventListener('pointerdown', (e) => {
+      const r = gc.getBoundingClientRect(), x = Math.floor((e.clientX - r.left) / r.width * n), y = Math.floor((e.clientY - r.top) / r.height * n);
+      if (x >= 0 && x < n && y >= 0 && y < n) { cells[y * n + x] ^= 1; draw(); }
+    });
+    el.append(h('div', { class: 'w-row' }, gc, lc), info,
+      h('div', { class: 'w-ctrl' }, chips(['1×1', '2×2', '3×3'], '3×3', (v) => { n = +v[0]; cells = new Uint8Array(n * n); draw(); }),
+        btn('random', () => { cells = cells.map(() => Math.random() < 0.5 ? 1 : 0); draw(); })),
+      h('div', { class: 'w-ctrl' }, slider('size', 1, 28, 1, side, (v) => v + '×' + v, (v) => { side = v; draw(); }),
+        slider('shades', 2, 256, 1, shades, String, (v) => { shades = v; draw(); })), big);
+    draw(); onTheme(draw);
+  };
+
+  /* ---------------- Monty Hall */
+  W.monty = (el) => {
+    frame(el, 'Monty Hall, played',
+      'Pick a door. The host, who knows where the car is, opens a different door with a goat behind it. Then stay or switch. Play a few rounds by hand, then let the computer play a thousand of each and watch the two win rates settle.');
+    const doors = h('div', { class: 'mh-doors' }), say = h('div', { class: 'w-kv' }), tally = h('div', { class: 'bars' });
+    const stat = { stay: [0, 0], switch: [0, 0] };
+    const bb = bars(2, ['stay', 'switch']);
+    bb.classList.add('wide-labels');
+    let car, pick, opened, done;
+    const ds = [0, 1, 2].map((i) => { const d = btn('door ' + (i + 1), () => choose(i)); d.classList.add('mh-door'); doors.append(d); return d; });
+    const stayB = btn('stay', () => finish(false)), swB = btn('switch', () => finish(true), 'accent');
+    function reset() {
+      car = (Math.random() * 3) | 0; pick = opened = null; done = false;
+      ds.forEach((d, i) => { d.textContent = 'door ' + (i + 1); d.disabled = false; d.className = 'w-btn mh-door'; });
+      stayB.disabled = swB.disabled = true; say.textContent = 'Pick a door.';
+    }
+    function choose(i) {
+      if (pick != null) return;
+      pick = i; ds[i].classList.add('on');
+      const goats = [0, 1, 2].filter((d) => d !== pick && d !== car);
+      opened = goats[(Math.random() * goats.length) | 0];
+      ds[opened].textContent = '🐐'; ds[opened].disabled = true;
+      stayB.disabled = swB.disabled = false;
+      say.textContent = `You picked door ${pick + 1}. The host opens door ${opened + 1}: a goat. Stay with ${pick + 1}, or switch to ${3 - pick - opened + 1}?`;
+    }
+    function finish(sw) {
+      if (done || pick == null) return;
+      done = true;
+      const fin = sw ? 3 - pick - opened : pick, win = fin === car;
+      ds.forEach((d, i) => { d.textContent = i === car ? '🚗' : '🐐'; d.disabled = true; });
+      ds[fin].classList.add(win ? 'mh-win' : 'mh-lose');
+      record(sw, win);
+      say.innerHTML = `You ${sw ? 'switched' : 'stayed'} and ${win ? '<b>won the car</b>' : 'got a goat'}. <button type="button" class="w-btn">again</button>`;
+      say.querySelector('button').onclick = reset;
+    }
+    function record(sw, win) { const s = stat[sw ? 'switch' : 'stay']; s[0] += win; s[1]++; show(); }
+    function show() {
+      const r = ['stay', 'switch'].map((k) => (stat[k][1] ? stat[k][0] / stat[k][1] : 0));
+      bb.set(r, (v) => (v * 100).toFixed(1) + '%', 1);
+      tally.textContent = `stay: won ${stat.stay[0]} of ${stat.stay[1]} · switch: won ${stat.switch[0]} of ${stat.switch[1]}`;
+    }
+    function many() {
+      for (let t = 0; t < 1000; t++) for (const sw of [false, true]) {
+        const c = (Math.random() * 3) | 0, p = (Math.random() * 3) | 0;
+        const goats = [0, 1, 2].filter((d) => d !== p && d !== c), o = goats[(Math.random() * goats.length) | 0];
+        record(sw, (sw ? 3 - p - o : p) === c);
+      }
+    }
+    tally.className = 'w-kv';
+    el.append(doors, say, h('div', { class: 'w-ctrl' }, stayB, swB, btn('play 1000 of each', many), btn('reset counts', () => { stat.stay = [0, 0]; stat.switch = [0, 0]; show(); })), bb, tally);
+    reset(); show();
+  };
+
+  /* ---------------- softmax and cross-entropy */
+  W.softmax = (el) => {
+    frame(el, 'Scores to probabilities',
+      'Drag the top bars to set the network\'s ten scores, one per digit. Below them, softmax turns the scores into probabilities that add up to 1. Click a digit\'s label to say which one is right: the loss is minus the log of the probability on the right answer. Try raising every score by the same amount, and try a confident wrong answer.');
+    const N = 10, Wd = 340, Ht = 260, top = 124, y0 = 16;
+    const [c, ctx] = canvas(Wd, Ht);
+    let s = [0.5, -1, 2, 0, -0.5, 1, -2, 0.2, 3, -1], truth = 8;
+    const info = h('div', { class: 'w-kv' });
+    const bw = Wd / N, sMax = 5;
+    const sm = () => { const m = Math.max(...s), e = s.map((v) => Math.exp(v - m)), t = e.reduce((a, b) => a + b, 0); return e.map((v) => v / t); };
+    function draw() {
+      ctx.clearRect(0, 0, Wd, Ht);
+      const p = sm(), mid = (y0 + top) / 2, ink = css('--ink'), ink2 = css('--ink-2'), acc = css('--accent');
+      ctx.strokeStyle = css('--rule'); ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(Wd, mid); ctx.moveTo(0, Ht - 28); ctx.lineTo(Wd, Ht - 28); ctx.stroke();
+      ctx.font = fpx(c, 10) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center';
+      for (let i = 0; i < N; i++) {
+        const x = i * bw + 4, w = bw - 8, y = s[i] / sMax * (mid - y0 - 4);
+        ctx.fillStyle = i === truth ? acc : ink2; ctx.globalAlpha = 0.85;
+        ctx.fillRect(x, y > 0 ? mid - y : mid, w, Math.abs(y));
+        const ph = p[i] * (Ht - 28 - top - 14);
+        ctx.fillStyle = i === truth ? acc : ink; ctx.fillRect(x, Ht - 28 - ph, w, ph); ctx.globalAlpha = 1;
+        ctx.fillStyle = ink2; ctx.fillText(s[i].toFixed(1), x + w / 2, s[i] >= 0 ? mid + 12 : mid - 4);
+        ctx.fillText(p[i] < 0.995 ? p[i].toFixed(2).replace(/^0/, '') : '1.0', x + w / 2, Ht - 32 - ph);
+        ctx.fillStyle = i === truth ? acc : ink; ctx.font = (i === truth ? 'bold ' : '') + fpx(c, 13) + 'px "JetBrains Mono", monospace';
+        ctx.fillText(String(i), x + w / 2, Ht - 10); ctx.font = fpx(c, 10) + 'px "JetBrains Mono", monospace';
+      }
+      ctx.textAlign = 'left'; ctx.fillStyle = ink2; ctx.fillText('scores (drag them)', 2, 10); ctx.fillText('probabilities', 2, top + 12);
+      const loss = -Math.log(Math.max(p[truth], 1e-12));
+      info.innerHTML = `right answer <b>${truth}</b> · probability ${p[truth].toFixed(3)} · loss = −log ${p[truth].toFixed(3)} = <b>${loss.toFixed(3)}</b> · sum of probabilities ${p.reduce((a, b) => a + b, 0).toFixed(3)}`;
+    }
+    let drag = null;
+    const at = (e) => { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * Wd, (e.clientY - r.top) / r.height * Ht]; };
+    c.addEventListener('pointerdown', (e) => {
+      const [x, y] = at(e), i = clamp(Math.floor(x / bw), 0, N - 1);
+      if (y > Ht - 28) { truth = i; draw(); return; }
+      if (y < top) { drag = i; c.setPointerCapture(e.pointerId); move(e); }
+    });
+    const move = (e) => { if (drag == null) return; const y = at(e)[1], mid = (y0 + top) / 2; s[drag] = Math.round(clamp((mid - y) / (mid - y0 - 4) * sMax, -sMax, sMax) * 10) / 10; draw(); };
+    c.addEventListener('pointermove', move);
+    c.addEventListener('pointerup', () => { drag = null; });
+    keys(c, 'ten scores; left and right choose a digit, up and down change its score', (dx, dy) => {
+      if (dx) truth = (truth + dx + N) % N; else s[truth] = clamp(Math.round((s[truth] - dy * 0.5) * 10) / 10, -sMax, sMax); draw();
+    });
+    el.append(c, info, h('div', { class: 'w-ctrl' },
+      btn('+1 to every score', () => { s = s.map((v) => Math.min(sMax, v + 1)); draw(); }),
+      btn('confident and wrong', () => { s = s.map(() => -1); s[(truth + 3) % N] = 5; draw(); }),
+      btn('all equal', () => { s = s.map(() => 0); draw(); })));
+    draw(); onTheme(draw);
+  };
+
+  /* ---------------- occlusion: what does the network look at? */
+  W.occlude = (el) => {
+    frame(el, 'Cover part of the digit',
+      'This is the small trained network from this chapter\'s demos, looking at a handwritten test digit. Move the black square over the digit to erase that part, and watch the probabilities change. Press <b>map</b> to slide the square over every position: red marks the pixels whose loss hurts the network\'s answer most.');
+    const S = 224, cell = S / 28;
+    const [c, ctx] = canvas(S, S);
+    let k = 1 + ((Math.random() * 119) | 0), x0 = null, size = 8, heat = null, sq = [10, 10];
+    const pb = bars(10);
+    const info = h('div', { class: 'w-kv' });
+    const digit = () => Float32Array.from(samples.subarray(k * 784, k * 784 + 784), (v) => v / 255);
+    function covered(x, sx, sy) { const y = Float32Array.from(x); for (let r = sy; r < sy + size; r++) for (let q = sx; q < sx + size; q++) if (r >= 0 && r < 28 && q >= 0 && q < 28) y[r * 28 + q] = 0; return y; }
+    function draw() {
+      const x = x0, y = covered(x, sq[0], sq[1]);
+      ctx.fillStyle = '#000'; ctx.fillRect(0, 0, S, S);
+      drawDigit(ctx, y, 0, 0, S, '#fff');
+      if (heat) {
+        const m = Math.max(...heat, 1e-6);
+        for (let i = 0; i < 784; i++) if (heat[i] > 0) { ctx.fillStyle = `rgba(239,68,68,${0.75 * heat[i] / m})`; ctx.fillRect((i % 28) * cell, ((i / 28) | 0) * cell, cell, cell); }
+      }
+      ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2; ctx.strokeRect(sq[0] * cell, sq[1] * cell, size * cell, size * cell);
+      const p0 = mlp.forward(x).p, p = mlp.forward(y).p, best = p0.indexOf(Math.max(...p0));
+      pb.set(p, (v) => v.toFixed(2), 1);
+      const now = p.indexOf(Math.max(...p));
+      info.innerHTML = `the digit is a <b>${D.sampleLabels[k]}</b> · uncovered, the network says ${best} (${(p0[best] * 100).toFixed(0)}%) · covered, it says <b>${now}</b> (${(p[now] * 100).toFixed(0)}%)`;
+    }
+    function map() {
+      const x = x0, p0 = mlp.forward(x).p, t = p0.indexOf(Math.max(...p0));
+      const acc = new Float32Array(784), cnt = new Float32Array(784);
+      for (let sy = -size + 1; sy < 28; sy += 1) for (let sx = -size + 1; sx < 28; sx += 1) {
+        const drop = Math.max(0, p0[t] - mlp.forward(covered(x, sx, sy)).p[t]);
+        for (let r = Math.max(0, sy); r < Math.min(28, sy + size); r++) for (let q = Math.max(0, sx); q < Math.min(28, sx + size); q++) { acc[r * 28 + q] += drop; cnt[r * 28 + q]++; }
+      }
+      heat = acc.map((v, i) => (cnt[i] ? v / cnt[i] : 0)); draw();
+    }
+    const place = (e) => { const r = c.getBoundingClientRect(); sq = [Math.round((e.clientX - r.left) / r.width * 28 - size / 2), Math.round((e.clientY - r.top) / r.height * 28 - size / 2)]; draw(); };
+    let down = false;
+    c.addEventListener('pointerdown', (e) => { down = true; c.setPointerCapture(e.pointerId); place(e); });
+    c.addEventListener('pointermove', (e) => { if (down || e.pointerType === 'mouse') place(e); });
+    c.addEventListener('pointerup', () => { down = false; });
+    c.style.cursor = 'none';
+    keys(c, 'digit with a movable black square', (dx, dy) => { sq = [sq[0] + dx, sq[1] + dy]; draw(); });
+    const next = () => { k = (k + 1 + ((Math.random() * 118) | 0)) % 120; x0 = digit(); heat = null; draw(); };
+    el.append(h('div', { class: 'w-row' }, c, h('div', { style: 'flex:1;min-width:220px' }, pb, info)),
+      h('div', { class: 'w-ctrl' }, btn('map', map, 'accent'), btn('another digit', next), btn('clear map', () => { heat = null; draw(); }),
+        slider('square', 2, 14, 1, size, (v) => v + '×' + v, (v) => { size = v; heat = null; draw(); })));
+    x0 = digit(); draw(); onTheme(draw);
+  };
+
+  /* ---------------- AlexNet's real first layer */
+  W.alexnet = (el) => {
+    frame(el, 'AlexNet\'s real first layer',
+      'These are the 64 filters of AlexNet\'s first layer, exactly as the network learned them from ImageNet, each 11×11 pixels in three colors. Pick one to run it over the cat, stepping 4 pixels at a time as AlexNet does. Its feature map is 55×55: bright where that bit of the photo matches the filter. With <b>signed</b>, orange is a match and blue an anti-match; ReLU keeps only the matches; pooling then keeps the strongest of each 3×3 patch.');
+    const A = D.alexnet, q = new Int8Array(b64(A.w).buffer);
+    const Wt = Float32Array.from(q, (v, i) => v * A.s[(i / 363) | 0]);
+    const [fc, fx] = canvas(8 * 30 + 7 * 3, 8 * 30 + 7 * 3), [ic, ix] = canvas(224, 224), [mc, mx] = canvas(224, 224);
+    const info = h('div', { class: 'w-kv' });
+    let pick = 1, mode = 'ReLU', X = null;
+    const mean = [0.485, 0.456, 0.406], sd = [0.229, 0.224, 0.225];
+    function filterRGB(f) {
+      const o = f * 363, v = Wt.subarray(o, o + 363), m = Math.max(...v.map(Math.abs));
+      return (y, x) => [0, 1, 2].map((ch) => Math.round(127.5 + 127.5 * v[ch * 121 + y * 11 + x] / m));
+    }
+    function drawFilters() {
+      fx.clearRect(0, 0, fc.W, fc.H);
+      for (let f = 0; f < 64; f++) {
+        const X0 = (f % 8) * 33, Y0 = ((f / 8) | 0) * 33, rgb = filterRGB(f);
+        for (let y = 0; y < 11; y++) for (let x = 0; x < 11; x++) { const [r, g, b] = rgb(y, x); fx.fillStyle = `rgb(${r},${g},${b})`; fx.fillRect(X0 + x * 30 / 11, Y0 + y * 30 / 11, 30 / 11 + 0.4, 30 / 11 + 0.4); }
+        if (f === pick) { fx.strokeStyle = css('--accent'); fx.lineWidth = 3; fx.strokeRect(X0 - 1, Y0 - 1, 32, 32); }
+      }
+    }
+    function featureMap() {
+      const o = pick * 363, out = new Float32Array(55 * 55), b = A.b[pick];
+      for (let oy = 0; oy < 55; oy++) for (let ox = 0; ox < 55; ox++) {
+        let s = b;
+        for (let ch = 0; ch < 3; ch++) for (let y = 0; y < 11; y++) {
+          const iy = oy * 4 - 2 + y; if (iy < 0 || iy >= 224) continue;
+          for (let x = 0; x < 11; x++) { const ixx = ox * 4 - 2 + x; if (ixx < 0 || ixx >= 224) continue; s += Wt[o + ch * 121 + y * 11 + x] * X[ch][iy * 224 + ixx]; }
+        }
+        out[oy * 55 + ox] = s;
+      }
+      return out;
+    }
+    function drawMap() {
+      if (!X) return;
+      let m = featureMap(), n = 55;
+      if (mode !== 'signed') m = m.map((v) => Math.max(0, v));
+      if (mode === 'ReLU + pool') {
+        const p = new Float32Array(27 * 27);
+        for (let y = 0; y < 27; y++) for (let x = 0; x < 27; x++) { let b = 0; for (let dy = 0; dy < 3; dy++) for (let dx = 0; dx < 3; dx++) b = Math.max(b, m[(y * 2 + dy) * 55 + x * 2 + dx]); p[y * 27 + x] = b; }
+        m = p; n = 27;
+      }
+      const mxv = Math.max(...m.map(Math.abs), 1e-6), c = 224 / n;
+      mx.clearRect(0, 0, 224, 224);
+      for (let i = 0; i < n * n; i++) {
+        mx.fillStyle = mode === 'signed' ? div(m[i] / mxv) : `rgb(${Array(3).fill(Math.round(255 * m[i] / mxv)).join(',')})`;
+        mx.fillRect((i % n) * c, ((i / n) | 0) * c, c + 0.4, c + 0.4);
+      }
+      info.innerHTML = `filter <b>${pick}</b> of 64 · its map is ${n}×${n}` + (mode === 'ReLU + pool' ? ' after 3×3 pooling with stride 2' : '') + ' · 64 filters like this make AlexNet\'s first layer, 23,232 weights in all';
+    }
+    const im = new Image();
+    im.onload = () => {
+      ix.drawImage(im, 0, 0, 224, 224);
+      const t = document.createElement('canvas'); t.width = t.height = 224;
+      const tc = t.getContext('2d'); tc.drawImage(im, 0, 0);
+      const d = tc.getImageData(0, 0, 224, 224).data;
+      X = [0, 1, 2].map((ch) => Float32Array.from({ length: 224 * 224 }, (_, i) => (d[i * 4 + ch] / 255 - mean[ch]) / sd[ch]));
+      drawMap();
+    };
+    im.src = A.jpg;
+    fc.style.cursor = 'pointer';
+    const choose = (f) => { pick = (f + 64) % 64; drawFilters(); drawMap(); };
+    fc.addEventListener('pointerdown', (e) => {
+      const r = fc.getBoundingClientRect(), x = Math.floor((e.clientX - r.left) / r.width * fc.W / 33), y = Math.floor((e.clientY - r.top) / r.height * fc.H / 33);
+      if (x >= 0 && x < 8 && y >= 0 && y < 8) choose(y * 8 + x);
+    });
+    keys(fc, 'the 64 first-layer filters; arrow keys choose one', (dx, dy) => choose(pick + dx + dy * 8));
+    el.append(h('div', { class: 'w-row' },
+      h('div', {}, h('div', { class: 'w-kv' }, 'the 64 learned filters'), fc),
+      h('div', {}, h('div', { class: 'w-kv' }, 'the input, 224×224'), ic),
+      h('div', {}, h('div', { class: 'w-kv' }, 'the feature map'), mc)), info,
+      h('div', { class: 'w-ctrl' }, chips(['signed', 'ReLU', 'ReLU + pool'], mode, (v) => { mode = v; drawMap(); }),
+        btn('random filter', () => choose((Math.random() * 64) | 0))));
+    drawFilters(); onTheme(() => { drawFilters(); drawMap(); });
+  };
+
+  /* ---------------- AlexNet by the formula */
+  W.alexsize = (el) => {
+    frame(el, 'AlexNet by the formula',
+      'Every shape in AlexNet follows from one rule: a layer with kernel k, stride s and padding p turns a side of n pixels into ⌊(n + 2p − k)/s⌋ + 1. Change the input size and watch the table recompute. The bars compare layers: where the weights are (mostly the fully connected layers) and where the multiplications are (mostly the convolutions). The receptive field is how many input pixels across one unit in that layer can see.');
+    const L = [
+      ['conv1', 'c', 3, 64, 11, 4, 2], ['pool1', 'p', 0, 0, 3, 2, 0], ['conv2', 'c', 64, 192, 5, 1, 2], ['pool2', 'p', 0, 0, 3, 2, 0],
+      ['conv3', 'c', 192, 384, 3, 1, 1], ['conv4', 'c', 384, 256, 3, 1, 1], ['conv5', 'c', 256, 256, 3, 1, 1], ['pool5', 'p', 0, 0, 3, 2, 0],
+      ['avgpool', 'a'], ['fc6', 'f', 9216, 4096], ['fc7', 'f', 4096, 4096], ['fc8', 'f', 4096, 1000]];
+    const tbl = h('table', { class: 'w-table' }), tot = h('div', { class: 'w-kv' });
+    let N = 224;
+    const fmt = (v) => v >= 1e9 ? (v / 1e9).toFixed(2) + 'G' : v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v >= 1e3 ? (v / 1e3).toFixed(1) + 'k' : String(v);
+    function render() {
+      let n = N, ch = 3, rf = 1, jump = 1, rows = [], ok = true;
+      for (const l of L) {
+        let w = 0, mult = 0, shape;
+        if (l[1] === 'c' || l[1] === 'p') {
+          const [, t, cin, cout, k, s, p] = l;
+          n = Math.floor((n + 2 * p - k) / s) + 1; if (n < 1) { ok = false; break; }
+          rf += (k - 1) * jump; jump *= s;
+          if (t === 'c') { ch = cout; w = cin * k * k * cout + cout; mult = cin * k * k * cout * n * n; }
+          shape = `${ch}×${n}×${n}`;
+        } else if (l[1] === 'a') { shape = `${ch}×6×6`; n = 6; }
+        else { w = l[2] * l[3] + l[3]; mult = l[2] * l[3]; shape = String(l[3]); }
+        rows.push({ name: l[0], shape, w, mult, rf: l[1] === 'c' || l[1] === 'p' ? rf : null });
+      }
+      if (!ok) { tbl.innerHTML = '<tr><td>too small: a layer would have no pixels left</td></tr>'; tot.textContent = ''; return; }
+      const W0 = rows.reduce((s, r) => s + r.w, 0), M0 = rows.reduce((s, r) => s + r.mult, 0);
+      const bar = (v, t, cls) => `<span class="w-mini ${cls}" style="width:${Math.max(v / t * 100, v ? 1 : 0).toFixed(1)}%"></span>`;
+      tbl.innerHTML = '<tr><th>layer</th><th>output</th><th>weights</th><th>multiplications</th><th>sees</th></tr>' +
+        rows.map((r) => `<tr><td>${r.name}</td><td>${r.shape}</td><td>${r.w ? fmt(r.w) : ''}<div class="w-minibox">${bar(r.w, W0, 'w')}</div></td><td>${r.mult ? fmt(r.mult) : ''}<div class="w-minibox">${bar(r.mult, M0, 'm')}</div></td><td>${r.rf ? r.rf + ' px' : ''}</td></tr>`).join('');
+      tot.innerHTML = `total: <b>${W0.toLocaleString()}</b> weights · <b>${fmt(M0)}</b> multiplications per image` + (N === 224 ? ' (the 61,100,840 printed by <code>ax_count</code>)' : '');
+    }
+    el.append(h('div', { class: 'w-ctrl' }, slider('input size', 63, 448, 1, N, (v) => v + '×' + v, (v) => { N = v; render(); })), h('div', { class: 'w-scroll' }, tbl), tot);
+    render();
+  };
+
+  /* ---------------- echo: a reservoir continues a signal */
+  W.echo = (el) => {
+    frame(el, 'A random memory, live',
+      'A reservoir of 200 randomly connected tanh units is fed a signal. Only the readout, one number per unit, is solved for, by least squares on 2,000 steps, so that it predicts the next value. Then the input is cut off and the reservoir runs on its own, fed back by its own predictions (orange). Turn the <b>strength</b> of the random connections down and the memory is too short; up and the reservoir starts to make its own chaos. Try a new random reservoir, too.');
+    const Nn = 200, Wd = 340, Ht = 150;
+    const [c, ctx] = canvas(Wd, Ht);
+    const info = h('div', { class: 'w-kv' });
+    let sig = 'Mackey–Glass', g = 0.95, seed = 8, bend = true;
+    function signal(kind, T) {
+      if (kind === 'sine') return Float64Array.from({ length: T }, (_, t) => Math.sin(t / 6));
+      if (kind === 'two waves') return Float64Array.from({ length: T }, (_, t) => 0.6 * Math.sin(t / 5) + 0.4 * Math.sin(t / 13.7));
+      const tau = 17, dt = 0.1, hist = new Float64Array(tau * 10 + 1).fill(1.2), out = new Float64Array(T); let x = 1.2, ptr = 0;
+      for (let t = 0; t < 300 + T; t++) {
+        for (let k = 0; k < 10; k++) { const xd = hist[ptr]; hist[ptr] = x; ptr = (ptr + 1) % hist.length; x += dt * (0.2 * xd / (1 + xd ** 10) - 0.1 * x); }
+        if (t >= 300) out[t - 300] = x;
+      }
+      return out.map((v) => (v - 0.9) * 2.2);
+    }
+    function solve(Am, bv) {             // Gaussian elimination with partial pivoting
+      const n = bv.length;
+      for (let i = 0; i < n; i++) {
+        let p = i; for (let r = i + 1; r < n; r++) if (Math.abs(Am[r][i]) > Math.abs(Am[p][i])) p = r;
+        [Am[i], Am[p]] = [Am[p], Am[i]]; [bv[i], bv[p]] = [bv[p], bv[i]];
+        for (let r = i + 1; r < n; r++) { const f = Am[r][i] / Am[i][i]; if (!f) continue; for (let q = i; q < n; q++) Am[r][q] -= f * Am[i][q]; bv[r] -= f * bv[i]; }
+      }
+      const x = new Float64Array(n);
+      for (let i = n - 1; i >= 0; i--) { let s = bv[i]; for (let q = i + 1; q < n; q++) s -= Am[i][q] * x[q]; x[i] = s / Am[i][i]; }
+      return x;
+    }
+    function run() {
+      const T0 = 100, T1 = 2000, T2 = 300, u = signal(sig, T0 + T1 + T2 + 1);
+      const r = mulberry(seed), gs = () => gauss(r);
+      const Wr = Array.from({ length: Nn }, () => Float64Array.from({ length: Nn }, () => gs() * g / Math.sqrt(Nn)));
+      const win = Float64Array.from({ length: Nn }, () => gs() * 0.5), wb = Float64Array.from({ length: Nn }, () => gs() * 0.2);
+      const f = bend ? Math.tanh : (v) => v;
+      const step = (s, x) => { const o = new Float64Array(Nn); for (let i = 0; i < Nn; i++) { let a = win[i] * x + wb[i]; const row = Wr[i]; for (let j = 0; j < Nn; j++) a += row[j] * s[j]; o[i] = f(a); } return o; };
+      let s = new Float64Array(Nn);
+      const SS = Array.from({ length: Nn }, () => new Float64Array(Nn)), Sy = new Float64Array(Nn);
+      for (let t = 0; t < T0 + T1; t++) {
+        s = step(s, u[t]);
+        if (t >= T0) { const y = u[t + 1]; for (let i = 0; i < Nn; i++) { Sy[i] += s[i] * y; const si = s[i], row = SS[i]; for (let j = 0; j < Nn; j++) row[j] += si * s[j]; } }
+      }
+      for (let i = 0; i < Nn; i++) SS[i][i] += 1e-6;
+      const wo = solve(SS, Sy);
+      const out = new Float64Array(T2); let x = u[T0 + T1];
+      for (let t = 0; t < T2; t++) { s = step(s, x); x = s.reduce((a, v, i) => a + v * wo[i], 0); if (!isFinite(x) || Math.abs(x) > 1e3) x = NaN; out[t] = x; }
+      const truth = u.subarray(T0 + T1 + 1, T0 + T1 + 1 + T2), past = u.subarray(T0 + T1 - 120, T0 + T1 + 1);
+      draw(past, truth, out);
+      const err = (n) => { let e = 0; for (let t = 0; t < n; t++) e += Math.abs(truth[t] - out[t]); return e / n; };
+      const e1 = err(100), e3 = err(T2);
+      info.innerHTML = isFinite(e3) ? `average error, first 100 steps on its own: <b>${e1.toExponential(1)}</b> · all 300: <b>${e3.toExponential(1)}</b>` : 'the reservoir blew up running on its own';
+    }
+    function draw(past, truth, out) {
+      ctx.clearRect(0, 0, Wd, Ht);
+      const n = past.length + truth.length, X = (t) => t / n * Wd, Y = (v) => Ht / 2 - v * Ht * 0.4;
+      ctx.strokeStyle = css('--rule'); ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(past.length), 0); ctx.lineTo(X(past.length), Ht); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = css('--ink'); ctx.globalAlpha = 0.25; ctx.lineWidth = 4; ctx.beginPath();
+      [...past, ...truth].forEach((v, t) => (t ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)))); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = css('--accent'); ctx.lineWidth = 1.6; ctx.beginPath(); let on = false;
+      out.forEach((v, t) => { if (!isFinite(v) || Math.abs(v) > 2.4) { on = false; return; } const x = X(past.length + t), y = Y(v); on ? ctx.lineTo(x, y) : ctx.moveTo(x, y); on = true; }); ctx.stroke();
+      ctx.fillStyle = css('--ink-2'); ctx.font = fpx(c, 10) + 'px "JetBrains Mono", monospace';
+      ctx.fillText('fed the signal', 4, 12); ctx.fillText('on its own →', X(past.length) + 4, 12);
+    }
+    let pending = null;
+    const later = () => { clearTimeout(pending); info.textContent = 'solving…'; pending = setTimeout(run, 30); };
+    el.append(c, info, h('div', { class: 'w-ctrl' }, chips(['sine', 'two waves', 'Mackey–Glass'], sig, (v) => { sig = v; later(); }),
+      chips(['tanh', 'no bend'], 'tanh', (v) => { bend = v === 'tanh'; later(); })),
+      h('div', { class: 'w-ctrl' }, slider('strength', 0.1, 1.6, 0.05, g, (v) => v.toFixed(2), (v) => { g = v; later(); }),
+        btn('new random reservoir', () => { seed++; later(); })));
+    later(); onTheme(later);
+  };
+
+  /* ---------------- MENACE: a learning machine made of matchboxes */
+  W.menace = (el) => {
+    frame(el, 'MENACE, the matchbox learner',
+      'MENACE plays X and you play O. Every position it has seen is a matchbox holding beads, a few for each free square, and it moves by drawing a bead at random. Positions that are rotations or mirror images of each other share a box, as in Michie\'s machine. The small numbers show the beads it had for each square in the box it just drew from. After a game, every box it used gains beads for the move it made: 3 if it won, 1 for a draw, and it loses 3 if it lost. Play it, or let it train against a player who moves at random, and watch it stop losing.');
+    const boxes = new Map(), board = Array(9).fill(' '), used = [];
+    let over = false, games = 0;
+    const hist = [];
+    const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+    const winner = (b) => { for (const [a, c, d] of lines) if (b[a] !== ' ' && b[a] === b[c] && b[a] === b[d]) return b[a]; return b.includes(' ') ? null : 'draw'; };
+    let log = [];
+    const SYM = [[0, 1, 2, 3, 4, 5, 6, 7, 8], [6, 3, 0, 7, 4, 1, 8, 5, 2], [8, 7, 6, 5, 4, 3, 2, 1, 0], [2, 5, 8, 1, 4, 7, 0, 3, 6],
+      [2, 1, 0, 5, 4, 3, 8, 7, 6], [6, 7, 8, 3, 4, 5, 0, 1, 2], [0, 3, 6, 1, 4, 7, 2, 5, 8], [8, 5, 2, 7, 4, 1, 6, 3, 0]];
+    const canon = (b) => { let key = null, map = null; for (const s of SYM) { const k = s.map((i) => b[i]).join(''); if (key === null || k < key) { key = k; map = s; } } return [key, map]; };
+    const box = (key) => { if (!boxes.has(key)) { const n = [...key].filter((v) => v === ' ').length, start = n >= 8 ? 4 : n >= 6 ? 3 : n >= 4 ? 2 : 1; boxes.set(key, [...key].map((v) => (v === ' ' ? start : 0))); } return boxes.get(key); };
+    function menaceMove(b, log) {
+      const [key, map] = canon(b), beads = box(key), tot = beads.reduce((a, v) => a + v, 0);
+      let r = Math.random() * tot, m = -1;
+      for (let i = 0; i < 9; i++) { r -= beads[i]; if (r < 0) { m = i; break; } }
+      if (m < 0) { const free = [...key].map((v, i) => (v === ' ' ? i : -1)).filter((i) => i >= 0); m = free[(Math.random() * free.length) | 0]; }
+      log.push([key, m, map]); b[map[m]] = 'X';
+    }
+    function learn(log, result) {
+      const d = result === 'X' ? 3 : result === 'draw' ? 1 : -3;
+      for (const [key, m] of log) { const bx = boxes.get(key); bx[m] = Math.max(0, bx[m] + d); }
+      games++; hist.push(result === 'O' ? 0 : result === 'draw' ? 1 : 2); if (hist.length > 2000) hist.shift();
+    }
+    const cells = Array.from({ length: 9 }, (_, i) => { const b = btn('', () => human(i)); b.className = 'mn-cell'; return b; });
+    const grid = h('div', { class: 'mn-board' }, ...cells), say = h('div', { class: 'w-kv' });
+    const [sc, sx] = canvas(300, 70);
+    function show(beads) {
+      cells.forEach((c, i) => {
+        c.innerHTML = board[i] !== ' ' ? board[i] : beads && beads[i] ? `<small>${beads[i]}</small>` : '';
+        c.classList.toggle('x', board[i] === 'X'); c.disabled = over || board[i] !== ' ';
+      });
+      sx.clearRect(0, 0, 300, 70);
+      const win = 100, cols = [css('--neg'), css('--ink-2'), css('--accent')];
+      const pts = [];
+      for (let e = win; e <= hist.length; e += Math.max(1, Math.floor(hist.length / 150))) { const seg = hist.slice(e - win, e); pts.push([e, seg.filter((v) => v === 0).length / win]); }
+      sx.strokeStyle = css('--rule'); sx.strokeRect(0.5, 0.5, 299, 69);
+      sx.fillStyle = css('--ink-2'); sx.font = fpx(sc, 10) + 'px "JetBrains Mono", monospace';
+      sx.fillText('games lost, of the last 100 (top = 40)', 4, 12);
+      if (pts.length > 1) { sx.strokeStyle = cols[0]; sx.lineWidth = 1.6; sx.beginPath(); pts.forEach(([e, v], i) => { const x = (i / (pts.length - 1)) * 296 + 2, y = 67 - Math.min(1, v / 0.4) * 50; i ? sx.lineTo(x, y) : sx.moveTo(x, y); }); sx.stroke(); }
+      const last = hist.slice(-100), L = last.filter((v) => v === 0).length, Dd = last.filter((v) => v === 1).length;
+      say.innerHTML = `${games} games · ${boxes.size} matchboxes so far` + (last.length ? ` · last ${last.length}: MENACE won ${last.length - L - Dd}, drew ${Dd}, lost <b>${L}</b>` : '');
+    }
+    function start() { board.fill(' '); over = false; log = []; menaceMove(board, log); show(usedBox()); }
+    const usedBox = () => {       // the beads of the last box, placed back on the real board
+      if (!log.length) return null;
+      const [key, , map] = log[log.length - 1], bx = boxes.get(key), out = Array(9).fill(0);
+      map.forEach((sq, i) => { if (key[i] === ' ') out[sq] = bx[i]; });
+      return out;
+    };
+    function human(i) {
+      if (over || board[i] !== ' ') return;
+      board[i] = 'O';
+      let w = winner(board);
+      if (!w) { menaceMove(board, log); w = winner(board); }
+      if (!w) { show(usedBox()); return; }
+      over = true; learn(log, w); show(usedBox());
+      say.innerHTML = (w === 'X' ? 'MENACE wins. ' : w === 'O' ? '<b>You win.</b> MENACE takes beads away. ' : 'A draw. ') + say.innerHTML;
+    }
+    function train(n) {
+      for (let g = 0; g < n; g++) {
+        const b = Array(9).fill(' '), lg = []; let w = null;
+        while (true) {
+          menaceMove(b, lg); if ((w = winner(b))) break;
+          const free = b.map((v, i) => (v === ' ' ? i : -1)).filter((i) => i >= 0); b[free[(Math.random() * free.length) | 0]] = 'O';
+          if ((w = winner(b))) break;
+        }
+        learn(lg, w);
+      }
+      start();
+    }
+    el.append(h('div', { class: 'w-row' }, grid, h('div', {}, sc, say)),
+      h('div', { class: 'w-ctrl' }, btn('new game', start, 'accent'), btn('train 200 games', () => train(200)), btn('train 2000', () => train(2000)),
+        btn('forget everything', () => { boxes.clear(); hist.length = 0; games = 0; start(); })));
+    start(); onTheme(() => show(usedBox()));
   };
 
   /* ---------------- mount when visible */

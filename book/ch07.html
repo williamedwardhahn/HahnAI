@@ -133,7 +133,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></code></pre></figure>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></code></pre></figure><div class="widget" data-widget="overflow"></div>
 <figure class="fig reveal" id="fig-img_brighter"><div class="fig-frame"><img src="fig/img_brighter.png" alt="" loading="lazy"></div><figcaption><span class="fignum">Figure 7.8</span> Left: <code>uint8</code> arithmetic wrapped around. Right: the same brightening done in floating point and clipped.</figcaption></figure>
 <p>This bug is common enough to be worth remembering. Whenever an image looks wildly, impossibly colorful after an edit, check the <code>dtype</code>.</p>
 <h2 class="reveal" id="gray-small-turned-and-flipped">Gray, small, turned and flipped</h2>
@@ -224,7 +224,7 @@
 3x3 gray               256^9       has 22 digits
 28x28 black and white  2^784       has 237 digits
 28x28 gray             256^784     has 1,889 digits
-the cat photo          256^405900  has 977,505 digits</pre></div></figure>
+the cat photo          256^405900  has 977,505 digits</pre></div></figure><div class="widget" data-widget="count"></div>
 <p>The 28-pixel-square grayscale images of the next chapter could be any of a number with 1<span>,</span>889 digits. For comparison, the number of atoms in the observable universe is usually estimated to have about 80. Almost all of these images look like the ones in <a href="#fig-img_noise">Figure 7.12</a>:</p>
 <figure class="listing" data-name="img_noise"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">img_noise.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">noise</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>

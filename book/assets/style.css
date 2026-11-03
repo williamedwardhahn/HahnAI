@@ -387,3 +387,37 @@ math[display="block"] { margin: 1.2em 0; overflow-x: auto; }
 .card-letter { font-family: var(--display); font-size: 52px; line-height: 56px; color: var(--accent); }
 .play-step { margin-top: 2.6em; }
 .play-say { font-size: 19px; line-height: 1.55; }
+
+/* matmul */
+.mm-area { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.mm-block { display: grid; gap: 4px; }
+.mm-grid { display: grid; gap: 3px; }
+.mm-cell { font-family: var(--mono); font-size: 14px; text-align: center; padding: 6px 0; border: 1px solid var(--rule); border-radius: 6px; background: var(--card); color: var(--ink); font-variant-numeric: tabular-nums; }
+button.mm-cell { cursor: pointer; }
+.mm-cell.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.mm-op { font-family: var(--mono); font-size: 20px; color: var(--ink-2); }
+.mm-sum { margin-top: 12px; overflow-wrap: anywhere; }
+/* Monty Hall */
+.mh-doors { display: flex; gap: 12px; margin-bottom: 12px; }
+.mh-door.w-btn { border-radius: 10px; width: 92px; height: 120px; font-size: 13px; padding: 0; }
+.mh-door.w-btn:disabled { cursor: default; }
+.mh-door.w-btn:disabled:not(.on):not(.mh-win):not(.mh-lose) { background: transparent; color: var(--ink); font-size: 34px; }
+.mh-door.w-btn:disabled { font-size: 34px; }
+.mh-door.mh-win { background: var(--accent); border-color: var(--accent); color: #fff; }
+.mh-door.mh-lose { border-width: 2px; }
+/* MENACE */
+.mn-board { display: grid; grid-template-columns: repeat(3, 64px); gap: 6px; }
+.mn-cell { width: 64px; height: 64px; font-family: var(--mono); font-size: 30px; border: 1px solid var(--rule); border-radius: 8px; background: var(--card); color: var(--ink); cursor: pointer; }
+.mn-cell.x { color: var(--accent); }
+.mn-cell:disabled { cursor: default; }
+.mn-cell small { font-size: 12px; color: var(--ink-2); }
+/* tables inside demos */
+.w-scroll { overflow-x: auto; margin-top: 10px; }
+.w-table { border-collapse: collapse; font-family: var(--mono); font-size: 12.5px; width: 100%; }
+.w-table th, .w-table td { text-align: left; padding: 4px 10px 4px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.w-table th { color: var(--ink-2); font-weight: 500; }
+.w-minibox { width: 90px; height: 4px; background: var(--rule); border-radius: 2px; margin-top: 2px; }
+.w-mini { display: block; height: 4px; border-radius: 2px; }
+.w-mini.w { background: var(--accent); }
+.w-mini.m { background: var(--ink-2); }
+.bars.wide-labels .bar { grid-template-columns: 4.5em 1fr 52px; }
