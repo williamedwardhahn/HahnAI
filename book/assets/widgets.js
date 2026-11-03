@@ -2233,6 +2233,234 @@
     start(); onTheme(() => show(usedBox()));
   };
 
+  /* ---------------- AlexNet, layer by layer: the real feature maps of a photo */
+  const loadScript = (() => {
+    const done = {};
+    return (src) => done[src] || (done[src] = new Promise((ok, bad) => {
+      const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => { delete done[src]; bad(new Error('could not load ' + src)); };
+      document.head.append(s);
+    }));
+  })();
+  const loadImage = (src) => new Promise((ok) => { const im = new Image(); im.onload = () => ok(im); im.src = src; });
+
+  W.layers = (el) => {
+    frame(el, 'Inside AlexNet, layer by layer',
+      'A photo flows left to right through AlexNet. Every square is a real feature map, computed from this photo, and each block shows the strongest few of its layer; drag sideways to turn the stack. Click a block to open every map of that layer. Click a map to enlarge it, then point at it: the box on the photo shows the patch that one number can see, which grows from 11 pixels in conv1 to 163 in conv5. For conv5 you also see what that unit <b>wants</b> to see: an image made by gradient ascent to excite it as much as possible.');
+    const L = [   // name, kernel, stride, pad (pools folded in where they occur)
+      { key: 'input', name: 'input', shape: '3×224×224' },
+      { key: 'conv1', name: 'conv1', shape: '64×55×55', ops: [[11, 4, 2]] },
+      { key: 'conv2', name: 'conv2', shape: '192×27×27', ops: [[3, 2, 0], [5, 1, 2]], note: 'after pool1' },
+      { key: 'conv3', name: 'conv3', shape: '384×13×13', ops: [[3, 2, 0], [3, 1, 1]], note: 'after pool2' },
+      { key: 'conv4', name: 'conv4', shape: '256×13×13', ops: [[3, 1, 1]] },
+      { key: 'conv5', name: 'conv5', shape: '256×13×13', ops: [[3, 1, 1]] },
+      { key: 'fc6', name: 'fc6', shape: '4096', note: 'pool5 →' },
+      { key: 'fc7', name: 'fc7', shape: '4096' },
+      { key: 'out', name: 'fc8', shape: '1000' }];
+    const PHOTOS = ['cat', 'coffee', 'rocket', 'astronaut', 'motorcycle'];
+    const narrow = (el.clientWidth || 800) < 600;            // a phone: smaller canvas, names only
+    const Wd = narrow ? 400 : 760, Ht = narrow ? 210 : 290, room = narrow ? 14 : 120;
+    const [c, ctx] = canvas(Wd, Ht);
+    const top5 = bars(5, ['', '', '', '', '']), status = h('div', { class: 'w-kv' });
+    top5.classList.add('lx-top');
+    const detail = h('div', { class: 'lx-detail' });
+    let fitK = 1, photo = 'cat', rec = null, maps = {}, yaw = 0.62, sel = null, reveal = 1, hoverBlock = -1, pick = 0, wantsData = null;
+    const geo = [];   // screen boxes of the blocks, for clicks
+
+    function mapTile(layer, k) {            // one map from the atlas as its own small canvas
+      const a = rec.layers[layer], key = layer + ':' + k;
+      if (maps[key]) return maps[key];
+      const t = document.createElement('canvas'); t.width = t.height = a.H;
+      const r = (k / a.cols) | 0, q = k % a.cols;
+      t.getContext('2d').drawImage(a.im, q * (a.H + 1), r * (a.H + 1), a.H, a.H, 0, 0, a.H, a.H);
+      return (maps[key] = t);
+    }
+    const strongest = (layer, n) => rec.layers[layer].mean.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]).slice(0, n).map((p) => p[1]);
+
+    function draw(t) {
+      ctx.setTransform(Math.min(2, devicePixelRatio || 1), 0, 0, Math.min(2, devicePixelRatio || 1), 0, 0);
+      ctx.clearRect(0, 0, Wd, Ht);
+      const dpr = Math.min(2, devicePixelRatio || 1), ink = css('--ink'), ink2 = css('--ink-2'), acc = css('--accent'), rule = css('--rule');
+      const cy = narrow ? 92 : 128, kx = Math.cos(yaw), ky = Math.sin(yaw) * 0.45;
+      const K = fitK, sizes = [116, 96, 80, 64, 64, 64].map((v) => v * K), depth = [1, 7, 8, 9, 8, 8];
+      let x = 18;
+      geo.length = 0;
+      ctx.font = fpx(c, 10.5) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center';
+      L.forEach((l, li) => {
+        const on = reveal >= li / L.length, fade = clamp((reveal * L.length - li) * 1.5, 0, 1);
+        let x0 = x, x1;
+        ctx.globalAlpha = on ? fade : 0;
+        if (li < 6) {
+          const s = sizes[li], n = depth[li], gap = li === 0 ? 0 : 5 * K, w = s * kx * 0.8, hgt = s;
+          const ids = li === 0 ? [0] : strongest(l.key, n).reverse();
+          ids.forEach((id, j) => {
+            const ox = x + j * gap, oy = cy - hgt / 2 - j * gap * 0.35;
+            const tex = li === 0 ? rec.photoIm : mapTile(l.key, id);
+            ctx.setTransform(dpr * w / tex.width, dpr * (-ky * s) / tex.width, 0, dpr * hgt / tex.height, dpr * ox, dpr * (oy + ky * s * 0.5));
+            ctx.imageSmoothingEnabled = li === 0;
+            ctx.globalAlpha = (on ? fade : 0) * (li === 0 ? 1 : 0.35 + 0.65 * (j + 1) / ids.length);
+            ctx.drawImage(tex, 0, 0);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.globalAlpha = on ? fade : 0;
+            ctx.strokeStyle = hoverBlock === li || sel === li ? acc : rule; ctx.lineWidth = hoverBlock === li || sel === li ? 1.6 : 0.8;
+            ctx.beginPath(); ctx.moveTo(ox, oy + ky * s * 0.5); ctx.lineTo(ox + w, oy + ky * s * 0.5 - ky * s); ctx.lineTo(ox + w, oy + ky * s * 0.5 - ky * s + hgt); ctx.lineTo(ox, oy + ky * s * 0.5 + hgt); ctx.closePath(); ctx.stroke();
+          });
+          x1 = x + (ids.length - 1) * gap + w;
+          x = x1 + (li === 0 ? 30 : 24) * K;
+        } else {                                  // fully connected: a column of 4096 (or 1000) numbers
+          const hgt = (li === 8 ? 120 : 170) * (narrow ? 0.7 : 1), w = 12 * K;
+          if (narrow) x += 4;
+          ctx.fillStyle = sel === li || hoverBlock === li ? acc : ink2; ctx.globalAlpha = (on ? fade : 0) * 0.85;
+          for (let k = 0; k < 34; k++) { ctx.beginPath(); ctx.arc(x + w / 2, cy - hgt / 2 + (k + 0.5) * hgt / 34, 1.9, 0, 7); ctx.fill(); }
+          ctx.globalAlpha = on ? fade : 0;
+          x1 = x + w; x = x1 + 40 * K;
+        }
+        ctx.fillStyle = sel === li ? acc : ink; ctx.fillText(narrow ? l.name.replace('conv', 'c').replace('input', 'in').replace('fc', 'f') : l.name, (x0 + x1) / 2, Ht - (narrow ? 14 : 46));
+        if (narrow) { geo.push([x0 - 4, x1 + 4]); ctx.globalAlpha = 1; return; }
+        ctx.fillStyle = ink2; ctx.fillText(l.shape, (x0 + x1) / 2, Ht - 32);
+        if (l.note) { ctx.fillStyle = css('--muted'); ctx.fillText(l.note, (x0 + x1) / 2, Ht - 18); }
+        geo.push([x0 - 6, x1 + 6]);
+        ctx.globalAlpha = 1;
+      });
+      // keep the whole stack and the answer inside the canvas, whatever the angle
+      const want = clamp(fitK * (Wd - room) / x, 0.3, 1);
+      if (Math.abs(want - fitK) > 0.01 && !draw.again) { fitK = want; draw.again = true; draw(t); draw.again = false; return; }
+      // the answer
+      if (reveal >= 1 && rec && !narrow) {
+        ctx.textAlign = 'left'; ctx.fillStyle = acc; ctx.font = '600 ' + fpx(c, 12.5) + 'px "JetBrains Mono", monospace';
+        const [name, p] = rec.top[0];
+        ctx.fillText(name, x - 8, cy - 6); ctx.fillStyle = ink2; ctx.font = fpx(c, 10.5) + 'px "JetBrains Mono", monospace';
+        ctx.fillText((p * 100).toFixed(1) + '%', x - 8, cy + 10);
+      }
+      // a pulse running through while the photo flows in
+      if (reveal < 1) { const px = 18 + reveal * (x - 18); ctx.fillStyle = acc; ctx.globalAlpha = 0.18; ctx.fillRect(px - 10, 20, 20, Ht - 80); ctx.globalAlpha = 1; }
+    }
+
+    function flow() {
+      if (reduced) { reveal = 1; draw(); return; }
+      const t0 = performance.now();
+      const step = (t) => { reveal = Math.min(1, (t - t0) / 1600); draw(); if (reveal < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }
+
+    async function load(name) {
+      photo = name; status.textContent = 'loading ' + name + '…';
+      await loadScript(`assets/alexnet/photo_${name}.js`);
+      const r = window.ALEXNET['photo_' + name];
+      r.photoIm = await loadImage(r.jpg);
+      for (const k of Object.keys(r.layers)) r.layers[k].im = await loadImage(r.layers[k].img);
+      rec = r; maps = {};
+      top5.set(r.top.map((t) => t[1]), (v) => (v * 100).toFixed(1) + '%', 1);
+      top5.querySelectorAll('.bar b').forEach((b, i) => { b.textContent = r.top[i][0]; });
+      status.innerHTML = `AlexNet's top five guesses for this photo` + (name === 'rocket' || name === 'astronaut' ? ' · ImageNet has no class for this, so it reaches for the nearest thing it knows' : '');
+      flow(); if (sel != null) openLayer(sel);
+    }
+
+    // receptive field: which input pixels can one unit of a layer see?
+    function field(li, r, q) {
+      const ops = []; for (let k = 1; k <= li; k++) ops.push(...L[k].ops);
+      let a0 = r, a1 = r, b0 = q, b1 = q;
+      for (let k = ops.length - 1; k >= 0; k--) { const [ks, s, p] = ops[k]; a0 = a0 * s - p; a1 = a1 * s - p + ks - 1; b0 = b0 * s - p; b1 = b1 * s - p + ks - 1; }
+      return [clamp(a0, 0, 223), clamp(a1, 0, 223), clamp(b0, 0, 223), clamp(b1, 0, 223), a1 - a0 + 1];
+    }
+
+    function openLayer(li) {
+      sel = li; draw();
+      const l = L[li];
+      if (li === 0 || li >= 6) {
+        const txt = li === 0 ? 'The input: 224×224 pixels in three colors, 150,528 numbers.'
+          : li === 8 ? `fc8 holds one score per ImageNet class. Softmax turns the 1,000 scores into probabilities; the top five are the bars above.`
+            : `${l.name} is a list of 4,096 numbers, each a weighted sum of every number in the layer before (9,216 of them for fc6). After the ReLU, <b>${rec.fc[l.key].active.toLocaleString()}</b> of the 4,096 are above zero for this photo. There are no pictures here any more: just a long list that the last layer reads off.`;
+        detail.replaceChildren(h('p', { class: 'w-kv', style: 'max-width:640px' }));
+        detail.firstChild.innerHTML = txt;
+        if (li === 8) showClasses();
+        return;
+      }
+      const a = rec.layers[l.key];
+      const scale = Math.min(2, 340 / a.im.width);
+      const [ac, actx] = canvas(Math.round(a.im.width * scale), Math.round(a.im.height * scale));
+      const [mc, mctx] = canvas(208, 208), [pc, pctx] = canvas(208, 208);
+      const info = h('div', { class: 'w-kv' }), wantBox = h('div', {});
+      pick = strongest(l.key, 1)[0];
+      function drawAtlas() {
+        actx.imageSmoothingEnabled = false; actx.clearRect(0, 0, ac.W, ac.H); actx.drawImage(a.im, 0, 0, ac.W, ac.H);
+        const r = (pick / a.cols) | 0, q = pick % a.cols, s = (a.H + 1) * scale;
+        actx.strokeStyle = css('--accent'); actx.lineWidth = 2; actx.strokeRect(q * s - 1, r * s - 1, a.H * scale + 2, a.H * scale + 2);
+      }
+      function drawMap(cell) {
+        mctx.imageSmoothingEnabled = false; mctx.clearRect(0, 0, 208, 208); mctx.drawImage(mapTile(l.key, pick), 0, 0, 208, 208);
+        pctx.clearRect(0, 0, 208, 208); pctx.drawImage(rec.photoIm, 0, 0, 208, 208);
+        if (cell) {
+          const [r0, r1, q0, q1, span] = field(li, cell[0], cell[1]), k = 208 / 224, s = 208 / a.H;
+          mctx.strokeStyle = css('--accent'); mctx.lineWidth = 2; mctx.strokeRect(cell[1] * s, cell[0] * s, s, s);
+          pctx.fillStyle = 'rgba(0,0,0,.45)'; pctx.fillRect(0, 0, 208, 208);
+          pctx.drawImage(rec.photoIm, q0, r0, q1 - q0 + 1, r1 - r0 + 1, q0 * k, r0 * k, (q1 - q0 + 1) * k, (r1 - r0 + 1) * k);
+          pctx.strokeStyle = css('--accent'); pctx.lineWidth = 2; pctx.strokeRect(q0 * k, r0 * k, (q1 - q0 + 1) * k, (r1 - r0 + 1) * k);
+          info.innerHTML = `${l.name}, map <b>${pick}</b> of ${a.C} · unit (${cell[0]}, ${cell[1]}) of ${a.H}×${a.H} sees a <b>${span}×${span}</b> patch of the photo` + (span > 224 ? ' (more than the whole photo, padding included)' : '');
+        } else info.innerHTML = `${l.name}, map <b>${pick}</b> of ${a.C} · its strongest response here is ${a.peak[pick].toFixed(1)} · point at the map`;
+      }
+      function choose(k) {
+        pick = clamp(k, 0, a.C - 1); drawAtlas(); drawMap(null);
+        if (l.key === 'conv5') showWant(); else if (l.key === 'conv1') showFilter(); else wantBox.replaceChildren();
+      }
+      function showFilter() {
+        const [fc, fx] = canvas(110, 110), Wt = new Int8Array(b64(D.alexnet.w).buffer), o = pick * 363;
+        let m = 0; for (let i = 0; i < 363; i++) m = Math.max(m, Math.abs(Wt[o + i]));
+        for (let y = 0; y < 11; y++) for (let x = 0; x < 11; x++) { const v = [0, 1, 2].map((ch) => Math.round(127.5 + 127.5 * Wt[o + ch * 121 + y * 11 + x] / m)); fx.fillStyle = `rgb(${v})`; fx.fillRect(x * 10, y * 10, 10, 10); }
+        wantBox.replaceChildren(h('div', { class: 'w-kv' }, 'its filter, 11×11'), fc);
+      }
+      async function showWant() {
+        wantBox.replaceChildren(h('div', { class: 'w-kv' }, 'what it wants to see: loading…'));
+        await ensureWants();
+        const im = h('img', { src: wantsData.conv5[pick], width: 208, height: 208, alt: `an image made to excite conv5 unit ${pick}`, class: 'lx-want' });
+        wantBox.replaceChildren(h('div', { class: 'w-kv' }, 'what it wants to see'), im);
+      }
+      ac.style.cursor = 'pointer';
+      ac.addEventListener('pointerdown', (e) => {
+        const r = ac.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * ac.W / scale, y = (e.clientY - r.top) / r.height * ac.H / scale;
+        const q = Math.floor(x / (a.H + 1)), rr = Math.floor(y / (a.H + 1));
+        if (q < a.cols && rr * a.cols + q < a.C) choose(rr * a.cols + q);
+      });
+      keys(ac, `all ${a.C} maps of ${l.name}; arrow keys choose one`, (dx, dy) => choose(pick + dx + dy * a.cols));
+      const at = (e) => { const r = mc.getBoundingClientRect(); return [clamp(Math.floor((e.clientY - r.top) / r.height * a.H), 0, a.H - 1), clamp(Math.floor((e.clientX - r.left) / r.width * a.H), 0, a.H - 1)]; };
+      mc.addEventListener('pointermove', (e) => drawMap(at(e)));
+      mc.addEventListener('pointerdown', (e) => drawMap(at(e)));
+      mc.style.cursor = 'crosshair';
+      detail.replaceChildren(
+        h('div', { class: 'w-kv' }, `all ${a.C} maps of ${l.name} for this photo, each scaled to its own brightest point · click one`), ac,
+        h('div', { class: 'w-row', style: 'margin-top:12px' },
+          h('div', {}, h('div', { class: 'w-kv' }, 'the map, enlarged'), mc),
+          h('div', {}, h('div', { class: 'w-kv' }, 'what one unit sees'), pc), wantBox), info);
+      choose(pick);
+    }
+
+    async function ensureWants() { if (!wantsData) { await loadScript('assets/alexnet/wants.js'); wantsData = window.ALEXNET.wants; } }
+    const classBox = h('div', {});
+    async function showClasses() {
+      classBox.replaceChildren(h('div', { class: 'w-kv' }, 'loading…'));
+      await ensureWants();
+      const grid = h('div', { class: 'lx-classes' }, ...wantsData.classes.map(([n, src]) => h('figure', {}, h('img', { src, alt: `an image made to make AlexNet say ${n}`, width: 128, height: 128 }), h('figcaption', {}, n))));
+      classBox.replaceChildren(h('p', { class: 'w-kv', style: 'max-width:640px' }, 'And here is what AlexNet imagines for a few classes: each image starts as gray noise and is changed, step by step, to raise one class score as high as it will go. Flamingo legs, fish scales, cat ears and eyes appear, but never a whole sensible scene: the network has learned the parts that vote for a class, not what the scene looks like.'), grid);
+      detail.append(classBox);
+    }
+
+    // turning and choosing on the stack
+    let drag = null;
+    const blockAt = (e) => { const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * Wd; return geo.findIndex(([a, b]) => x >= a && x <= b); };
+    c.addEventListener('pointerdown', (e) => { drag = [e.clientX, yaw, false]; c.setPointerCapture(e.pointerId); });
+    c.addEventListener('pointermove', (e) => {
+      if (drag) { const dx = e.clientX - drag[0]; if (Math.abs(dx) > 4) { drag[2] = true; yaw = clamp(drag[1] + dx / 180, 0.15, 1.35); draw(); } return; }
+      const b = blockAt(e); if (b !== hoverBlock) { hoverBlock = b; c.style.cursor = b >= 0 ? 'pointer' : 'grab'; draw(); }
+    });
+    c.addEventListener('pointerup', (e) => { if (drag && !drag[2]) { const b = blockAt(e); if (b >= 0 && rec) openLayer(b); } drag = null; });
+    c.addEventListener('pointerleave', () => { hoverBlock = -1; draw(); });
+    keys(c, 'AlexNet as a stack of layers; left and right choose a layer', (dx) => { if (rec) openLayer(clamp((sel == null ? 0 : sel) + dx, 0, L.length - 1)); });
+
+    el.append(h('div', { class: 'w-ctrl', style: 'margin-top:0' }, chips(PHOTOS, photo, (n) => load(n)), btn('play it through again', flow)),
+      h('div', { class: 'w-scroll' }, c), h('div', { class: 'w-row' }, h('div', { style: 'flex:1;min-width:260px' }, status, top5)), detail);
+    load('cat').then(() => openLayer(1)).catch((e) => { status.textContent = String(e.message); });
+    onTheme(() => { draw(); if (sel != null) openLayer(sel); });
+  };
+
   /* ---------------- mount when visible */
   const io = new IntersectionObserver((ents) => ents.forEach((e) => {
     if (!e.isIntersecting) return;
