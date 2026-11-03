@@ -1,130 +1,607 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
-	<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
-	<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
-	
-	<!-- Google tag (gtag.js) -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-	
-	  gtag('config', 'G-ZDVLMSSQ0M');
-	</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Will Hahn, mathematician at Florida Atlantic University</title>
+<meta name="description" content="William Edward Hahn, Ph.D., studies how natural and artificial systems compute. MPCR Lab, Gruber AI Sandbox, papers, talks, teaching and essays.">
+<link rel="canonical" href="https://will.hahn.ai/">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Will Hahn">
+<meta property="og:title" content="Will Hahn">
+<meta property="og:description" content="Mathematician at Florida Atlantic University studying how natural and artificial systems compute.">
+<meta property="og:url" content="https://will.hahn.ai/">
+<meta property="og:image" content="https://will.hahn.ai/images/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="William Edward Hahn, written on graph paper beside a Game of Life pattern.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://will.hahn.ai/images/og-card.png">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="apple-touch-icon" href="https://will.hahn.ai/images/favicon-32x32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"William Edward Hahn","alternateName":"Will Hahn","honorificSuffix":"Ph.D.","jobTitle":"Associate Professor of Mathematical Sciences","url":"https://will.hahn.ai/","email":"mailto:whahn@fau.edu","image":"https://will.hahn.ai/images/spotlight01.jpg","worksFor":{"@type":"CollegeOrUniversity","name":"Florida Atlantic University","url":"https://www.fau.edu"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Florida Atlantic University"},"knowsAbout":["Compressed sensing","Sparse coding","Neural networks","Computer vision","Hyperdimensional computing","Cellular automata","Artificial life","Unconventional computing"],"sameAs":["https://scholar.google.com/citations?user=eHyXKZAAAAAJ","https://github.com/williamedwardhahn","https://x.com/will_hahn","https://www.youtube.com/@williamedwardhahn","https://mpcrlab.com"]}
+</script>
+<style>
+:root {
+  /* engineering graph paper, fountain-pen ink, red correction ink */
+  --paper: #FCFCFA;
+  --minor: rgba(64, 106, 168, 0.035);
+  --major: rgba(64, 106, 168, 0.07);
+  --dish-minor: rgba(64, 106, 168, 0.10);
+  --dish-major: rgba(64, 106, 168, 0.20);
+  --rule: rgba(28, 37, 65, 0.22);
+  --ink: #141B33;
+  --ink-soft: #3B4560;
+  --red: #A8322D;
+  --margin: rgba(196, 64, 58, 0.38);
+  --cell: #2B4BA8;
+  --stain: rgba(43, 75, 168, 0.12);
+  --c-new: #C8412C;      /* vermilion */
+  --c-young: #C98A1E;    /* ochre */
+  --c-mid: #1E7F6A;      /* viridian */
+  --c-old: #2B4BA8;      /* ultramarine */
+  --c-violet: #6A3D9A;
+  --band: rgba(43, 75, 168, 0.045);
+  --tint: rgba(43, 75, 168, 0.07);
+  --foot: #1F3A8A;
+  --foot-ink: #F2F5FB;
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --display: "EB Garamond", Garamond, "Iowan Old Style", Georgia, serif;
+  --sq: 24px;                 /* one graph-paper square */
+  --measure: 66ch;
+  --gutter: clamp(16px, 6vw, 96px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* blueprint */
+    --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05); --dish-minor: rgba(255, 255, 255, 0.07); --dish-major: rgba(255, 255, 255, 0.14);
+    --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+    --red: #FFA597; --margin: rgba(255, 150, 130, 0.35);
+    --cell: #9DB2FF; --stain: rgba(157, 178, 255, 0.16); --c-new: #FF7A63; --c-young: #F2B84B; --c-mid: #45C4A5; --c-old: #9DB2FF; --c-violet: #C3A3F0; --band: rgba(157, 178, 255, 0.05); --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; --foot-ink: #F2F5FB; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05); --dish-minor: rgba(255, 255, 255, 0.07); --dish-major: rgba(255, 255, 255, 0.14);
+  --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+  --red: #FFA597; --margin: rgba(255, 150, 130, 0.35);
+  --cell: #9DB2FF; --stain: rgba(157, 178, 255, 0.16); --c-new: #FF7A63; --c-young: #F2B84B; --c-mid: #45C4A5; --c-old: #9DB2FF; --c-violet: #C3A3F0; --band: rgba(157, 178, 255, 0.05); --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; --foot-ink: #F2F5FB; color-scheme: dark;
+}
 
-		
-		<title>Hahn.ai</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: var(--sq); }
+body {
+  margin: 0;
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--major) 1px, transparent 1px),
+    linear-gradient(var(--minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--minor) 1px, transparent 1px);
+  background-size: calc(var(--sq) * 5) calc(var(--sq) * 5), calc(var(--sq) * 5) calc(var(--sq) * 5), var(--sq) var(--sq), var(--sq) var(--sq);
+  font: 400 1.15rem/1.62 var(--serif);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  position: relative;
+}
+/* the red notebook margin */
+@media (min-width: 900px) {
+  body::before {
+    content: ""; position: absolute; top: 0; bottom: 0; z-index: 0; pointer-events: none;
+    left: calc(var(--gutter) - 22px); width: 1px; background: var(--margin);
+    box-shadow: 3px 0 0 var(--margin);
+  }
+}
+a { color: var(--red); text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+p { margin: 0 0 1em; }
+i, em { font-style: italic; }
+.skip { position: absolute; left: -999px; top: 0; }
+.skip:focus { left: var(--gutter); top: 8px; background: var(--paper); padding: 6px 10px; z-index: 10; }
+main, header, footer { position: relative; z-index: 1; }
 
-		<!-- Wrapper -->
-			<div id="wrapper" class="divided">
-				
-			
+/* ---------- header: exactly three squares tall so the dish lands on the grid ---------- */
+.top {
+  height: calc(var(--sq) * 3);
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 0 var(--gutter);
+}
+.top .home { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 500; font-size: 1.3rem; }
+.top nav ul { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; margin: 0; padding: 0; list-style: none; }
+.top nav a { color: var(--ink-soft); text-decoration: none; }
+.top nav a:hover { color: var(--red); }
 
-				<!-- Banner -->
-					<section class="banner style1 orient-left content-align-left image-position-right fullscreen onload-image-fade-in onload-content-fade-right">
-						<div class="content">
-							<h1>Hahn.AI</h1>
-							
-							<p class="major">William Edward Hahn, Ph.D.</p>
-							
-							<a href="https://hahn.ai/blog/blog4.html"><p><strong>Natural Computing Research</strong></p></a>
-							<a href="https://hahn.ai/blog/blog5.html"><p><strong>Neural Networks</strong></p></a>
-							<a href="https://hahn.ai/blog/blog6.html"><p><strong>Artificial Intelligence</strong></p></a>
-							<a href="https://hahn.ai/blog/blog7.html"><p><strong>Artificial Immune Systems</strong></p></a>
-						
-							
-							
-							<ul class="actions stacked">
-								<li><a href="https://X.com/will_hahn" class="button">X</a></li>
-							</ul>
-							<ul class="actions stacked">
-								<li><a href="https://hahn.ai/blog/index.html" class="button">Blog</a></li>
-							</ul>
-							<ul class="actions stacked">
-								<li><a href="https://www.youtube.com/williamedwardhahn" class="button">YouTube Channel</a></li>
-							</ul>
+/* ---------- hero ---------- */
+.dish {
+  position: relative;
+  height: calc(var(--sq) * 16);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  overflow: hidden;
+  cursor: crosshair;
+  background-image:
+    linear-gradient(var(--dish-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--dish-major) 1px, transparent 1px),
+    linear-gradient(var(--dish-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--dish-minor) 1px, transparent 1px);
+  background-size: calc(var(--sq) * 5) calc(var(--sq) * 5), calc(var(--sq) * 5) calc(var(--sq) * 5), var(--sq) var(--sq), var(--sq) var(--sq);
+  background-position: 0 -1px;
+  background-color: var(--band);
+  touch-action: none;
+}
+.dish canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.dish-bar {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 6px 24px;
+  padding: 8px var(--gutter) 0;
+  font-size: 0.95rem; color: var(--ink-soft);
+}
+.dish-bar p { margin: 0; }
+.dish-bar .controls { display: flex; gap: 18px; flex: none; font-style: normal; }
+.dish-bar button {
+  font: inherit; color: var(--red); background: none; border: 0; padding: 4px 0; min-height: 24px; cursor: pointer;
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em;
+}
+.dish-bar button:hover { text-decoration-thickness: 2px; }
+.gen { font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; font-style: normal; }
 
-							
-						</div>
-						<div class="image">
-							<img src="images/banner.jpg" alt="" />
-						</div>
-					</section>
-					
-					
-					
-					
-				<!-- Spotlight -->
-					<section class="spotlight style1 orient-right content-align-left image-position-center onscroll-image-fade-in" id="first">
-						<div class="content">
-							<h2>MPCR Lab</h2>
-							<p>The <a href="http://www.mpcrlab.com"><strong>MPCR</strong></a> lab is a multidisciplinary research group exploring the interface between mathematics, electronics, and the natural sciences. Our research consists of physical/digital agents that learn, evolve, and live within synthetic environments.  We create embedded and embodied computational lifeforms using analog/digital hardware/software. </p>
-							<ul class="actions stacked">
-								<li><a href="http://www.mpcrlab.com" class="button">Learn More</a></li>
-							</ul>
-						</div>
-						<div class="image">
-							<img src="images/spotlight02.jpg" alt="" />
-						</div>
-					</section>
-					
+.intro {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px;
+  padding: calc(var(--sq) * 2) var(--gutter) 0;
+}
+@media (min-width: 1080px) {
+  .intro { grid-template-columns: minmax(0, var(--measure)) minmax(16rem, 21rem); justify-content: space-between; align-items: start; row-gap: 8px; }
+  .intro .head { grid-column: 1 / -1; }
+}
+h1 {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(2.6rem, 6.4vw, 5.25rem); line-height: 1.02; letter-spacing: -0.01em;
+  margin: 0 0 6px;
+}
+.title { font-family: var(--display); font-style: italic; font-size: clamp(1.25rem, 2vw, 1.5rem); color: var(--ink-soft); margin: 0 0 24px; }
+.lede { font-size: clamp(1.25rem, 2vw, 1.45rem); line-height: 1.45; margin: 0 0 14px; }
+.heard { color: var(--ink-soft); margin: 0 0 18px; }
+.elsewhere { display: flex; flex-wrap: wrap; gap: 4px 24px; margin: 0; padding: 0; list-style: none; }
 
+.now { font-size: 1.02rem; background: var(--tint); border-top: 3px solid var(--c-old); padding: 14px 18px 4px; }
+.now dl { border-top-color: transparent; }
+.now h2 { font-size: 1.3rem; margin: 0 0 6px; }
+.now dl { margin: 0; border-top: 1px solid var(--rule); }
+.now dt { color: var(--ink-soft); padding-top: 10px; font-size: 0.92rem; }
+.now dd { margin: 0; padding: 0 0 10px; border-bottom: 1px solid var(--rule); line-height: 1.4; }
 
-					<!-- Spotlight -->
-					<section class="spotlight style1 orient-left content-align-left image-position-center onscroll-image-fade-in">
-						<div class="content">
-							<h2>Teaching</h2>
-							<p>Fall 2023</p>
-							
-						
-							<ul class="actions stacked">
-								<li><a href="https://github.com/williamedwardhahn/MathDataSci_Fall23" class="button">Math for Data Science</a></li>
-							</ul>
-							
-							
-							
-							
-						</div>
-						<div class="image">
-							<img src="images/spotlight01.jpg" alt="" />
-						</div>
-					</section>
+/* ---------- sections ---------- */
+main > section { padding: calc(var(--sq) * 4) var(--gutter) 0; }
+main > section.tight { padding-top: calc(var(--sq) * 3); }
+.col { max-width: var(--measure); }
+h2 {
+  font-family: var(--display); font-weight: 500;
+  font-size: clamp(1.8rem, 3.4vw, 2.35rem); line-height: 1.15;
+  margin: 0 0 16px;
+}
+main > section { --sec: var(--c-old); }
+h2::before {
+  content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 12px; background: var(--sec);
+  vertical-align: 0.12em;
+}
+h2::after {
+  content: ""; display: block; width: 3.5rem; border-top: 2px solid var(--sec); margin-top: 10px;
+}
+#about { --sec: var(--c-old); }
+#research { --sec: var(--c-violet); }
+#talks { --sec: var(--c-new); }
+#teaching { --sec: var(--c-mid); }
+.now h2::after, .now h2::before { display: none; }
+h3 { font-weight: 600; font-size: 1.2rem; margin: 0; line-height: 1.3; }
+.note { color: var(--ink-soft); }
+.interests { color: var(--ink-soft); }
+.highlights { list-style: none; margin: 8px 0 0; padding: 14px 0 0; border-top: 1px solid var(--rule); }
+.highlights li { position: relative; padding: 0 0 8px 26px; }
+.highlights li::before { content: ""; position: absolute; left: 2px; top: 0.5em; width: 10px; height: 10px; background: var(--sec); }
+.rows.plain { margin-bottom: 1em; }
+.rows.plain h3 { color: var(--ink); }
+h3.sub { font-family: var(--display); font-weight: 500; font-size: 1.45rem; margin: 40px 0 12px; }
+footer .also { margin-bottom: 10px; font-size: 1.1rem; }
 
+.rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.rows > li { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.rows p { margin: 2px 0 0; color: var(--ink-soft); font-size: 1.02rem; }
+a.row { color: var(--ink); text-decoration: none; display: block; }
+a.row h3 { color: var(--red); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+a.row:hover h3 { text-decoration-thickness: 2px; }
+.more { display: inline-block; margin-top: 16px; }
 
-				<!-- Footer -->
-					<footer class="wrapper style1 align-center">
-						<div class="inner">
-							<ul class="icons">
-<!--
-								<li><a href="#" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a></li>
-								<li><a href="#" class="icon brands style2 fa-linkedin"><span class="label">LinkedIn</span></a></li>
-								<li><a href="#" class="icon style2 fa-envelope"><span class="label">Email</span></a></li>
--->
-							</ul>
-							<p>&copy; William Edward Hahn</p>
-						</div>
-					</footer>
+.pubs { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.pubs li { padding: 12px 0 12px 1.5em; text-indent: -1.5em; border-bottom: 1px solid var(--rule); line-height: 1.45; }
+.pubs .t { font-weight: 600; }
+.pubs .m { color: var(--ink-soft); }
+.book { margin-top: 20px; }
 
-			</div>
+.lab { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; max-width: 1120px; }
+@media (min-width: 860px) { .lab { grid-template-columns: minmax(0, var(--measure)) minmax(0, 1fr); align-items: start; } }
+.lab figure { margin: 0; background: var(--paper); padding: 10px; border: 1px solid var(--rule); border-top: 3px solid var(--c-mid); }
+.lab img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.lab figcaption { font-size: 0.95rem; color: var(--ink-soft); padding-top: 8px; }
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+.talks { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.talks li { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 0 16px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.talks time { color: var(--c-new); font-size: 1rem; font-weight: 600; }
+.talks .t { font-weight: 600; }
+.talks .v { display: block; color: var(--ink-soft); font-size: 1.02rem; }
 
+footer {
+  margin-top: calc(var(--sq) * 5);
+  padding: calc(var(--sq) * 1.5) var(--gutter) calc(var(--sq) * 2);
+  background: var(--foot); color: var(--foot-ink);
+  font-size: 1.02rem;
+}
+footer a { color: var(--foot-ink); }
+footer p { margin: 0 0 4px; }
 
-	</body>
+@media (max-width: 560px) {
+  body { font-size: 1.08rem; }
+  .top nav { display: none; }
+  .dish { height: calc(var(--sq) * 11); }
+  .dish-bar .long { display: none; }
+  .talks li { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 561px) { .dish-bar .short { display: none; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <a class="home" href="./">will.hahn.ai</a>
+  <nav aria-label="Sections">
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#talks">Talks</a></li>
+      <li><a href="#teaching">Teaching</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <div class="dish" id="dish">
+    <canvas id="life" role="img" aria-label="A live Game of Life simulation that starts from the word HAHN. Click or drag to add cells."></canvas>
+  </div>
+  <div class="dish-bar">
+    <p><span class="long">Life is a 3×3 convolution and a threshold: a cell is born with three neighbors and survives with two or three. Click to add cells; <a href="https://youtu.be/Efky9u1e-Ms">watch the talk</a>.</span><span class="short">Tap to add cells.</span> <span class="gen" id="gen">Generation 0</span></p>
+    <div class="controls">
+      <button type="button" id="toggle">Pause</button>
+      <button type="button" id="reseed">Reseed</button>
+    </div>
+  </div>
+
+  <div class="intro">
+    <div class="head">
+      <h1>William Edward Hahn</h1>
+      <p class="title">Associate Professor of Mathematical Sciences, Florida Atlantic University</p>
+    </div>
+    <div>
+      <p class="lede">I study how natural and artificial systems compute, from sparse codes in the visual cortex to agents that learn inside synthetic worlds.</p>
+      <p class="heard">Heard me on Theories of Everything? <a href="#talks">Start with those conversations</a>.</p>
+      <ul class="elsewhere">
+        <li><a href="https://scholar.google.com/citations?user=eHyXKZAAAAAJ">Google Scholar</a></li>
+        <li><a href="https://www.youtube.com/@williamedwardhahn">YouTube</a></li>
+        <li><a href="https://github.com/williamedwardhahn">GitHub</a></li>
+        <li><a href="https://x.com/will_hahn">X</a></li>
+        <li><a href="blog/">Blog</a></li>
+        <li><a href="mailto:whahn@fau.edu">Email</a></li>
+      </ul>
+    </div>
+    <aside class="now" aria-labelledby="now-h">
+      <h2 id="now-h">Now</h2>
+      <dl>
+        <dt>Teaching, Fall 2026</dt>
+        <dd><a href="https://williamedwardhahn.github.io/DataSci26/">Data Science</a> and <a href="https://williamedwardhahn.github.io/algebra26/">Intermediate Algebra</a></dd>
+        <dt>Latest talk, November 2025</dt>
+        <dd>From Turing to Hyperorganisms, Frontier Tower, San Francisco</dd>
+        <dt>Latest essay</dt>
+        <dd><a href="blog/48/">How large language models resemble Borges’ Library of Babel</a></dd>
+        <dt>In preparation</dt>
+        <dd><i>Memory and Words: Foundations of Computation</i>, a book</dd>
+      </dl>
+    </aside>
+  </div>
+
+  <section id="about" aria-labelledby="about-h">
+    <div class="lab">
+      <div>
+        <h2 id="about-h">About</h2>
+        <p>I’m an Associate Professor of Mathematical Sciences and Associate Director of the Center for Complex Systems at Florida Atlantic University. I studied mathematics and physics at Guilford College and earned my Ph.D. in Complex Systems and Brain Sciences at FAU in 2016, with a thesis on sparse coding and compressed sensing.</p>
+        <p>My work comes at one question from several directions: what does it take for a physical system to perceive, learn and compute? It has taken me from models of visual cortex to self-driving cars, quadruped robots and drug-discovery networks, and now to vision-language-action models and the foundations of computation. I’m writing a book on the last of these, <i>Memory and Words: Foundations of Computation</i>.</p>
+        <p>In 2014 Elan Barenholtz and I co-founded the <a href="https://mpcrlab.com">MPCR Lab</a>. In 2019 I was lead PI on the $1 million gift from Rubin and Cindy Gruber that built the <a href="https://www.fau.edu/sandbox/">Gruber AI Sandbox</a>. I’m principal investigator on a <a href="https://www.sbir.gov/awards/216792">$1.25 million U.S. Air Force SBIR Phase II award</a> for quantum-resistant secure communication for drones.</p>
+        <ul class="highlights" aria-label="Highlights">
+          <li>More than $2.8 million as PI since 2017, from the U.S. Air Force, the Gruber Foundation, Ghost Robotics and Nvidia</li>
+          <li>College of Science Teacher of the Year, 2023</li>
+          <li>Lab alumni at MIT, Stanford, Yale, Caltech, Harvard Law and Los Alamos National Laboratory</li>
+          <li>Research featured in <i>Science</i> (“Could robots be psychology’s new lab rats?”, 2019)</li>
+          <li>Papers in Nature’s <i>Scientific Reports</i>, <i>Robotics and Autonomous Systems</i> and the <i>Journal of Chemical Information and Modeling</i></li>
+        </ul>
+      </div>
+      <figure>
+        <img src="images/spotlight02.jpg" alt="A quadruped robot dog with a yellow body panel and red joints, standing on a lab floor." width="975" height="650" loading="lazy" decoding="async">
+        <figcaption>Astro, the MPCR Lab’s quadruped robot.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="research" aria-labelledby="research-h">
+    <div class="col">
+      <h2 id="research-h">Research</h2>
+      <p>Sparse coding and compressed sensing run through everything I do. The lab’s work follows three threads.</p>
+      <ul class="rows plain">
+        <li><h3>Language and action in embodied AI</h3><p>How large language models can ground what they see and turn it into physical action, on embedded hardware.</p></li>
+        <li><h3>Foundations of computation</h3><p>Hyperdimensional computing, stochastic computing and one-instruction architectures: rebuilding the computing stack from the metal up.</p></li>
+        <li><h3>Languages and minds</h3><p>How the design of a language, for people or machines, shapes the intelligence that grows inside it.</p></li>
+      </ul>
+      <h3 class="sub">Selected papers</h3>
+      <ul class="pubs">
+        <li><span class="m">Jerez, Stuart, Schmitt, Guerrero-Given, Christie, Hahn, Kamasawa and Smirnov (2021).</span> <span class="t">A deep learning approach to identifying immunogold particles in electron microscopy images.</span> <i class="m">Scientific Reports</i> <span class="m">11 (Nature Portfolio).</span></li>
+        <li><span class="m">Teti, Hahn, Martin, Teti and Barenholtz (2021).</span> <span class="t">A controlled investigation of behaviorally-cloned deep neural network behaviors in an autonomous steering task.</span> <i class="m">Robotics and Autonomous Systems</i> <span class="m">142.</span></li>
+        <li><span class="m">Morris, St. Clair, Barenholtz and Hahn (2020).</span> <span class="t">Predicting binding from screening assays with transformer network embeddings.</span> <i class="m">Journal of Chemical Information and Modeling</i> <span class="m">60(9).</span></li>
+        <li><span class="m">Hahn, Lewkowitz and Barenholtz (2015).</span> <span class="t">Deep learning human actions from video via sparse filtering and locally competitive algorithms.</span> <i class="m">Multimedia Tools and Applications</i> <span class="m">74.</span></li>
+      </ul>
+      <a class="more" href="https://scholar.google.com/citations?user=eHyXKZAAAAAJ">All papers on Google Scholar</a>
+    </div>
+  </section>
+
+  <section id="talks" aria-labelledby="talks-h">
+    <div class="col">
+      <h2 id="talks-h">Talks</h2>
+      <p class="note">Long conversations where I lay out the ideas I keep coming back to.</p>
+      <ol class="talks" reversed>
+        <li><time datetime="2025-11">Nov 2025</time><div><span class="t">From Turing to Hyperorganisms: Rethinking Intelligence and Mind in the Age of LLMs</span><span class="v">Frontier Tower, San Francisco</span></div></li>
+        <li><time datetime="2025-10">Oct 2025</time><div><a class="t" href="https://youtu.be/Efky9u1e-Ms">2D Cellular Automata and Image Convolutions</a><span class="v">Wolfram Institute. The idea behind the grid at the top of this page.</span></div></li>
+        <li><time datetime="2025-07">Jul 2025</time><div><a class="t" href="https://youtu.be/Ca_RbPXraDE">The Theory That Your Thoughts Were Never Your Own</a><span class="v">Theories of Everything, with Elan Barenholtz</span></div></li>
+        <li><time datetime="2025-02">Feb 2025</time><div><a class="t" href="https://youtu.be/3fkg0uTA3qU">Wolfram, Leibniz and Consciousness</a><span class="v">Theories of Everything</span></div></li>
+        <li><time datetime="2024-10">Oct 2024</time><div><a class="t" href="https://youtu.be/xr4R7eh5f_M">Our Minds Could Be Running on Virtual Machines</a><span class="v">Theories of Everything (on YouTube as “These Thoughts Will Literally Destroy You”)</span></div></li>
+        <li><time datetime="2023">2023</time><div><span class="t">Artificial Immune Systems and AI Safety</span><span class="v">NIU AI Safety Conference, Washington, DC</span></div></li>
+      </ol>
+      <a class="more" href="https://www.youtube.com/@williamedwardhahn">More on YouTube</a>
+    </div>
+  </section>
+
+  <section id="teaching" aria-labelledby="teaching-h">
+    <div class="col">
+      <h2 id="teaching-h">Teaching</h2>
+      <p>I’ve taught more than 25 courses at FAU, from Matrix Theory and Biostatistics to Deep Reinforcement Learning and Minds as Machines, and I was the College of Science Teacher of the Year in 2023. My courses run in the browser with nothing to install, and more than a hundred of my GitHub repositories are open teaching material.</p>
+      <p>MPCR Lab alumni have gone on to MIT, Stanford, Yale, Caltech, Harvard Law School, Brown Medical School, Northwestern, Georgia Tech, Notre Dame and the University of Florida; to research posts at Los Alamos National Laboratory, the Naval Postgraduate School and the Department of Homeland Security; to tenure-track faculty jobs; and to founding their own AI startups.</p>
+      <p>If you want to join, <a href="mailto:whahn@fau.edu">email me</a> with a short note on what you want to build.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p class="also">Also: <a href="blog/">essays</a>, <a href="https://dividingengine.com">The Dividing Engine</a>, <a href="https://solresol.xyz">Solresol</a> and <a href="demos/">demos</a>.</p>
+  <p>William Edward Hahn, Ph.D. Department of Mathematical Sciences, Florida Atlantic University, 777 Glades Road, Boca Raton, FL 33431. <a href="mailto:whahn@fau.edu">whahn@fau.edu</a></p>
+</footer>
+
+<script>
+(() => {
+  const dish = document.getElementById('dish');
+  const canvas = document.getElementById('life');
+  const ctx = canvas.getContext('2d');
+  const genEl = document.getElementById('gen');
+  const toggle = document.getElementById('toggle');
+  const reseedBtn = document.getElementById('reseed');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const narrow = window.matchMedia('(max-width: 560px)');
+
+  // Cells divide the 24px graph-paper square evenly, so the automaton sits on the page's own grid.
+  const SQ = 24;
+  const TRAIL = 6;    // generations a dead cell stays faintly inked
+  const TICK = 110;   // ms per generation
+  const HOLD = 2600;  // ms the seeded word holds before evolving
+  let CELL = narrow.matches ? 6 : 8;
+  let cols = 0, rows = 0, grid = null, next = null, age = null, gen = 0;
+  let running = !reduce.matches, holdUntil = 0, last = 0;
+  let visible = true, raf = 0, hover = null, colors = {};
+
+  function readColors() {
+    const s = getComputedStyle(document.documentElement);
+    const v = n => s.getPropertyValue(n).trim();
+    colors = { live: v('--cell'), stain: v('--stain'), ink: v('--ink'), paper: v('--paper') };
+  }
+
+  // 5x7 bitmap glyphs for the seed word
+  const GLYPHS = {
+    H: ['10001','10001','10001','11111','10001','10001','10001'],
+    A: ['01110','10001','10001','11111','10001','10001','10001'],
+    N: ['10001','11001','10101','10011','10001','10001','10001'],
+  };
+
+  function alloc(c, r) {
+    return [new Uint8Array(c * r), new Uint8Array(c * r), new Uint8Array(c * r).fill(255)];
+  }
+
+  // Resize keeps the cells already on the dish; only the first call seeds.
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = dish.clientWidth, h = dish.clientHeight;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const c = Math.ceil(w / CELL), r = Math.ceil(h / CELL);
+    if (!grid) { cols = c; rows = r; seed(); return; }
+    if (c !== cols || r !== rows) {
+      const [g, n, a] = alloc(c, r);
+      const ox = Math.floor((c - cols) / 2 / (SQ / CELL)) * (SQ / CELL);
+      const oy = Math.floor((r - rows) / 2 / (SQ / CELL)) * (SQ / CELL);
+      for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+        const nx = x + ox, ny = y + oy;
+        if (nx < 0 || ny < 0 || nx >= c || ny >= r) continue;
+        g[ny * c + nx] = grid[y * cols + x]; a[ny * c + nx] = age[y * cols + x];
+      }
+      cols = c; rows = r; grid = g; next = n; age = a;
+    }
+    draw();
+  }
+
+  function set(x, y) {
+    if (x < 0 || y < 0 || x >= cols || y >= rows) return;
+    const k = y * cols + x;
+    grid[k] = 1; age[k] = 0;
+  }
+
+  function seed() {
+    [grid, next, age] = alloc(cols, rows);
+    gen = 0;
+    const word = 'HAHN';
+    const span = cols < 100 ? 0.85 : 0.6;
+    const scale = Math.max(1, Math.min(Math.floor(cols * span / (word.length * 6)), Math.floor(rows * 0.6 / 7)));
+    const x0 = Math.floor((cols - (word.length * 6 - 1) * scale) / 2);
+    const y0 = Math.floor((rows - 7 * scale) / 2);
+    [...word].forEach((ch, i) => {
+      GLYPHS[ch].forEach((row, gy) => {
+        [...row].forEach((bit, gx) => {
+          if (bit !== '1') return;
+          for (let sy = 0; sy < scale; sy++) for (let sx = 0; sx < scale; sx++) {
+            if (scale > 2 && sx > 0 && sy > 0 && sx < scale - 1 && sy < scale - 1 && Math.random() < 0.3) continue;
+            set(x0 + (i * 6 + gx) * scale + sx, y0 + gy * scale + sy);
+          }
+        });
+      });
+    });
+    holdUntil = performance.now() + HOLD;
+    draw();
+    kick();
+  }
+
+  function neighbors(x, y) {
+    let n = 0;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      if (dx || dy) n += grid[((y + dy + rows) % rows) * cols + ((x + dx + cols) % cols)];
+    }
+    return n;
+  }
+
+  function step() {
+    for (let y = 0; y < rows; y++) {
+      const yu = ((y - 1 + rows) % rows) * cols, yc = y * cols, yd = ((y + 1) % rows) * cols;
+      for (let x = 0; x < cols; x++) {
+        const xl = (x - 1 + cols) % cols, xr = (x + 1) % cols;
+        const n = grid[yu + xl] + grid[yu + x] + grid[yu + xr] + grid[yc + xl] + grid[yc + xr] + grid[yd + xl] + grid[yd + x] + grid[yd + xr];
+        const k = yc + x;
+        const alive = grid[k] ? (n === 2 || n === 3) : n === 3;
+        next[k] = alive ? 1 : 0;
+        if (alive) age[k] = 0; else if (age[k] < 255) age[k]++;
+      }
+    }
+    [grid, next] = [next, grid];
+    gen++;
+  }
+
+  // The canvas is transparent: the page's graph paper shows through, and cells fill its squares.
+  function draw() {
+    const w = dish.clientWidth, h = dish.clientHeight;
+    ctx.clearRect(0, 0, w, h);
+    const s = CELL - 2;
+    ctx.fillStyle = colors.stain;
+    for (let k = 0; k < grid.length; k++) {
+      if (!grid[k] && age[k] > 0 && age[k] <= TRAIL) ctx.fillRect((k % cols) * CELL + 1, ((k / cols) | 0) * CELL + 1, s, s);
+    }
+    ctx.fillStyle = colors.live;
+    for (let k = 0; k < grid.length; k++) {
+      if (grid[k]) ctx.fillRect((k % cols) * CELL + 1, ((k / cols) | 0) * CELL + 1, s, s);
+    }
+    // the 3x3 neighborhood under the pointer: the kernel the rule convolves with
+    if (hover) {
+      const { x, y } = hover;
+      ctx.strokeStyle = colors.ink;
+      ctx.lineWidth = 1;
+      ctx.strokeRect((x - 1) * CELL + 0.5, (y - 1) * CELL + 0.5, CELL * 3 - 1, CELL * 3 - 1);
+      const n = neighbors(x, y);
+      const label = n + (n === 1 ? ' neighbor' : ' neighbors');
+      ctx.font = '600 13px "Source Serif 4", Georgia, serif';
+      const tw = ctx.measureText(label).width + 10;
+      let lx = (x + 2) * CELL + 4, ly = (y - 1) * CELL;
+      if (lx + tw > w) lx = (x - 1) * CELL - tw - 4;
+      if (ly < 2) ly = 2;
+      ctx.fillStyle = colors.paper;
+      ctx.fillRect(lx, ly, tw, 20);
+      ctx.fillStyle = colors.ink;
+      ctx.fillText(label, lx + 5, ly + 15);
+    }
+    genEl.textContent = 'Generation ' + gen;
+  }
+
+  function sprinkle(n) {
+    for (let i = 0; i < n; i++) set(Math.floor(Math.random() * cols), Math.floor(Math.random() * rows));
+  }
+
+  // Only schedule frames while running, on screen and in a visible tab.
+  function kick() {
+    if (!raf && running && visible && !document.hidden) raf = requestAnimationFrame(loop);
+  }
+  function loop(t) {
+    raf = 0;
+    if (!running || !visible || document.hidden) return;
+    if (t >= holdUntil && t - last >= TICK) {
+      step(); last = t;
+      if (gen % 40 === 0) {
+        let pop = 0; for (let k = 0; k < grid.length; k++) pop += grid[k];
+        if (pop < cols * rows * 0.02) sprinkle(cols * rows * 0.04);
+      }
+      draw();
+    }
+    kick();
+  }
+
+  function setRunning(on) {
+    running = on;
+    toggle.textContent = on ? 'Pause' : 'Play';
+    if (on) kick();
+  }
+
+  let drawing = false;
+  function cellAt(e) {
+    const r = canvas.getBoundingClientRect();
+    return { x: Math.floor((e.clientX - r.left) / CELL), y: Math.floor((e.clientY - r.top) / CELL) };
+  }
+  function paint(e) {
+    const { x, y } = cellAt(e);
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (Math.random() < 0.6) set(x + dx, y + dy);
+  }
+  dish.addEventListener('pointerdown', e => { drawing = true; dish.setPointerCapture(e.pointerId); paint(e); draw(); });
+  dish.addEventListener('pointermove', e => {
+    if (drawing) paint(e);
+    hover = e.pointerType === 'mouse' ? cellAt(e) : null;
+    draw();
+  });
+  dish.addEventListener('pointerup', () => { drawing = false; });
+  dish.addEventListener('pointercancel', () => { drawing = false; });
+  dish.addEventListener('pointerleave', () => { hover = null; draw(); });
+
+  toggle.addEventListener('click', () => {
+    if (!running) holdUntil = Math.min(holdUntil, performance.now() + 300);
+    setRunning(!running);
+  });
+  reseedBtn.addEventListener('click', seed);
+
+  reduce.addEventListener('change', e => setRunning(!e.matches));
+  narrow.addEventListener('change', e => { CELL = e.matches ? 6 : 8; grid = null; resize(); });
+  const repaint = () => { readColors(); draw(); };
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', repaint);
+  new MutationObserver(repaint).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; kick(); }).observe(dish);
+  document.addEventListener('visibilitychange', kick);
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(resize, 150); });
+  if (document.fonts) document.fonts.ready.then(draw);
+
+  readColors();
+  resize();
+  setRunning(running);
+})();
+</script>
+</body>
 </html>
-

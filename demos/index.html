@@ -1,30 +1,216 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Index</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demos, Will Hahn</title>
+<meta name="description" content="Small interactive experiments by William Edward Hahn: color naming and perception, Solresol and sound, and hiding images inside images.">
+<link rel="canonical" href="https://will.hahn.ai/demos/">
+<link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #FCFCFA;
+  --minor: rgba(64, 106, 168, 0.035);
+  --major: rgba(64, 106, 168, 0.07);
+  --rule: rgba(28, 37, 65, 0.22);
+  --ink: #141B33;
+  --ink-soft: #3B4560;
+  --red: #A8322D;
+  --margin: rgba(196, 64, 58, 0.38);
+  --c-new: #C8412C; --c-mid: #1E7F6A; --c-old: #2B4BA8; --c-violet: #6A3D9A;
+  --foot: #1F3A8A; --foot-ink: #F2F5FB;
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --display: "EB Garamond", Garamond, "Iowan Old Style", Georgia, serif;
+  --sq: 24px;
+  --gutter: clamp(16px, 6vw, 96px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+    --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+    --red: #FFA597; --margin: rgba(255, 150, 130, 0.35);
+    --c-new: #FF7A63; --c-mid: #45C4A5; --c-old: #9DB2FF; --c-violet: #C3A3F0;
+    --foot: #0A1A36; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+  --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+  --red: #FFA597; --margin: rgba(255, 150, 130, 0.35);
+  --c-new: #FF7A63; --c-mid: #45C4A5; --c-old: #9DB2FF; --c-violet: #C3A3F0;
+  --foot: #0A1A36; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--ink); background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--major) 1px, transparent 1px),
+    linear-gradient(var(--minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--minor) 1px, transparent 1px);
+  background-size: calc(var(--sq) * 5) calc(var(--sq) * 5), calc(var(--sq) * 5) calc(var(--sq) * 5), var(--sq) var(--sq), var(--sq) var(--sq);
+  font: 400 1.15rem/1.62 var(--serif);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  position: relative;
+}
+@media (min-width: 900px) {
+  body::before {
+    content: ""; position: absolute; top: 0; bottom: 0; z-index: 0; pointer-events: none;
+    left: calc(var(--gutter) - 22px); width: 1px; background: var(--margin); box-shadow: 3px 0 0 var(--margin);
+  }
+}
+a { color: var(--red); text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+p { margin: 0 0 1em; }
+main, header, footer { position: relative; z-index: 1; }
+
+.top {
+  height: calc(var(--sq) * 3);
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 0 var(--gutter);
+}
+.top .home { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 500; font-size: 1.3rem; }
+.top nav ul { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; margin: 0; padding: 0; list-style: none; }
+.top nav a { color: var(--ink-soft); text-decoration: none; }
+.top nav a:hover { color: var(--red); }
+
+.intro { padding: calc(var(--sq) * 2) var(--gutter) 0; max-width: calc(66ch + 2 * var(--gutter)); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.6rem, 6.4vw, 4.5rem); line-height: 1.02; margin: 0 0 14px; }
+.lede { font-size: clamp(1.2rem, 2vw, 1.4rem); line-height: 1.45; color: var(--ink-soft); }
+
+main > section { padding: calc(var(--sq) * 3) var(--gutter) 0; }
+h2 { font-family: var(--display); font-weight: 500; font-size: clamp(1.8rem, 3.4vw, 2.35rem); line-height: 1.15; margin: 0 0 6px; }
+h2::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 12px; background: var(--sec); vertical-align: 0.12em; }
+h2::after { content: ""; display: block; width: 3.5rem; border-top: 2px solid var(--sec); margin-top: 10px; }
+.section-note { color: var(--ink-soft); max-width: 66ch; margin: 12px 0 24px; }
+#color { --sec: var(--c-new); }
+#sound { --sec: var(--c-violet); }
+#images { --sec: var(--c-mid); }
+
+.plates { list-style: none; margin: 0; padding: 0; display: grid; gap: 36px 32px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); max-width: 1180px; }
+.plate { display: flex; flex-direction: column; }
+.plate .print { display: block; background: var(--paper); padding: 8px; border: 1px solid var(--rule); border-top: 3px solid var(--sec); }
+.plate .print img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; object-position: top; }
+.plate .print:hover { border-color: var(--sec); }
+.plate h3 { font-family: var(--serif); font-weight: 600; font-size: 1.15rem; margin: 12px 0 2px; line-height: 1.3; }
+.plate h3 a { color: var(--red); }
+.plate p { margin: 0; color: var(--ink-soft); font-size: 1.02rem; }
+.plate .also { margin-top: 6px; font-size: 0.98rem; }
+
+footer {
+  margin-top: calc(var(--sq) * 5);
+  padding: calc(var(--sq) * 1.5) var(--gutter) calc(var(--sq) * 2);
+  background: var(--foot); color: var(--foot-ink); font-size: 1.02rem;
+}
+footer a { color: var(--foot-ink); }
+footer p { margin: 0 0 4px; }
+@media (max-width: 560px) { body { font-size: 1.08rem; } }
+</style>
 </head>
 <body>
-    <h1>Index</h1>
+<header class="top">
+  <a class="home" href="../">will.hahn.ai</a>
+  <nav aria-label="Site">
     <ul>
-        <li><a href="./Tetrachromacy.html">Tetrachromacy.html</a></li>
-        <li><a href="./Watermark_drop_decode000.html">Watermark_drop_decode000.html</a></li>
-        <li><a href="./solresol_songs4.html">solresol_songs4.html</a></li>
-        <li><a href="./Paint.html">Paint.html</a></li>
-        <li><a href="./piano.html">piano.html</a></li>
-        <li><a href="./Name2Color_phone.html">Name2Color_phone.html</a></li>
-        <li><a href="./Watermark_drop_encode000.html">Watermark_drop_encode000.html</a></li>
-        <li><a href="./Name2Color.html">Name2Color.html</a></li>
-        <li><a href="./solresol_songs3.html">solresol_songs3.html</a></li>
-        <li><a href="./color_guess.html">color_guess.html</a></li>
-        <li><a href="./solresol_songs.html">solresol_songs.html</a></li>
-        <li><a href="./Color2Name_phone.html">Color2Name_phone.html</a></li>
-        <li><a href="./Color2Name.html">Color2Name.html</a></li>
-        <li><a href="./Solresol_piano7.html">Solresol_piano7.html</a></li>
-        <li><a href="./calendar.html">calendar.html</a></li>
-        <li><a href="./solresol2.html">solresol2.html</a></li>
-        <li><a href="./solresol_songs2.html">solresol_songs2.html</a></li>
-
+      <li><a href="../#about">About</a></li>
+      <li><a href="../#research">Research</a></li>
+      <li><a href="../#talks">Talks</a></li>
+      <li><a href="../#teaching">Teaching</a></li>
     </ul>
+  </nav>
+</header>
+
+<main>
+  <div class="intro">
+    <h1>Demos</h1>
+    <p class="lede">Small experiments that run in the browser, most of them built for teaching. Each one opens on its own page; nothing to install.</p>
+  </div>
+
+  <section id="color" aria-labelledby="color-h">
+    <h2 id="color-h">Color and perception</h2>
+    <p class="section-note">How well do we name what we see? These turn color vision into quick games.</p>
+    <ul class="plates">
+      <li class="plate">
+        <a class="print" href="Color2Name.html" tabindex="-1" aria-hidden="true"><img src="thumbs/Color2Name.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="Color2Name.html">Color to name</a></h3>
+        <p>A color fills the screen. Pick its name from three choices.</p>
+        <p class="also"><a href="Color2Name_phone.html">Phone version</a></p>
+      </li>
+      <li class="plate">
+        <a class="print" href="Name2Color.html" tabindex="-1" aria-hidden="true"><img src="thumbs/Name2Color.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="Name2Color.html">Name to color</a></h3>
+        <p>A color name appears. Pick the swatch that matches it.</p>
+        <p class="also"><a href="Name2Color_phone.html">Phone version</a></p>
+      </li>
+      <li class="plate">
+        <a class="print" href="Tetrachromacy.html" tabindex="-1" aria-hidden="true"><img src="thumbs/Tetrachromacy.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="Tetrachromacy.html">Tetrachromacy test</a></h3>
+        <p>Find the square that looks slightly different from the others.</p>
+      </li>
+      <li class="plate">
+        <a class="print" href="color_guess.html" tabindex="-1" aria-hidden="true"><img src="thumbs/color_guess.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="color_guess.html">Guess the RGB</a></h3>
+        <p>Match a target color by mixing red, green and blue with sliders.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="sound" aria-labelledby="sound-h">
+    <h2 id="sound-h">Solresol and sound</h2>
+    <p class="section-note">Solresol is a 19th-century language built entirely from the seven notes of the scale, so every word can be sung, played or painted. More at <a href="https://solresol.xyz">solresol.xyz</a>.</p>
+    <ul class="plates">
+      <li class="plate">
+        <a class="print" href="Solresol_piano7.html" tabindex="-1" aria-hidden="true"><img src="thumbs/Solresol_piano7.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="Solresol_piano7.html">Solresol flashcards</a></h3>
+        <p>Hear a syllable and press its key. Each note has its own color and glyph.</p>
+      </li>
+      <li class="plate">
+        <a class="print" href="solresol_songs3.html" tabindex="-1" aria-hidden="true"><img src="thumbs/solresol_songs3.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="solresol_songs3.html">Songs in Solresol</a></h3>
+        <p>A familiar tune is drawn from a songbook of a dozen, from Frère Jacques to Ode to Joy. Play it note by note on keys 1 to 7.</p>
+        <p class="also">Other versions: <a href="solresol_songs.html">twelve songs</a>, <a href="solresol_songs2.html">piano or flute</a>, <a href="solresol_songs4.html">with the Star-Spangled Banner</a></p>
+      </li>
+      <li class="plate">
+        <a class="print" href="piano.html" tabindex="-1" aria-hidden="true"><img src="thumbs/piano.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="piano.html">Keyboard piano</a></h3>
+        <p>An octave you can play from the computer keyboard, A to J and W to Y.</p>
+      </li>
+      <li class="plate">
+        <a class="print" href="solresol2.html" tabindex="-1" aria-hidden="true"><img src="thumbs/solresol2.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="solresol2.html">Solresol tones</a></h3>
+        <p>A syllable appears. Press its number, 1 to 7, to hear the tone and check your answer.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="images" aria-labelledby="images-h">
+    <h2 id="images-h">Images</h2>
+    <p class="section-note">Hiding one picture inside another, and getting it back out.</p>
+    <ul class="plates">
+      <li class="plate">
+        <a class="print" href="Watermark_drop_encode000.html" tabindex="-1" aria-hidden="true"><img src="thumbs/Watermark_drop_encode000.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="Watermark_drop_encode000.html">Hide an image</a></h3>
+        <p>Drop in two images. One is hidden inside the other, and the result looks like the first picture alone.</p>
+        <p class="also"><a href="Watermark_drop_decode000.html">Recover the hidden image</a></p>
+      </li>
+      <li class="plate">
+        <a class="print" href="Paint.html" tabindex="-1" aria-hidden="true"><img src="thumbs/Paint.jpg" alt="" width="480" height="320" loading="lazy"></a>
+        <h3><a href="Paint.html">Paint</a></h3>
+        <p>The smallest possible drawing canvas: pick a color and draw.</p>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <p><a href="../">William Edward Hahn</a>, Department of Mathematical Sciences, Florida Atlantic University. <a href="mailto:whahn@fau.edu">whahn@fau.edu</a></p>
+</footer>
 </body>
 </html>
