@@ -1,0 +1,6 @@
+# Built site only: no scripts, caches or OS files
+__pycache__/
+*.pyc
+*.py
+.env
+.DS_Store
