@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Intelligence Beneath Language, Will Hahn</title>
+<meta name="description" content="We have spent the last few years teaching machines to talk.">
+<link rel="canonical" href="https://will.hahn.ai/blog/70/">
+<link rel="alternate" type="application/rss+xml" title="Will Hahn: Writing" href="https://will.hahn.ai/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Intelligence Beneath Language">
+<meta property="og:description" content="We have spent the last few years teaching machines to talk.">
+<meta property="og:url" content="https://will.hahn.ai/blog/70/">
+<meta property="og:image" content="https://will.hahn.ai/images/og-card.png">
+<meta property="article:published_time" content="2026-07-06">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZDVLMSSQ0M');</script>
+<style>
+:root {
+  --paper: #FCFCFA;
+  --minor: rgba(64, 106, 168, 0.035);
+  --major: rgba(64, 106, 168, 0.07);
+  --rule: rgba(28, 37, 65, 0.22);
+  --ink: #141B33;
+  --ink-soft: #3B4560;
+  --red: #A8322D;
+  --margin: rgba(196, 64, 58, 0.38);
+  --accent: #6A3D9A;
+  --tint: rgba(43, 75, 168, 0.07);
+  --foot: #1F3A8A; --foot-ink: #F2F5FB;
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --display: "EB Garamond", Garamond, "Iowan Old Style", Georgia, serif;
+  --sq: 24px;
+  --measure: 66ch;
+  --gutter: clamp(16px, 6vw, 96px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+    --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+    --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+    --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+  --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+  --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+  --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--ink); background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--major) 1px, transparent 1px),
+    linear-gradient(var(--minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--minor) 1px, transparent 1px);
+  background-size: calc(var(--sq) * 5) calc(var(--sq) * 5), calc(var(--sq) * 5) calc(var(--sq) * 5), var(--sq) var(--sq), var(--sq) var(--sq);
+  font: 400 1.15rem/1.62 var(--serif);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  position: relative;
+}
+@media (min-width: 900px) {
+  body::before {
+    content: ""; position: absolute; top: 0; bottom: 0; z-index: 0; pointer-events: none;
+    left: calc(var(--gutter) - 22px); width: 1px; background: var(--margin); box-shadow: 3px 0 0 var(--margin);
+  }
+}
+a { color: var(--red); text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+p { margin: 0 0 1em; }
+main, header, footer { position: relative; z-index: 1; }
+
+.top {
+  height: calc(var(--sq) * 3);
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 0 var(--gutter);
+}
+.top .home { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 500; font-size: 1.3rem; }
+.top nav ul { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; margin: 0; padding: 0; list-style: none; }
+.top nav a { color: var(--ink-soft); text-decoration: none; }
+.top nav a:hover, .top nav a[aria-current] { color: var(--red); }
+
+.intro { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.intro > * { max-width: var(--measure); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.4rem, 6vw, 4.25rem); line-height: 1.05; margin: 0 0 12px; }
+.lede { font-size: clamp(1.15rem, 2vw, 1.35rem); line-height: 1.45; color: var(--ink-soft); }
+
+.subscribe {
+  max-width: var(--measure); background: var(--tint); border-top: 3px solid var(--accent);
+  padding: 14px 18px; margin: 20px 0 0;
+}
+.subscribe p { margin: 0; }
+
+/* index */
+.year { padding: calc(var(--sq) * 2.5) var(--gutter) 0; }
+.year h2 { font-family: var(--display); font-weight: 500; font-size: 1.9rem; margin: 0 0 8px; }
+.year h2::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 12px; background: var(--accent); vertical-align: 0.1em; }
+.entries { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); max-width: 900px; }
+.entry { border-bottom: 1px solid var(--rule); }
+.entry a {
+  display: grid; grid-template-columns: 8.5rem minmax(0, 1fr) auto; grid-template-areas: "d t i" "d x i";
+  gap: 2px 20px; padding: 14px 0; text-decoration: none; color: var(--ink);
+}
+.entry time { grid-area: d; color: var(--ink-soft); font-size: 0.95rem; padding-top: 3px; }
+.entry .t { grid-area: t; color: var(--red); font-weight: 600; font-size: 1.12rem; line-height: 1.35; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+.entry a:hover .t { text-decoration-thickness: 2px; }
+.entry .x { grid-area: x; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; }
+.entry .thumb { grid-area: i; width: 120px; height: 80px; object-fit: cover; border: 1px solid var(--rule); }
+
+/* post */
+.post { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.post > * { max-width: var(--measure); }
+.post .back { display: inline-block; margin-bottom: 18px; }
+.post h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); max-width: 22em; }
+.post h1, .post .subtitle { max-width: min(100%, 860px); }
+.post .subtitle { font-family: var(--display); font-style: italic; font-size: 1.4rem; color: var(--ink-soft); margin: 0 0 10px; }
+.post .meta { color: var(--ink-soft); font-size: 1rem; margin: 0 0 24px; }
+.post .meta .sep { margin: 0 4px; opacity: 0.6; }
+.hero { width: fit-content; max-width: 100%; margin: 0 0 28px; background: var(--paper); padding: 8px; border: 1px solid var(--rule); border-top: 3px solid var(--accent); }
+.body { font-size: 1.18rem; line-height: 1.7; }
+.body h2, .body h3 { font-family: var(--display); font-weight: 500; line-height: 1.2; margin: 1.6em 0 0.5em; }
+.body h2 { font-size: 1.8rem; } .body h3 { font-size: 1.4rem; }
+.body blockquote { margin: 1.2em 0; padding: 0 0 0 18px; border-left: 3px solid var(--accent); color: var(--ink-soft); font-style: italic; }
+.body img { margin: 1em 0; }
+.hero img { max-height: 460px; width: auto; }
+.body figure { margin: 1.4em 0; }
+.body figcaption { color: var(--ink-soft); font-size: 0.95rem; }
+.body hr { border: 0; border-top: 1px solid var(--rule); margin: 2em 0; }
+.body ul, .body ol { padding-left: 1.4em; }
+.body pre, .body code { font-size: 0.92em; }
+.body pre { overflow-x: auto; background: var(--tint); padding: 12px; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0 0; padding-top: 16px; border-top: 1px solid var(--rule); max-width: var(--measure); }
+.pager a { text-decoration: none; color: var(--red); font-weight: 600; line-height: 1.35; }
+.pager a span { display: block; font-weight: 400; color: var(--ink-soft); font-size: 0.92rem; }
+.pager .next { text-align: right; }
+
+footer {
+  margin-top: calc(var(--sq) * 5);
+  padding: calc(var(--sq) * 1.5) var(--gutter) calc(var(--sq) * 2);
+  background: var(--foot); color: var(--foot-ink); font-size: 1.02rem;
+}
+footer a { color: var(--foot-ink); }
+footer p { margin: 0 0 4px; }
+
+@media (max-width: 640px) {
+  body { font-size: 1.08rem; }
+  .top nav { display: none; }
+  .entry a { grid-template-columns: minmax(0, 1fr); grid-template-areas: "d" "t" "x"; }
+  .entry .thumb { display: none; }
+  .pager { grid-template-columns: 1fr; }
+  .pager .next { text-align: left; }
+}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="home" href="../../">will.hahn.ai</a>
+  <nav aria-label="Site">
+    <ul>
+      <li><a href="../../#about">About</a></li>
+      <li><a href="../../#research">Research</a></li>
+      <li><a href="../../#talks">Talks</a></li>
+      <li><a href="../../#teaching">Teaching</a></li>
+      <li><a href="../" aria-current="page">Writing</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <article class="post">
+    <a class="back" href="../">All essays</a>
+    <h1>The Intelligence Beneath Language</h1>
+    
+    <p class="meta"><time datetime="2026-07-06">July 6, 2026</time> <span class="sep">/</span> <a href="https://williamedwardhahn.substack.com/p/the-intelligence-beneath-language">Also on Substack</a></p>
+    
+    <div class="body">
+<p>We have spent the last few years teaching machines to talk.</p><p>This was not a small thing.</p><p>Language is not decoration. Language is compressed civilization. It is law, poetry, mathematics, gossip, memory, threat, seduction, theory, instruction, myth, and map. To build a machine that can move through language is to build a machine that can move through the accumulated residue of human minds.</p><p>But there is a danger here.</p><p>Because language is so bright, it blinds us.</p><p>We start to confuse the ability to describe the world with the ability to inhabit it. We confuse the map with the animal. We confuse the sentence “the cup is on the table” with the silent, muscular, frictional, gravity-soaked competence required to actually reach for the cup without knocking it over.</p><p>Your dog cannot write an essay.</p><p>But your dog can run through a forest.</p><p>Your cat cannot explain object permanence.</p><p>But your cat can leap from the floor to the counter, correct its body midair, land on a narrow surface, and instantly decide whether the thing it sees is prey, toy, threat, or beneath contempt.</p><p>Your horse cannot solve a logic puzzle.</p><p>But your horse can feel the tension in a rider’s body, interpret the terrain through its hooves, coordinate half a ton of muscle and bone, and move through the world with a kind of embodied intelligence no chatbot currently possesses.</p><p>This is the frontier.</p><p>Not more words.</p><p>More world.</p><p><strong>The Strange Poverty of Pure Language</strong></p><p>We have built machines that can speak about almost anything.</p><p>But speaking about reality is not the same as being coupled to reality.</p><p>A language model lives in a universe of tokens. Its physics is syntax. Its gravity is probability. It has no hunger, no balance, no skin, no injury, no fatigue, no peripheral vision, no vestibular sense, no instinctive terror of falling.</p><p>It knows the word “slippery.”</p><p>But it has never slipped.</p><p>This matters.</p><p>Because much of intelligence did not evolve to produce sentences. It evolved to keep bodies alive. Before intelligence was philosophical, it was navigational. Before it was verbal, it was sensorimotor. Before it argued about truth, it had to solve the ancient problem: What is happening, and what do I do next?</p><p>The root of intelligence is not explanation.</p><p>It is orientation.</p><p>Every living creature is a theory of its environment written in flesh. A squirrel is a model of branches, predators, nuts, seasons, distance, and risk. A bird is a model of air. An octopus is a model of surfaces, holes, camouflage, and escape. A dog is a model of smell, pack, mood, movement, and permission.</p><p>These creatures are not stupid because they cannot talk.</p><p>They are intelligent in the older language.</p><p>The language of affordance.</p><p>The language of action.</p><p>The language of “can I climb this, eat this, chase this, trust this, hide here, jump there, survive now?”</p><p><strong>The Cat Is Not Running an Essay</strong></p><p>A cat does not look at a shelf and internally narrate:</p><p>“There appears to be a horizontal surface approximately four feet above the ground. Based on prior experience, I predict that a leap of sufficient force will allow me to reach it.”</p><p>The cat just knows.</p><p>But “just knows” is doing enormous work.</p><p>It means the cat has integrated vision, balance, proprioception, memory, muscle control, surface estimation, and risk into one fluid act. The cat’s intelligence is not arranged as a paragraph. It is arranged as a body moving through space.</p><p>This kind of intelligence is easy to underestimate because it is not articulate.</p><p>But the universe does not care whether you can articulate your competence.</p><p>The universe cares whether you can execute.</p><p>A toddler learning to walk is solving a control problem more profound than many symbolic puzzles. A crow bending wire into a hook is doing applied physics. A dog catching a frisbee is running real-time predictive modeling in wind, light, motion, and muscle.</p><p>These are not inferior forms of intelligence.</p><p>They are foundational forms.</p><p>Language came late. Bodies came first.</p><p><strong>The Missing Layer</strong></p><p>Modern AI has become extraordinary at disembodied abstraction.</p><p>It can summarize, translate, compose, classify, simulate, code, and explain. It can manipulate the symbolic products of human civilization with astonishing fluency.</p><p>But general intelligence cannot remain trapped in the library.</p><p>The library is not the world. It is a fossil bed of worlds already observed.</p><p>A truly general intelligence has to move from text to texture. From description to contact. From saying “fragile” to handling glass. From saying “afraid” to recognizing the tremor in an animal’s posture. From saying “tool” to discovering, by interaction, what can be used as one.</p><p>This is not merely robotics. That is too small a frame.</p><p>Robotics sounds like motors and joints.</p><p>The deeper issue is grounding.</p><p>An intelligence must be grounded in the consequences of its own actions. It has to learn that the world pushes back. That objects persist. That time is not a transcript. That space is not a diagram. That other agents are not just characters in a prompt but centers of behavior with their own hidden state.</p><p>The next great leap in AI may not look like a machine passing a harder exam.</p><p>It may look like a machine learning the obvious things every animal knows.</p><p>That surfaces support.</p><p>That bodies occlude.</p><p>That pressure matters.</p><p>That attention is finite.</p><p>That fear changes motion.</p><p>That the shortest path is sometimes dangerous.</p><p>That the thing which is still may be waiting.</p><p><strong>Intelligence Is Not One Thing</strong></p><p>We keep trying to rank intelligence as if it were a ladder.</p><p>At the bottom, bacteria.</p><p>Then insects.</p><p>Then mammals.</p><p>Then humans.</p><p>Then machines, perhaps, at the top.</p><p>But intelligence is not a ladder. It is an ecology.</p><p>Different minds are specialized compressions of different worlds. The bee has a mind shaped by flowers and sun angles. The bat has a mind shaped by echoes. The wolf has a mind shaped by pursuit, hierarchy, and hunger. The human has a mind shaped by hands, fire, language, death, and stories.</p><p>So when we say “general intelligence,” we should be careful.</p><p>General does not mean “good at talking about everything.”</p><p>General means able to discover the structure of many environments and act effectively inside them.</p><p>That includes language.</p><p>But it cannot end there.</p><p>A mind that can debate physics but cannot learn a room is not general. A mind that can describe a horse but cannot infer what the horse is about to do from the set of its ears is missing an entire continent of cognition.</p><p>The animal world is not beneath AI.</p><p>It is ahead of AI in the domains where reality is immediate.</p><p><strong>The World Is the Real Benchmark</strong></p><p>We have made benchmarks out of tests.</p><p>But the real benchmark has always been the world.</p><p>Can you cross the room?</p><p>Can you open the unfamiliar door?</p><p>Can you tell when the dog is nervous?</p><p>Can you notice that the floor is wet?</p><p>Can you carry the egg without crushing it?</p><p>Can you understand that the elderly person is not just moving slowly, but hesitating because the step is uncertain?</p><p>Can you help?</p><p>This is where intelligence becomes more than prediction.</p><p>It becomes participation.</p><p>The dream is not a machine that can merely answer questions about life. The dream is a machine that can join the causal fabric of life competently, safely, and adaptively.</p><p>Not as a puppet.</p><p>Not as a search engine with arms.</p><p>But as an agent with grounded understanding.</p><p>Something that can learn the way animals learn: through perception, motion, feedback, surprise, correction, and care.</p><p><strong>The Return to Animal Intelligence</strong></p><p>The future of AI may require a strange humility.</p><p>After all the talk of superintelligence, we may need to study the cat.</p><p>After all the giant data centers, we may need to understand the dog.</p><p>After all the formal benchmarks, we may need to look again at the horse, the crow, the dolphin, the rat, the spider, the octopus.</p><p>Not because these creatures are primitive.</p><p>Because they solved reality before we solved grammar.</p><p>They live in the world directly. They do not need a caption. They do not need a prompt. They wake inside the problem and begin.</p><p>Artificial intelligence has learned to speak with the voice of civilization.</p><p>Now it has to learn the silence beneath it.</p><p>The silent intelligence of balance.</p><p>The silent intelligence of touch.</p><p>The silent intelligence of noticing.</p><p>The silent intelligence of action.</p><p>The silent intelligence that knows what a thing is by what can be done with it.</p><p><strong>The Next Mind Will Have Paws Before It Has Wings</strong></p><p>The temptation is to imagine the next intelligence as a god of pure thought: weightless, verbal, abstract, everywhere at once.</p><p>But perhaps the path runs in the opposite direction.</p><p>Perhaps intelligence must descend before it ascends.</p><p>Into bodies. Into rooms. Into friction. Into failed grasps and corrected movements. Into the animal grammar of the world.</p><p>The next great AI may not first appear as an oracle.</p><p>It may appear as something that can tidy a kitchen without breaking a glass.</p><p>Something that can walk beside a child and understand the child is about to stumble.</p><p>Something that can watch a horse’s flank, a dog’s tail, a human hand, a crowded street, and grasp the living geometry of intention.</p><p>We taught machines our language.</p><p>Now we have to teach them Earth.</p><p>And Earth does not speak in sentences. It speaks in surfaces, forces, glances, weights, smells, rhythms, risks, openings, and consequences.</p><p>The next frontier is not artificial intelligence that can talk like us.</p><p>It is artificial intelligence that can understand the world the way life does.</p><p>Before the word.</p><p>Before the theory.</p><p>Before the explanation.</p><p>There is the leap, the paw, the hoof, the wing, the hand reaching out into reality and learning what reality permits.</p><p>That is where intelligence began.</p><p>That is where it has to go next.</p>
+    </div>
+    <div class="subscribe">
+      <p>New essays also go out by email. <a href="https://williamedwardhahn.substack.com/subscribe">Subscribe on Substack</a>.</p>
+    </div>
+    <nav class="pager" aria-label="More essays">
+      <a class="prev" href="../69/"><span>Earlier</span>The Magic Is Real</a>
+      <a class="next" href="../71/"><span>Later</span>Consciousness: Minds and Machines</a>
+    </nav>
+  </article>
+</main>
+
+<footer>
+  <p><a href="../../">William Edward Hahn</a>, Department of Mathematical Sciences, Florida Atlantic University. <a href="mailto:whahn@fau.edu">whahn@fau.edu</a></p>
+</footer>
+</body>
+</html>

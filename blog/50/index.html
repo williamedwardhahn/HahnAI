@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Forbidden Equation, Will Hahn</title>
+<meta name="description" content="Why can’t you patent mathematics?">
+<link rel="canonical" href="https://will.hahn.ai/blog/50/">
+<link rel="alternate" type="application/rss+xml" title="Will Hahn: Writing" href="https://will.hahn.ai/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Forbidden Equation">
+<meta property="og:description" content="Why can’t you patent mathematics?">
+<meta property="og:url" content="https://will.hahn.ai/blog/50/">
+<meta property="og:image" content="https://will.hahn.ai/images/og-card.png">
+<meta property="article:published_time" content="2026-02-16">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZDVLMSSQ0M');</script>
+<style>
+:root {
+  --paper: #FCFCFA;
+  --minor: rgba(64, 106, 168, 0.035);
+  --major: rgba(64, 106, 168, 0.07);
+  --rule: rgba(28, 37, 65, 0.22);
+  --ink: #141B33;
+  --ink-soft: #3B4560;
+  --red: #A8322D;
+  --margin: rgba(196, 64, 58, 0.38);
+  --accent: #6A3D9A;
+  --tint: rgba(43, 75, 168, 0.07);
+  --foot: #1F3A8A; --foot-ink: #F2F5FB;
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --display: "EB Garamond", Garamond, "Iowan Old Style", Georgia, serif;
+  --sq: 24px;
+  --measure: 66ch;
+  --gutter: clamp(16px, 6vw, 96px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+    --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+    --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+    --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+  --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+  --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+  --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--ink); background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--major) 1px, transparent 1px),
+    linear-gradient(var(--minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--minor) 1px, transparent 1px);
+  background-size: calc(var(--sq) * 5) calc(var(--sq) * 5), calc(var(--sq) * 5) calc(var(--sq) * 5), var(--sq) var(--sq), var(--sq) var(--sq);
+  font: 400 1.15rem/1.62 var(--serif);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  position: relative;
+}
+@media (min-width: 900px) {
+  body::before {
+    content: ""; position: absolute; top: 0; bottom: 0; z-index: 0; pointer-events: none;
+    left: calc(var(--gutter) - 22px); width: 1px; background: var(--margin); box-shadow: 3px 0 0 var(--margin);
+  }
+}
+a { color: var(--red); text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+p { margin: 0 0 1em; }
+main, header, footer { position: relative; z-index: 1; }
+
+.top {
+  height: calc(var(--sq) * 3);
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 0 var(--gutter);
+}
+.top .home { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 500; font-size: 1.3rem; }
+.top nav ul { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; margin: 0; padding: 0; list-style: none; }
+.top nav a { color: var(--ink-soft); text-decoration: none; }
+.top nav a:hover, .top nav a[aria-current] { color: var(--red); }
+
+.intro { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.intro > * { max-width: var(--measure); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.4rem, 6vw, 4.25rem); line-height: 1.05; margin: 0 0 12px; }
+.lede { font-size: clamp(1.15rem, 2vw, 1.35rem); line-height: 1.45; color: var(--ink-soft); }
+
+.subscribe {
+  max-width: var(--measure); background: var(--tint); border-top: 3px solid var(--accent);
+  padding: 14px 18px; margin: 20px 0 0;
+}
+.subscribe p { margin: 0; }
+
+/* index */
+.year { padding: calc(var(--sq) * 2.5) var(--gutter) 0; }
+.year h2 { font-family: var(--display); font-weight: 500; font-size: 1.9rem; margin: 0 0 8px; }
+.year h2::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 12px; background: var(--accent); vertical-align: 0.1em; }
+.entries { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); max-width: 900px; }
+.entry { border-bottom: 1px solid var(--rule); }
+.entry a {
+  display: grid; grid-template-columns: 8.5rem minmax(0, 1fr) auto; grid-template-areas: "d t i" "d x i";
+  gap: 2px 20px; padding: 14px 0; text-decoration: none; color: var(--ink);
+}
+.entry time { grid-area: d; color: var(--ink-soft); font-size: 0.95rem; padding-top: 3px; }
+.entry .t { grid-area: t; color: var(--red); font-weight: 600; font-size: 1.12rem; line-height: 1.35; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+.entry a:hover .t { text-decoration-thickness: 2px; }
+.entry .x { grid-area: x; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; }
+.entry .thumb { grid-area: i; width: 120px; height: 80px; object-fit: cover; border: 1px solid var(--rule); }
+
+/* post */
+.post { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.post > * { max-width: var(--measure); }
+.post .back { display: inline-block; margin-bottom: 18px; }
+.post h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); max-width: 22em; }
+.post h1, .post .subtitle { max-width: min(100%, 860px); }
+.post .subtitle { font-family: var(--display); font-style: italic; font-size: 1.4rem; color: var(--ink-soft); margin: 0 0 10px; }
+.post .meta { color: var(--ink-soft); font-size: 1rem; margin: 0 0 24px; }
+.post .meta .sep { margin: 0 4px; opacity: 0.6; }
+.hero { width: fit-content; max-width: 100%; margin: 0 0 28px; background: var(--paper); padding: 8px; border: 1px solid var(--rule); border-top: 3px solid var(--accent); }
+.body { font-size: 1.18rem; line-height: 1.7; }
+.body h2, .body h3 { font-family: var(--display); font-weight: 500; line-height: 1.2; margin: 1.6em 0 0.5em; }
+.body h2 { font-size: 1.8rem; } .body h3 { font-size: 1.4rem; }
+.body blockquote { margin: 1.2em 0; padding: 0 0 0 18px; border-left: 3px solid var(--accent); color: var(--ink-soft); font-style: italic; }
+.body img { margin: 1em 0; }
+.hero img { max-height: 460px; width: auto; }
+.body figure { margin: 1.4em 0; }
+.body figcaption { color: var(--ink-soft); font-size: 0.95rem; }
+.body hr { border: 0; border-top: 1px solid var(--rule); margin: 2em 0; }
+.body ul, .body ol { padding-left: 1.4em; }
+.body pre, .body code { font-size: 0.92em; }
+.body pre { overflow-x: auto; background: var(--tint); padding: 12px; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0 0; padding-top: 16px; border-top: 1px solid var(--rule); max-width: var(--measure); }
+.pager a { text-decoration: none; color: var(--red); font-weight: 600; line-height: 1.35; }
+.pager a span { display: block; font-weight: 400; color: var(--ink-soft); font-size: 0.92rem; }
+.pager .next { text-align: right; }
+
+footer {
+  margin-top: calc(var(--sq) * 5);
+  padding: calc(var(--sq) * 1.5) var(--gutter) calc(var(--sq) * 2);
+  background: var(--foot); color: var(--foot-ink); font-size: 1.02rem;
+}
+footer a { color: var(--foot-ink); }
+footer p { margin: 0 0 4px; }
+
+@media (max-width: 640px) {
+  body { font-size: 1.08rem; }
+  .top nav { display: none; }
+  .entry a { grid-template-columns: minmax(0, 1fr); grid-template-areas: "d" "t" "x"; }
+  .entry .thumb { display: none; }
+  .pager { grid-template-columns: 1fr; }
+  .pager .next { text-align: left; }
+}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="home" href="../../">will.hahn.ai</a>
+  <nav aria-label="Site">
+    <ul>
+      <li><a href="../../#about">About</a></li>
+      <li><a href="../../#research">Research</a></li>
+      <li><a href="../../#talks">Talks</a></li>
+      <li><a href="../../#teaching">Teaching</a></li>
+      <li><a href="../" aria-current="page">Writing</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <article class="post">
+    <a class="back" href="../">All essays</a>
+    <h1>The Forbidden Equation</h1>
+    
+    <p class="meta"><time datetime="2026-02-16">February 16, 2026</time> <span class="sep">/</span> <a href="https://williamedwardhahn.substack.com/p/the-forbidden-equation">Also on Substack</a></p>
+    
+    <div class="body">
+<p>Why can’t you patent mathematics?</p><p>You can patent a machine. You can patent a chemical compound. You can even patent a specific implementation of an algorithm. But you cannot patent the Pythagorean theorem. You cannot own calculus. You cannot charge licensing fees for prime numbers.</p><p>Mathematics is treated as discovered structure — not invented property.</p><p>Software sits in an uneasy middle ground. Pure code, abstractly described, is hard to own outright. Courts resist granting monopolies over logic itself. You can protect an application, a specific implementation, a narrow claim. But you cannot patent “if/then.” You cannot patent sorting as an idea.</p><p>The law, however imperfectly, draws a line around abstract structure.</p><p>Then we arrive at music.</p><p>And the line dissolves.</p><p>A Language That Binds</p><p>Music is not merely entertainment. It is patterned sound that entrains neural systems. Rhythm modulates motor circuits. Harmony manipulates expectation. Melody shapes prediction error. It is structured information encoded in time.</p><p>In computational terms, music is an interface protocol for the human nervous system.</p><p>Yet unlike mathematics, music is aggressively owned. A three-note motif can trigger litigation. A chord progression can become grounds for a lawsuit. Entire industries exist to detect similarity at the level of waveform resemblance.</p><p>The same society that refuses to let someone own geometry will allow someone to claim exclusive rights over a sequence of vibrations.</p><p>Why?</p><p>The Architecture of Influence</p><p>Consider the asymmetry.</p><p>Mathematics programs machines.</p><p>Music programs people.</p><p>Mathematics structures bridges, rockets, encryption systems. But its effects are mediated through tools. Its influence is indirect.</p><p>Music bypasses tools. It modifies internal state directly.</p><p>A melody can alter mood in seconds. A rhythm can synchronize thousands of bodies into one coordinated unit. Anthems mobilize nations. Jingles shape consumer memory. Songs embed themselves into recall systems with a durability few ideas achieve.</p><p>Music is compressed persuasion.</p><p>And persuasion is power.</p><p>Copyright as Cognitive Control</p><p>Modern intellectual property law emerged alongside mass media. Once recording technology allowed infinite replication, the law moved to restrict copying. The justification was economic incentive.</p><p>But incentives are only part of the story.</p><p>When a form of structured influence scales across populations, ownership becomes a regulatory instrument. Control the distribution channels. Control the licensing. Control the synchronization rights.</p><p>You do not just control a song.</p><p>You control a memetic vector.</p><p>Unlike equations, songs spread horizontally. They enter living rooms, cars, stadiums, headphones. They circulate through childhood memory and collective ritual. They are sticky.</p><p>To own a melody is to own a behavioral lever.</p><p>The Programming Layer</p><p>There is a deeper reframing available.</p><p>Language is symbolic. Mathematics is symbolic. Code is symbolic.</p><p>Music is sub-symbolic.</p><p>It operates below explicit reasoning, interfacing with prediction circuits evolved long before literacy. It tunes expectation and reward systems through pattern and surprise. It entrains time perception itself.</p><p>In that sense, music resembles firmware.</p><p>Firmware is not the operating system. It sits closer to the hardware.</p><p>Music reaches into the timing loops of the brain.</p><p>If mathematics is the architecture of external systems, music is the architecture of internal state transitions.</p><p>One builds bridges.</p><p>The other builds moods, identities, loyalties.</p><p>One constructs infrastructure.</p><p>The other constructs cohesion.</p><p>Why This Matters Now</p><p>In a world increasingly defined by computation, the boundaries between code and culture blur.</p><p>Recommendation systems optimize for engagement using music because music holds attention. Political campaigns deploy sound strategically. Brands invest millions in sonic logos because three seconds of audio can condition response more efficiently than paragraphs of text.</p><p>The economics reveal the truth: structured sound is not peripheral.</p><p>It is leverage.</p><p>When similarity between two melodies becomes a courtroom battle, what is really being defended is not art in the abstract. It is access to neural real estate.</p><p>The fact that mathematical structure remains unowned while musical structure is tightly guarded suggests something revealing about what societies perceive as immediately influential.</p><p>We guard what moves crowds.</p><p>Hearing the System</p><p>None of this requires conspiracy. It requires recognizing gradients of influence.</p><p>Some forms of structure are treated as universal substrate. Others are treated as proprietary triggers.</p><p>Music sits at the intersection of art and behavioral engineering. It is aesthetic, yes. But it is also algorithmic. It modulates prediction, reward, synchronization.</p><p>To call it a programming language is not metaphorical excess. It is a description of patterned input shaping state transitions in a biological processor.</p><p>The question is not whether music should be owned or free. The deeper question is whether we understand what it is.</p><p>If we begin to see music not merely as culture but as code for nervous systems, the legal asymmetry becomes less puzzling and more diagnostic.</p><p>We protect what can steer populations.</p><p>Wake Up and Hear</p><p>There is something electric in realizing that every chorus you hum is structured influence. Every beat that moves you is timing code entering your motor cortex. Every anthem is a distributed synchronization protocol.</p><p>The world is not divided neatly into machines and art. It is layered in protocols — some external, some internal.</p><p>Mathematics describes the geometry of the world.</p><p>Music describes the geometry of experience.</p><p>To hear that clearly is not to retreat into suspicion. It is to become literate in the architectures shaping you. Once you notice the patterns, you begin to hear not just melody but mechanism — not just rhythm but recursion.</p><p>And when you can hear the code, you are no longer merely running it.</p>
+    </div>
+    <div class="subscribe">
+      <p>New essays also go out by email. <a href="https://williamedwardhahn.substack.com/subscribe">Subscribe on Substack</a>.</p>
+    </div>
+    <nav class="pager" aria-label="More essays">
+      <a class="prev" href="../49/"><span>Earlier</span>The Polite Machine and the Burning House</a>
+      <a class="next" href="../51/"><span>Later</span>The Dream of Talking to the Dead</a>
+    </nav>
+  </article>
+</main>
+
+<footer>
+  <p><a href="../../">William Edward Hahn</a>, Department of Mathematical Sciences, Florida Atlantic University. <a href="mailto:whahn@fau.edu">whahn@fau.edu</a></p>
+</footer>
+</body>
+</html>

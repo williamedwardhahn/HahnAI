@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When the World Went Online, Will Hahn</title>
+<meta name="description" content="The Year Between Worlds">
+<link rel="canonical" href="https://will.hahn.ai/blog/53/">
+<link rel="alternate" type="application/rss+xml" title="Will Hahn: Writing" href="https://will.hahn.ai/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="When the World Went Online">
+<meta property="og:description" content="The Year Between Worlds">
+<meta property="og:url" content="https://will.hahn.ai/blog/53/">
+<meta property="og:image" content="https://will.hahn.ai/images/og-card.png">
+<meta property="article:published_time" content="2026-02-25">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZDVLMSSQ0M');</script>
+<style>
+:root {
+  --paper: #FCFCFA;
+  --minor: rgba(64, 106, 168, 0.035);
+  --major: rgba(64, 106, 168, 0.07);
+  --rule: rgba(28, 37, 65, 0.22);
+  --ink: #141B33;
+  --ink-soft: #3B4560;
+  --red: #A8322D;
+  --margin: rgba(196, 64, 58, 0.38);
+  --accent: #6A3D9A;
+  --tint: rgba(43, 75, 168, 0.07);
+  --foot: #1F3A8A; --foot-ink: #F2F5FB;
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --display: "EB Garamond", Garamond, "Iowan Old Style", Georgia, serif;
+  --sq: 24px;
+  --measure: 66ch;
+  --gutter: clamp(16px, 6vw, 96px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+    --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+    --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+    --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+  --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+  --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+  --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--ink); background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--major) 1px, transparent 1px),
+    linear-gradient(var(--minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--minor) 1px, transparent 1px);
+  background-size: calc(var(--sq) * 5) calc(var(--sq) * 5), calc(var(--sq) * 5) calc(var(--sq) * 5), var(--sq) var(--sq), var(--sq) var(--sq);
+  font: 400 1.15rem/1.62 var(--serif);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  position: relative;
+}
+@media (min-width: 900px) {
+  body::before {
+    content: ""; position: absolute; top: 0; bottom: 0; z-index: 0; pointer-events: none;
+    left: calc(var(--gutter) - 22px); width: 1px; background: var(--margin); box-shadow: 3px 0 0 var(--margin);
+  }
+}
+a { color: var(--red); text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+p { margin: 0 0 1em; }
+main, header, footer { position: relative; z-index: 1; }
+
+.top {
+  height: calc(var(--sq) * 3);
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 0 var(--gutter);
+}
+.top .home { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 500; font-size: 1.3rem; }
+.top nav ul { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; margin: 0; padding: 0; list-style: none; }
+.top nav a { color: var(--ink-soft); text-decoration: none; }
+.top nav a:hover, .top nav a[aria-current] { color: var(--red); }
+
+.intro { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.intro > * { max-width: var(--measure); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.4rem, 6vw, 4.25rem); line-height: 1.05; margin: 0 0 12px; }
+.lede { font-size: clamp(1.15rem, 2vw, 1.35rem); line-height: 1.45; color: var(--ink-soft); }
+
+.subscribe {
+  max-width: var(--measure); background: var(--tint); border-top: 3px solid var(--accent);
+  padding: 14px 18px; margin: 20px 0 0;
+}
+.subscribe p { margin: 0; }
+
+/* index */
+.year { padding: calc(var(--sq) * 2.5) var(--gutter) 0; }
+.year h2 { font-family: var(--display); font-weight: 500; font-size: 1.9rem; margin: 0 0 8px; }
+.year h2::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 12px; background: var(--accent); vertical-align: 0.1em; }
+.entries { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); max-width: 900px; }
+.entry { border-bottom: 1px solid var(--rule); }
+.entry a {
+  display: grid; grid-template-columns: 8.5rem minmax(0, 1fr) auto; grid-template-areas: "d t i" "d x i";
+  gap: 2px 20px; padding: 14px 0; text-decoration: none; color: var(--ink);
+}
+.entry time { grid-area: d; color: var(--ink-soft); font-size: 0.95rem; padding-top: 3px; }
+.entry .t { grid-area: t; color: var(--red); font-weight: 600; font-size: 1.12rem; line-height: 1.35; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+.entry a:hover .t { text-decoration-thickness: 2px; }
+.entry .x { grid-area: x; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; }
+.entry .thumb { grid-area: i; width: 120px; height: 80px; object-fit: cover; border: 1px solid var(--rule); }
+
+/* post */
+.post { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.post > * { max-width: var(--measure); }
+.post .back { display: inline-block; margin-bottom: 18px; }
+.post h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); max-width: 22em; }
+.post h1, .post .subtitle { max-width: min(100%, 860px); }
+.post .subtitle { font-family: var(--display); font-style: italic; font-size: 1.4rem; color: var(--ink-soft); margin: 0 0 10px; }
+.post .meta { color: var(--ink-soft); font-size: 1rem; margin: 0 0 24px; }
+.post .meta .sep { margin: 0 4px; opacity: 0.6; }
+.hero { width: fit-content; max-width: 100%; margin: 0 0 28px; background: var(--paper); padding: 8px; border: 1px solid var(--rule); border-top: 3px solid var(--accent); }
+.body { font-size: 1.18rem; line-height: 1.7; }
+.body h2, .body h3 { font-family: var(--display); font-weight: 500; line-height: 1.2; margin: 1.6em 0 0.5em; }
+.body h2 { font-size: 1.8rem; } .body h3 { font-size: 1.4rem; }
+.body blockquote { margin: 1.2em 0; padding: 0 0 0 18px; border-left: 3px solid var(--accent); color: var(--ink-soft); font-style: italic; }
+.body img { margin: 1em 0; }
+.hero img { max-height: 460px; width: auto; }
+.body figure { margin: 1.4em 0; }
+.body figcaption { color: var(--ink-soft); font-size: 0.95rem; }
+.body hr { border: 0; border-top: 1px solid var(--rule); margin: 2em 0; }
+.body ul, .body ol { padding-left: 1.4em; }
+.body pre, .body code { font-size: 0.92em; }
+.body pre { overflow-x: auto; background: var(--tint); padding: 12px; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0 0; padding-top: 16px; border-top: 1px solid var(--rule); max-width: var(--measure); }
+.pager a { text-decoration: none; color: var(--red); font-weight: 600; line-height: 1.35; }
+.pager a span { display: block; font-weight: 400; color: var(--ink-soft); font-size: 0.92rem; }
+.pager .next { text-align: right; }
+
+footer {
+  margin-top: calc(var(--sq) * 5);
+  padding: calc(var(--sq) * 1.5) var(--gutter) calc(var(--sq) * 2);
+  background: var(--foot); color: var(--foot-ink); font-size: 1.02rem;
+}
+footer a { color: var(--foot-ink); }
+footer p { margin: 0 0 4px; }
+
+@media (max-width: 640px) {
+  body { font-size: 1.08rem; }
+  .top nav { display: none; }
+  .entry a { grid-template-columns: minmax(0, 1fr); grid-template-areas: "d" "t" "x"; }
+  .entry .thumb { display: none; }
+  .pager { grid-template-columns: 1fr; }
+  .pager .next { text-align: left; }
+}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="home" href="../../">will.hahn.ai</a>
+  <nav aria-label="Site">
+    <ul>
+      <li><a href="../../#about">About</a></li>
+      <li><a href="../../#research">Research</a></li>
+      <li><a href="../../#talks">Talks</a></li>
+      <li><a href="../../#teaching">Teaching</a></li>
+      <li><a href="../" aria-current="page">Writing</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <article class="post">
+    <a class="back" href="../">All essays</a>
+    <h1>When the World Went Online</h1>
+    
+    <p class="meta"><time datetime="2026-02-25">February 25, 2026</time> <span class="sep">/</span> <a href="https://williamedwardhahn.substack.com/p/when-the-world-went-online">Also on Substack</a></p>
+    
+    <div class="body">
+<p>The Year Between Worlds</p><p>I was born late enough to remember the sound of a modem negotiating with the dark.</p><p>Not as nostalgia. As tectonics.</p><p>I grew up in the final decade of the twentieth century—old enough to remember the analog world as a lived reality, young enough to become fluent in the digital one before adulthood. I did homework on loose-leaf paper and submitted essays through web portals. I memorized phone numbers and then stopped needing to. I learned to navigate both the card catalog and the search bar.</p><p>In the library, my older brother pulled drawers open and thumbed through stiff index cards. My younger brother never touched one. I was there for the strange transitional year when they taught us both. We practiced the Dewey Decimal System and Internet search in the same semester. It felt redundant at the time. It was not.</p><p>It was initiation.</p><p>Analog Childhood</p><p>The analog world had friction. Information had mass.</p><p>You could feel it in the weight of encyclopedias, in the latency of waiting for a photograph to develop, in the simple fact that if you missed a television broadcast, it was gone. Memory lived in bodies and objects. Knowledge required traversal—physical movement through space. You had to go somewhere to know something.</p><p>That friction shaped cognition. When information is scarce, you compress it. You internalize it. You argue from memory. You tolerate uncertainty because retrieval is costly.</p><p>The world felt slower not because time was slower, but because feedback loops were wider. Cause and effect were separated by hours, days, sometimes years. Human attention was not yet the primary commodity in a planetary-scale marketplace.</p><p>Digital Adolescence</p><p>Then the network came online.</p><p>At first it was clumsy. Dial-up tones. Pixelated avatars. Forums that felt like secret rooms carved into the static. But within a decade, the web inverted the epistemic structure of society. Information detached from location. Retrieval approached zero cost. Search replaced recall.</p><p>My younger brother never had to learn the topology of a library. He learned ranking algorithms instead. He learned that relevance is computed, not curated by a human hand. His intuition about knowledge is fundamentally different. To him, truth is indexed.</p><p>I straddle both intuitions.</p><p>I remember when you could not outsource memory. I also know how to swim in an ocean of hyperlinks.</p><p>The Shrinking Cohort</p><p>There is a narrow band of us—born in the hinge years—who carry both architectures in our nervous systems.</p><p>We are the last generation to go to school without the Internet and the first to graduate into a world that could not function without it. We wrote essays without search engines and then learned to optimize queries. We experienced boredom unmediated by screens, and then watched boredom become intolerable.</p><p>This cohort is shrinking. Not numerically—we are many millions—but temporally. Each year, our analog memories grow more distant. Each year, the digital natives and the fully networked children grow more dominant.</p><p>We are a living compression algorithm for two civilizations.</p><p>Pre-Singularity and Post-Singularity</p><p>The word “singularity” is often abused. Strip it of mysticism and it simply marks a phase transition: the point at which machine computation becomes the dominant substrate of human coordination.</p><p>We crossed that threshold quietly.</p><p>When financial markets became algorithmic. When navigation outsourced itself to satellites. When language models began drafting documents. When recommendation systems shaped culture at scale. These were not gadgets; they were infrastructural rewrites of human behavior.</p><p>The children born into this world will never experience a society that is not computationally mediated. They will not remember when maps were folded paper or when arguments required citation rather than links.</p><p>We will.</p><p>And that matters.</p><p>Bilingual Minds</p><p>To speak analog is to understand constraint. To speak digital is to understand scale.</p><p>Analog thinking asks: What is worth remembering? Digital thinking asks: What can be retrieved? Analog systems assume locality. Digital systems assume networks. Analog authority is embodied; digital authority is statistical.</p><p>Those who are fluent in only one of these languages will misread the other.</p><p>The purely analog mind will underestimate the speed and nonlinearity of algorithmic systems. The purely digital mind may underestimate the fragility of human institutions that evolved under scarcity.</p><p>But the bilingual mind can translate.</p><p>We can explain to our elders why the network amplifies extremes. We can explain to the young why forgetting how to remember is dangerous. We can argue for friction in systems optimized for immediacy. We can insist that not every process should be automated simply because it can be.</p><p>The Burden of Translation</p><p>Translation is not glamorous. It is often invisible. It requires patience and synthesis.</p><p>Yet in moments of civilizational transition, translators are decisive.</p><p>We are the only generation that viscerally understands both a world where information had edges and a world where it diffuses at light speed. We know what it felt like to be unreachable. We know what it feels like to be perpetually pinged. We have lived through the compression of decades into software updates.</p><p>That gives us a particular responsibility.</p><p>If the transition from human-centered systems to computation-saturated systems is going to be smooth, it will not happen automatically. Phase transitions are turbulent. They produce instability, polarization, cascading failures.</p><p>Stability must be engineered.</p><p>And engineering requires people who understand both the legacy system and the new architecture.</p><p>Why Your Voice Matters</p><p>If you are part of this hinge generation, you may underestimate your importance because your experience feels ordinary. It was simply your childhood.</p><p>It was not ordinary. It was liminal.</p><p>You remember waiting. You remember wandering without GPS. You remember arguments that ended because no one could verify a claim in real time. You also know how to navigate distributed systems, cloud infrastructures, and algorithmic feeds.</p><p>You are not just a user of technology. You are a witness to its phase change.</p><p>That witness status confers authority—not institutional authority, but experiential authority. You can articulate what was lost and what was gained. You can advocate for designs that preserve human depth within computational scale. You can resist the false binary that says we must choose between nostalgia and acceleration.</p><p>If you grew up in that narrow window—before everything was online but not before everything was digital—then you carry a rare perspective. You remember how the world functioned when information had weight. You also know how it behaves now that it moves at near zero cost.</p><p>That combination is not nostalgia. It is context.</p><p>The systems being built today—algorithmic governance, automated creativity, machine-mediated relationships—will define the next century. Most people experiencing them will have no memory of the world before them. They will assume this is simply how reality works.</p><p>You know it isn’t.</p><p>You remember that attention once drifted without being captured. You remember that knowledge required effort. You remember that friction shaped character.</p><p>That memory is not for sentimental reflection. It is a calibration tool.</p><p>We are not here to resist the future. We are here to inform it. To remind designers, leaders, and builders that human cognition evolved under constraint, that meaning requires depth, that scale without judgment destabilizes.</p><p>If you are part of this cohort, speak plainly. Write. Build. Mentor. Vote. Design systems that respect the human nervous system instead of overwhelming it. Translate without contempt in either direction.</p><p>The transition is already underway. It will not slow down.</p><p>But it can still be guided.</p><p>And the people who remember both worlds are the ones most capable of doing it.</p>
+    </div>
+    <div class="subscribe">
+      <p>New essays also go out by email. <a href="https://williamedwardhahn.substack.com/subscribe">Subscribe on Substack</a>.</p>
+    </div>
+    <nav class="pager" aria-label="More essays">
+      <a class="prev" href="../52/"><span>Earlier</span>The Polite Refusal</a>
+      <a class="next" href="../54/"><span>Later</span>The Holographic Animal</a>
+    </nav>
+  </article>
+</main>
+
+<footer>
+  <p><a href="../../">William Edward Hahn</a>, Department of Mathematical Sciences, Florida Atlantic University. <a href="mailto:whahn@fau.edu">whahn@fau.edu</a></p>
+</footer>
+</body>
+</html>

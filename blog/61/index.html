@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soli Deo Gloria, Will Hahn</title>
+<meta name="description" content="The Rule Newton Could Not Quite Say">
+<link rel="canonical" href="https://will.hahn.ai/blog/61/">
+<link rel="alternate" type="application/rss+xml" title="Will Hahn: Writing" href="https://will.hahn.ai/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Soli Deo Gloria">
+<meta property="og:description" content="The Rule Newton Could Not Quite Say">
+<meta property="og:url" content="https://will.hahn.ai/blog/61/">
+<meta property="og:image" content="https://will.hahn.ai/images/og-card.png">
+<meta property="article:published_time" content="2026-05-15">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZDVLMSSQ0M');</script>
+<style>
+:root {
+  --paper: #FCFCFA;
+  --minor: rgba(64, 106, 168, 0.035);
+  --major: rgba(64, 106, 168, 0.07);
+  --rule: rgba(28, 37, 65, 0.22);
+  --ink: #141B33;
+  --ink-soft: #3B4560;
+  --red: #A8322D;
+  --margin: rgba(196, 64, 58, 0.38);
+  --accent: #6A3D9A;
+  --tint: rgba(43, 75, 168, 0.07);
+  --foot: #1F3A8A; --foot-ink: #F2F5FB;
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --display: "EB Garamond", Garamond, "Iowan Old Style", Georgia, serif;
+  --sq: 24px;
+  --measure: 66ch;
+  --gutter: clamp(16px, 6vw, 96px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+    --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+    --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+    --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+  --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+  --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+  --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--ink); background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--major) 1px, transparent 1px),
+    linear-gradient(var(--minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--minor) 1px, transparent 1px);
+  background-size: calc(var(--sq) * 5) calc(var(--sq) * 5), calc(var(--sq) * 5) calc(var(--sq) * 5), var(--sq) var(--sq), var(--sq) var(--sq);
+  font: 400 1.15rem/1.62 var(--serif);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  position: relative;
+}
+@media (min-width: 900px) {
+  body::before {
+    content: ""; position: absolute; top: 0; bottom: 0; z-index: 0; pointer-events: none;
+    left: calc(var(--gutter) - 22px); width: 1px; background: var(--margin); box-shadow: 3px 0 0 var(--margin);
+  }
+}
+a { color: var(--red); text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+p { margin: 0 0 1em; }
+main, header, footer { position: relative; z-index: 1; }
+
+.top {
+  height: calc(var(--sq) * 3);
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 0 var(--gutter);
+}
+.top .home { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 500; font-size: 1.3rem; }
+.top nav ul { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; margin: 0; padding: 0; list-style: none; }
+.top nav a { color: var(--ink-soft); text-decoration: none; }
+.top nav a:hover, .top nav a[aria-current] { color: var(--red); }
+
+.intro { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.intro > * { max-width: var(--measure); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.4rem, 6vw, 4.25rem); line-height: 1.05; margin: 0 0 12px; }
+.lede { font-size: clamp(1.15rem, 2vw, 1.35rem); line-height: 1.45; color: var(--ink-soft); }
+
+.subscribe {
+  max-width: var(--measure); background: var(--tint); border-top: 3px solid var(--accent);
+  padding: 14px 18px; margin: 20px 0 0;
+}
+.subscribe p { margin: 0; }
+
+/* index */
+.year { padding: calc(var(--sq) * 2.5) var(--gutter) 0; }
+.year h2 { font-family: var(--display); font-weight: 500; font-size: 1.9rem; margin: 0 0 8px; }
+.year h2::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 12px; background: var(--accent); vertical-align: 0.1em; }
+.entries { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); max-width: 900px; }
+.entry { border-bottom: 1px solid var(--rule); }
+.entry a {
+  display: grid; grid-template-columns: 8.5rem minmax(0, 1fr) auto; grid-template-areas: "d t i" "d x i";
+  gap: 2px 20px; padding: 14px 0; text-decoration: none; color: var(--ink);
+}
+.entry time { grid-area: d; color: var(--ink-soft); font-size: 0.95rem; padding-top: 3px; }
+.entry .t { grid-area: t; color: var(--red); font-weight: 600; font-size: 1.12rem; line-height: 1.35; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+.entry a:hover .t { text-decoration-thickness: 2px; }
+.entry .x { grid-area: x; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; }
+.entry .thumb { grid-area: i; width: 120px; height: 80px; object-fit: cover; border: 1px solid var(--rule); }
+
+/* post */
+.post { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.post > * { max-width: var(--measure); }
+.post .back { display: inline-block; margin-bottom: 18px; }
+.post h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); max-width: 22em; }
+.post h1, .post .subtitle { max-width: min(100%, 860px); }
+.post .subtitle { font-family: var(--display); font-style: italic; font-size: 1.4rem; color: var(--ink-soft); margin: 0 0 10px; }
+.post .meta { color: var(--ink-soft); font-size: 1rem; margin: 0 0 24px; }
+.post .meta .sep { margin: 0 4px; opacity: 0.6; }
+.hero { width: fit-content; max-width: 100%; margin: 0 0 28px; background: var(--paper); padding: 8px; border: 1px solid var(--rule); border-top: 3px solid var(--accent); }
+.body { font-size: 1.18rem; line-height: 1.7; }
+.body h2, .body h3 { font-family: var(--display); font-weight: 500; line-height: 1.2; margin: 1.6em 0 0.5em; }
+.body h2 { font-size: 1.8rem; } .body h3 { font-size: 1.4rem; }
+.body blockquote { margin: 1.2em 0; padding: 0 0 0 18px; border-left: 3px solid var(--accent); color: var(--ink-soft); font-style: italic; }
+.body img { margin: 1em 0; }
+.hero img { max-height: 460px; width: auto; }
+.body figure { margin: 1.4em 0; }
+.body figcaption { color: var(--ink-soft); font-size: 0.95rem; }
+.body hr { border: 0; border-top: 1px solid var(--rule); margin: 2em 0; }
+.body ul, .body ol { padding-left: 1.4em; }
+.body pre, .body code { font-size: 0.92em; }
+.body pre { overflow-x: auto; background: var(--tint); padding: 12px; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0 0; padding-top: 16px; border-top: 1px solid var(--rule); max-width: var(--measure); }
+.pager a { text-decoration: none; color: var(--red); font-weight: 600; line-height: 1.35; }
+.pager a span { display: block; font-weight: 400; color: var(--ink-soft); font-size: 0.92rem; }
+.pager .next { text-align: right; }
+
+footer {
+  margin-top: calc(var(--sq) * 5);
+  padding: calc(var(--sq) * 1.5) var(--gutter) calc(var(--sq) * 2);
+  background: var(--foot); color: var(--foot-ink); font-size: 1.02rem;
+}
+footer a { color: var(--foot-ink); }
+footer p { margin: 0 0 4px; }
+
+@media (max-width: 640px) {
+  body { font-size: 1.08rem; }
+  .top nav { display: none; }
+  .entry a { grid-template-columns: minmax(0, 1fr); grid-template-areas: "d" "t" "x"; }
+  .entry .thumb { display: none; }
+  .pager { grid-template-columns: 1fr; }
+  .pager .next { text-align: left; }
+}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="home" href="../../">will.hahn.ai</a>
+  <nav aria-label="Site">
+    <ul>
+      <li><a href="../../#about">About</a></li>
+      <li><a href="../../#research">Research</a></li>
+      <li><a href="../../#talks">Talks</a></li>
+      <li><a href="../../#teaching">Teaching</a></li>
+      <li><a href="../" aria-current="page">Writing</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <article class="post">
+    <a class="back" href="../">All essays</a>
+    <h1>Soli Deo Gloria</h1>
+    
+    <p class="meta"><time datetime="2026-05-15">May 15, 2026</time> <span class="sep">/</span> <a href="https://williamedwardhahn.substack.com/p/soli-deo-gloria">Also on Substack</a></p>
+    
+    <div class="body">
+<p><strong>The Rule Newton Could Not Quite Say</strong></p><p>Newton is remembered for a refusal.</p><p><em>Hypotheses non fingo.</em></p><p>I feign no hypotheses.</p><p>It is one of the most famous methodological declarations in the history of science, and it helped create the modern image of Newton as the sober conqueror of speculation. No imaginary mechanisms. No metaphysical machinery. No ornate explanations invented merely because the mind dislikes incompleteness.</p><p>Newton would not pretend to know what he did not know. His laws would arise from phenomena, mathematics, and disciplined reasoning. The <em>Principia</em> would not be another castle of natural philosophy floating above the evidence. It would be a structure of stone.</p><p>But hidden near the edge of that refusal is a stranger fact.</p><p>Newton appears to have withheld, softened, or suppressed what scholars sometimes call his Fifth Rule of Reasoning: a broader methodological principle about how the mind may move from phenomena toward universal truth. The details matter less than the tension it reveals. Newton, the great enemy of feigned hypotheses, still needed a rule that gave science permission to do more than collect observations.</p><p>He needed a frame.</p><p>He needed a way to say that nature could be trusted beyond the immediate case. That what was seen here might hold there. That the order visible in falling bodies might also govern moons, planets, tides, and comets. That the universe was not a heap of local accidents but a coherent whole.</p><p>This is the secret at the foundation of modern science.</p><p>Newton did not build physics from facts and logic alone. No one does. He worked inside a larger vision of what the world is like, why the mind is entitled to search it for law, and why the search itself matters.</p><p>And for Newton, that vision did not end in nature.</p><p>It ended in God.</p><p><em>Soli Deo Gloria.</em></p><p><strong>Science Begins Before the Experiment</strong></p><p>The modern myth says science begins with observation.</p><p>It does not.</p><p>Science begins before observation, in the quiet act of deciding that observation is worth making.</p><p>A fact is never just a fact. It arrives inside a frame. Before the scientist measures, she has already made commitments about what counts as signal, what counts as noise, what kind of pattern might be real, and what sort of explanation would be satisfying.</p><p>These commitments are not ordinary hypotheses. They are deeper than that. They are not claims like “this planet follows this orbit” or “this chemical reacts under these conditions.” They are the hidden architecture beneath inquiry itself.</p><p>Nature is ordered.</p><p>Nature is mathematically legible.</p><p>The same laws apply across space and time.</p><p>Invisible causes may explain visible effects.</p><p>Simplicity is not merely convenient, but revealing.</p><p>These are thematic commitments. They are not mere decorations placed on top of science. They are the conditions that allow science to move at all.</p><p>A falling apple does not announce universal gravitation. A planet does not whisper the inverse-square law. A prism does not hand over a theory of light. Data do not organize themselves into a cosmos.</p><p>Someone has to believe the mess is hiding a form.</p><p>That belief is not a betrayal of science. It is the beginning of science.</p><p>The danger is not that science has such commitments. The danger is that science forgets it has them.</p><p><strong>Newton Was Stranger Than the Myth</strong></p><p>The Newton we inherit is too clean.</p><p>He has been polished into the patron saint of secular reason: the man of laws, forces, prisms, planets, and proofs. A mind so severe it could make the heavens submit to geometry.</p><p>But the real Newton was stranger.</p><p>The central figure of modern physics was not first and foremost a modern secular rationalist. He was a theist. More than that, he spent immense intellectual energy in territories we would now file under the occult: alchemy, biblical chronology, prophecy, hidden correspondences, ancient wisdom, the secret architecture of nature.</p><p>This is usually treated as an embarrassment, an unfortunate residue of the premodern world clinging to an otherwise modern genius. But that may be exactly backward.</p><p>Newton’s “occult” interests were not random hobbies sealed off from his physics. They belonged to the same hunger: the conviction that visible nature was the surface of a deeper order. The world was not flatly available to the senses. It had structure beneath appearance, intelligibility beneath motion, invisible agencies beneath visible effects.</p><p>Gravity itself was once attacked as an occult force because it seemed to act invisibly across empty space. Newton refused to explain its ultimate mechanism, but he also refused to deny its mathematical reality. He had no need to make nature small enough to fit the prejudices of the age.</p><p>This is the uncomfortable lesson.</p><p>The father of modern physics did not become great by evacuating mystery from the world. He became great by disciplining mystery until it yielded law.</p><p>The myth says science was born when reason defeated the occult.</p><p>Newton suggests something stranger: modern science was born when the search for hidden order was disciplined by mathematics.</p><p><strong>Newton Did Not Study a Dead Machine</strong></p><p>The modern caricature of Newton is that he turned the universe into a machine: cold, mathematical, impersonal, automatic.</p><p>But this is too shallow.</p><p>Newton did not see mathematical order as a substitute for God. He saw it as a sign of divine rationality. The laws of motion were not an argument against transcendence. They were evidence that the world was not chaos, not accident, not a brute heap of events.</p><p>The universe could be studied because it was ordered.</p><p>It could be mathematized because it was coherent.</p><p>It could be trusted because it was not ultimate.</p><p>That last point matters. For Newton, nature was real, but not final. It was intelligible, but not self-explaining. The beauty of physics was not that it eliminated mystery, but that it revealed a deeper kind of mystery: a cosmos whose regularity invited the mind into disciplined wonder.</p><p>Think of the audacity required to unify heaven and earth. Before Newton, the skies could still seem like a separate kingdom, a higher theater with different rules. Newton helped collapse that divide. The falling stone and the orbiting moon belonged to the same syntax.</p><p>This was not modest.</p><p>It was one of the great acts of intellectual compression in human history.</p><p>But it was not frameless. Newton’s confidence in universal law rested inside a larger theological imagination. Creation has order because God is not chaos. Truth can be pursued because reality is not deception. The human mind can discover because intelligibility is woven into the world.</p><p>Newton’s science had daring because the world was intelligible.</p><p>It had humility because the world was not ultimate.</p><p>That combination is what we have nearly lost.</p><p><strong>The External Abstract</strong></p><p>Every science needs an external abstract: a principle beyond its procedures that tells it what its procedures mean.</p><p>No field operates on facts alone. Facts require selection. Selection requires value. Value requires a frame.</p><p>Why search for simplicity rather than complexity?</p><p>Why assume the same laws apply here and there?</p><p>Why trust that invisible causes can explain visible effects?</p><p>Why believe the universe is intelligible at all?</p><p>The external abstract is not one more datapoint inside the system. It is the light by which the system becomes visible.</p><p>For Newton, that external abstract was not merely “nature is mathematical.” It was larger. Nature is mathematical because it is the work of a rational Creator. Its order is not arbitrary. Its intelligibility is not an accident. The human mind can discover truth because mind and world are not strangers; both participate, in different ways, in a deeper rational order.</p><p>This does not mean every equation becomes theology. It does not mean every experiment quotes Scripture. It means science once lived inside a larger moral and metaphysical architecture.</p><p>Truth was not merely useful.</p><p>Knowledge was not merely power.</p><p>Discovery was not merely control.</p><p>The scientist’s task was not to dominate reality, but to read it faithfully.</p><p>That is a radically different posture.</p><p><strong>What Happens When the Horizon Vanishes</strong></p><p>Modern science has not lost its tools.</p><p>It has lost its horizon.</p><p>It can sequence genomes, simulate climates, photograph galaxies, model contagion, and train machines on the accumulated residue of human language. It can extract signal from noise with terrifying precision. It can see farther, cut deeper, compute faster, and intervene more dramatically than any civilization before it.</p><p>But measurement is not meaning.</p><p>A civilization can become brilliant at detecting patterns and still forget why truth matters. It can build instruments powerful enough to see the beginning of stars while losing the moral vocabulary to ask what knowledge is finally for.</p><p>When science loses its external abstract, it does not become neutral.</p><p>It becomes available.</p><p>Available to markets.</p><p>Available to states.</p><p>Available to prestige.</p><p>Available to ideology.</p><p>Available to the institution, the weapon, the platform, the grant cycle, the algorithm, the machine.</p><p>Science never serves nothing. If it is not ordered to truth under God, it will be ordered to something else. The vacuum does not remain empty. A lower god moves in.</p><p>This is the great naivety of modern secular science: it imagines that by removing the highest end, it has removed worship. But worship remains. It is simply redirected.</p><p>Toward power.</p><p>Toward optimization.</p><p>Toward control.</p><p>Toward career.</p><p>Toward novelty.</p><p>Toward the intoxicating ability to make reality obey.</p><p>Without <em>Soli Deo Gloria</em>, science does not become purer. It becomes easier to capture.</p><p><strong>Facts Cannot Save Us</strong></p><p>The crisis is not that scientists lack intelligence. The crisis is that intelligence without orientation becomes technique.</p><p>Technique can split the atom and build the bomb.</p><p>Technique can decode the genome and design the market for edited life.</p><p>Technique can model attention and then addict it.</p><p>Technique can build artificial intelligence and hand it directly to the incentives of surveillance, persuasion, and scale.</p><p>The problem is not knowledge. The problem is knowledge without a sanctifying end.</p><p>Facts cannot decide their own use. Equations cannot confess their own limits. Data cannot generate wisdom by accumulation. A model can optimize perfectly and still drive straight into catastrophe if the objective function is false.</p><p>A missile optimizes.</p><p>A cancer cell optimizes.</p><p>An algorithm optimizes.</p><p>The question is always: toward what?</p><p>Modern science has become extraordinarily good at motion. More papers. More models. More compute. More interventions. More technical capacity. But motion is not progress unless it is ordered toward the good.</p><p>Acceleration is not ascent.</p><p>A civilization can move faster and still be falling.</p><p>This is why Newton’s hidden frame matters. He did not merely give science better mathematics. He worked inside an account of reality where truth was gift, order was creation, and discovery was not finally self-glorification.</p><p>The scientist was not the author of order.</p><p>The scientist was its reader.</p><p><strong>The Wrong Imitation of Physics</strong></p><p>Many younger sciences have tried to imitate physics by copying its surfaces.</p><p>Measurement.</p><p>Formalism.</p><p>Quantification.</p><p>Prediction.</p><p>These are valuable. But they are not the whole secret.</p><p>Physics did not become powerful because it refused all grand commitments. It became powerful because it chose fertile commitments and submitted them to reality. It trusted that nature was unified, mathematical, ordered, and intelligible. It believed that visible phenomena could reveal invisible structure.</p><p>To imitate physics while rejecting its deeper frame is to copy the skeleton and abandon the breath.</p><p>This is why so many fields become simultaneously more technical and less wise. They gain sharper instruments while losing the question that would tell them where to aim. They become crowded with methods and starved of meaning.</p><p>A science without an external abstract can still produce results. It can publish. It can measure. It can predict. It can optimize.</p><p>But it struggles to know what counts as progress.</p><p>It struggles to distinguish power from truth.</p><p>It struggles to say no.</p><p>And a science that cannot say no will eventually be mastered by whatever can say yes with money.</p><p><strong>Glory as Method</strong></p><p><em>Soli Deo Gloria</em> is not a retreat from science.</p><p>It is the restoration of science’s proper scale.</p><p>To say “to God alone be the glory” is not to stop measuring, testing, modeling, falsifying, or revising. It is not to replace experiment with piety or mathematics with sentiment. It is to place the entire act of inquiry under an end large enough to discipline it.</p><p>Glory is not anti-rigor.</p><p>Glory is rigor with a horizon.</p><p>It tells the scientist: pursue truth fiercely, but do not confuse discovery with possession. Study nature deeply, but do not reduce it to inventory. Use mathematics boldly, but remember that elegance is received before it is written. Build, intervene, explain, and transform, but do not imagine that power is the same as authority.</p><p>This is not a small distinction. It changes the posture of the mind.</p><p>Without glory, nature becomes raw material.</p><p>With glory, nature becomes disclosure.</p><p>Without glory, knowledge becomes leverage.</p><p>With glory, knowledge becomes stewardship.</p><p>Without glory, the scientist becomes a technician of power.</p><p>With glory, the scientist becomes a witness to order.</p><p>The point is not to make science less ambitious. It is to give science an ambition worthy of the universe it studies.</p><p><strong>The Myth of Neutral Inquiry</strong></p><p>Modern science often claims to proceed without ultimate commitments. It presents itself as method without metaphysics, knowledge without worship, inquiry without a final cause.</p><p>But this is impossible.</p><p>Every scientific age has a theology, even when it refuses the word. It has an image of the real. It has a doctrine of the human person. It has a vision of what knowledge is for. It has saints, sins, rituals, taboos, heresies, and rewards.</p><p>The only question is whether those commitments are worthy of the power science now possesses.</p><p>If the highest good is utility, science will produce tools.</p><p>If the highest good is power, science will produce weapons.</p><p>If the highest good is prestige, science will produce careers.</p><p>If the highest good is profit, science will produce markets.</p><p>If the highest good is control, science will produce systems of control.</p><p>Only if the highest good is truth under God can science remain answerable to something beyond human appetite.</p><p>That is the hard claim.</p><p>Not that every scientist must write theology into every paper. Not that every lab must become a chapel. Not that empirical work should be forced into prefabricated doctrine.</p><p>The claim is deeper and more dangerous: science cannot be healthy when its final end is trapped inside the human will.</p><p>The will is too small.</p><p>The instruments are too powerful.</p><p>The temptation is too great.</p><p><strong>The Return of an End</strong></p><p>The future of science does not require less intelligence.</p><p>It requires a recovered end.</p><p>Not less rigor, but more reverence.</p><p>Not less discovery, but a truer account of what discovery is.</p><p>Not less ambition, but ambition purified of self-worship.</p><p><em>Soli Deo Gloria</em> is the phrase that breaks the spell. It refuses to let knowledge curve inward toward the knower. It refuses to let discovery terminate in prestige. It refuses to let nature be reduced to material for manipulation. It says the order we uncover is not ours in any ultimate sense. The truth we discover is not manufactured by our brilliance. The intelligibility of the world is gift before it is achievement.</p><p>Newton’s greatness was not that he had no frame.</p><p>His greatness was that his frame was large enough to sustain science.</p><p>He could search for universal law because he believed the universe was lawfully made. He could trust the mathematical structure of nature because nature was not, for him, a cosmic accident without mind or source. He could be bold because creation was intelligible. He could be humble because creation was not God.</p><p>That is the posture science needs again.</p><p>Not nostalgia. Not anti-modern reaction. Not a sentimental return to an imagined past. Something more exacting: the recovery of a final cause strong enough to govern our instruments before our instruments govern us.</p><p>The universe is not a warehouse of material waiting for mastery. It is a vast disclosure, charged with order, depth, and invitation. To study it rightly is to receive that order, trace it with discipline, and return the glory beyond ourselves.</p><p><em>Soli Deo Gloria</em> is not the end of inquiry.</p><p>It is the reason inquiry can begin again.</p>
+    </div>
+    <div class="subscribe">
+      <p>New essays also go out by email. <a href="https://williamedwardhahn.substack.com/subscribe">Subscribe on Substack</a>.</p>
+    </div>
+    <nav class="pager" aria-label="More essays">
+      <a class="prev" href="../60/"><span>Earlier</span>The iPad Generation</a>
+      <a class="next" href="../62/"><span>Later</span>Faith in the Future</a>
+    </nav>
+  </article>
+</main>
+
+<footer>
+  <p><a href="../../">William Edward Hahn</a>, Department of Mathematical Sciences, Florida Atlantic University. <a href="mailto:whahn@fau.edu">whahn@fau.edu</a></p>
+</footer>
+</body>
+</html>

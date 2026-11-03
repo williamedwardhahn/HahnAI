@@ -1,279 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Rolling the AI Dice: How Random Inputs Drive AI, And How It Mirrors Ancient Divination Techniques - Hahn AI</title>
-    <link rel="icon" type="image/png" href="../images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="../images/favicon-16x16.png" sizes="16x16">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-ZDVLMSSQ0M');
-    </script>
-    <style>
-        :root {
-            --bg: #faf8f4;
-            --bg-deep: #f0ece4;
-            --surface: #ffffff;
-            --text: #1a1a1a;
-            --text-secondary: #5c5c5c;
-            --text-tertiary: #8a8a8a;
-            --accent: #c46d3b;
-            --accent-glow: rgba(196, 109, 59, 0.15);
-            --accent-light: #e8a87c;
-            --border: rgba(0, 0, 0, 0.06);
-            --border-strong: rgba(0, 0, 0, 0.12);
-            --grain-opacity: 0.03;
-        }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #0d0d0f;
-                --bg-deep: #141418;
-                --surface: #1a1a20;
-                --text: #e8e4df;
-                --text-secondary: #a09a92;
-                --text-tertiary: #6b665f;
-                --accent: #d4845a;
-                --accent-glow: rgba(212, 132, 90, 0.12);
-                --accent-light: #e8a87c;
-                --border: rgba(255, 255, 255, 0.06);
-                --border-strong: rgba(255, 255, 255, 0.1);
-                --grain-opacity: 0.04;
-            }
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rolling the AI Dice: How Random Inputs Drive AI, And How It Mirrors Ancient Divination Techniques, Will Hahn</title>
+<meta name="description" content="It&#x27;s not easy to imagine that the complex world of artificial intelligence (AI) can share anything in common with ancient techniques of divination such as augury, haruspicy, and anthropomancy. And yet, they do. The...">
+<link rel="canonical" href="https://will.hahn.ai/blog/41/">
+<link rel="alternate" type="application/rss+xml" title="Will Hahn: Writing" href="https://will.hahn.ai/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rolling the AI Dice: How Random Inputs Drive AI, And How It Mirrors Ancient Divination Techniques">
+<meta property="og:description" content="It&#x27;s not easy to imagine that the complex world of artificial intelligence (AI) can share anything in common with ancient techniques of divination such as augury, haruspicy, and anthropomancy. And yet, they do. The...">
+<meta property="og:url" content="https://will.hahn.ai/blog/41/">
+<meta property="og:image" content="https://will.hahn.ai/blog/41/image.jpg">
+<meta property="article:published_time" content="2023-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../../images/favicon-32x32.png" sizes="32x32">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDVLMSSQ0M"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZDVLMSSQ0M');</script>
+<style>
+:root {
+  --paper: #FCFCFA;
+  --minor: rgba(64, 106, 168, 0.035);
+  --major: rgba(64, 106, 168, 0.07);
+  --rule: rgba(28, 37, 65, 0.22);
+  --ink: #141B33;
+  --ink-soft: #3B4560;
+  --red: #A8322D;
+  --margin: rgba(196, 64, 58, 0.38);
+  --accent: #6A3D9A;
+  --tint: rgba(43, 75, 168, 0.07);
+  --foot: #1F3A8A; --foot-ink: #F2F5FB;
+  --serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --display: "EB Garamond", Garamond, "Iowan Old Style", Georgia, serif;
+  --sq: 24px;
+  --measure: 66ch;
+  --gutter: clamp(16px, 6vw, 96px);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+    --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+    --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+    --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #10264A; --minor: rgba(255, 255, 255, 0.025); --major: rgba(255, 255, 255, 0.05);
+  --rule: rgba(238, 242, 250, 0.24); --ink: #F2F5FB; --ink-soft: #C3CFE5;
+  --red: #FFA597; --margin: rgba(255, 150, 130, 0.35); --accent: #C3A3F0;
+  --tint: rgba(157, 178, 255, 0.09); --foot: #0A1A36; color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--ink); background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--major) 1px, transparent 1px),
+    linear-gradient(var(--minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--minor) 1px, transparent 1px);
+  background-size: calc(var(--sq) * 5) calc(var(--sq) * 5), calc(var(--sq) * 5) calc(var(--sq) * 5), var(--sq) var(--sq), var(--sq) var(--sq);
+  font: 400 1.15rem/1.62 var(--serif);
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  position: relative;
+}
+@media (min-width: 900px) {
+  body::before {
+    content: ""; position: absolute; top: 0; bottom: 0; z-index: 0; pointer-events: none;
+    left: calc(var(--gutter) - 22px); width: 1px; background: var(--margin); box-shadow: 3px 0 0 var(--margin);
+  }
+}
+a { color: var(--red); text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+img { max-width: 100%; height: auto; display: block; }
+p { margin: 0 0 1em; }
+main, header, footer { position: relative; z-index: 1; }
 
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+.top {
+  height: calc(var(--sq) * 3);
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 0 var(--gutter);
+}
+.top .home { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 500; font-size: 1.3rem; }
+.top nav ul { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 22px; margin: 0; padding: 0; list-style: none; }
+.top nav a { color: var(--ink-soft); text-decoration: none; }
+.top nav a:hover, .top nav a[aria-current] { color: var(--red); }
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.85;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            font-weight: 300;
-            -webkit-font-smoothing: antialiased;
-        }
+.intro { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.intro > * { max-width: var(--measure); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.4rem, 6vw, 4.25rem); line-height: 1.05; margin: 0 0 12px; }
+.lede { font-size: clamp(1.15rem, 2vw, 1.35rem); line-height: 1.45; color: var(--ink-soft); }
 
-        /* Grain overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            opacity: var(--grain-opacity);
-            pointer-events: none;
-            z-index: 9999;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 200px;
-        }
+.subscribe {
+  max-width: var(--measure); background: var(--tint); border-top: 3px solid var(--accent);
+  padding: 14px 18px; margin: 20px 0 0;
+}
+.subscribe p { margin: 0; }
 
-        /* Header */
-        .site-header {
-            padding: 1.2rem 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .logo {
-            text-decoration: none;
-            color: var(--text);
-            font-family: 'Instrument Serif', serif;
-            font-size: 1.6rem;
-            letter-spacing: -0.02em;
-            display: flex;
-            align-items: center;
-            gap: 0.15em;
-        }
-        .logo .mark {
-            color: var(--accent);
-            font-style: italic;
-        }
-        .header-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--text-tertiary);
-            border: 1px solid var(--border-strong);
-            padding: 0.3em 0.8em;
-            border-radius: 2px;
-        }
+/* index */
+.year { padding: calc(var(--sq) * 2.5) var(--gutter) 0; }
+.year h2 { font-family: var(--display); font-weight: 500; font-size: 1.9rem; margin: 0 0 8px; }
+.year h2::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-right: 12px; background: var(--accent); vertical-align: 0.1em; }
+.entries { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); max-width: 900px; }
+.entry { border-bottom: 1px solid var(--rule); }
+.entry a {
+  display: grid; grid-template-columns: 8.5rem minmax(0, 1fr) auto; grid-template-areas: "d t i" "d x i";
+  gap: 2px 20px; padding: 14px 0; text-decoration: none; color: var(--ink);
+}
+.entry time { grid-area: d; color: var(--ink-soft); font-size: 0.95rem; padding-top: 3px; }
+.entry .t { grid-area: t; color: var(--red); font-weight: 600; font-size: 1.12rem; line-height: 1.35; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+.entry a:hover .t { text-decoration-thickness: 2px; }
+.entry .x { grid-area: x; color: var(--ink-soft); font-size: 1rem; line-height: 1.5; }
+.entry .thumb { grid-area: i; width: 120px; height: 80px; object-fit: cover; border: 1px solid var(--rule); }
 
-        /* Article container */
-        .article-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2.5rem;
-            flex: 1;
-            position: relative;
-        }
+/* post */
+.post { padding: calc(var(--sq) * 2) var(--gutter) 0; }
+.post > * { max-width: var(--measure); }
+.post .back { display: inline-block; margin-bottom: 18px; }
+.post h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); max-width: 22em; }
+.post h1, .post .subtitle { max-width: min(100%, 860px); }
+.post .subtitle { font-family: var(--display); font-style: italic; font-size: 1.4rem; color: var(--ink-soft); margin: 0 0 10px; }
+.post .meta { color: var(--ink-soft); font-size: 1rem; margin: 0 0 24px; }
+.post .meta .sep { margin: 0 4px; opacity: 0.6; }
+.hero { width: fit-content; max-width: 100%; margin: 0 0 28px; background: var(--paper); padding: 8px; border: 1px solid var(--rule); border-top: 3px solid var(--accent); }
+.body { font-size: 1.18rem; line-height: 1.7; }
+.body h2, .body h3 { font-family: var(--display); font-weight: 500; line-height: 1.2; margin: 1.6em 0 0.5em; }
+.body h2 { font-size: 1.8rem; } .body h3 { font-size: 1.4rem; }
+.body blockquote { margin: 1.2em 0; padding: 0 0 0 18px; border-left: 3px solid var(--accent); color: var(--ink-soft); font-style: italic; }
+.body img { margin: 1em 0; }
+.hero img { max-height: 460px; width: auto; }
+.body figure { margin: 1.4em 0; }
+.body figcaption { color: var(--ink-soft); font-size: 0.95rem; }
+.body hr { border: 0; border-top: 1px solid var(--rule); margin: 2em 0; }
+.body ul, .body ol { padding-left: 1.4em; }
+.body pre, .body code { font-size: 0.92em; }
+.body pre { overflow-x: auto; background: var(--tint); padding: 12px; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 40px 0 0; padding-top: 16px; border-top: 1px solid var(--rule); max-width: var(--measure); }
+.pager a { text-decoration: none; color: var(--red); font-weight: 600; line-height: 1.35; }
+.pager a span { display: block; font-weight: 400; color: var(--ink-soft); font-size: 0.92rem; }
+.pager .next { text-align: right; }
 
-        /* Title block */
-        .title-block {
-            padding: 3rem 0 2rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
-            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .title-block h1 {
-            font-family: 'Instrument Serif', serif;
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            line-height: 1.15;
-            letter-spacing: -0.025em;
-            font-weight: 400;
-            margin-bottom: 1rem;
-        }
-        .post-meta {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 0.8rem;
-            color: var(--text-tertiary);
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.04em;
-        }
-        .meta-divider {
-            width: 24px;
-            height: 1px;
-            background: var(--accent);
-        }
+footer {
+  margin-top: calc(var(--sq) * 5);
+  padding: calc(var(--sq) * 1.5) var(--gutter) calc(var(--sq) * 2);
+  background: var(--foot); color: var(--foot-ink); font-size: 1.02rem;
+}
+footer a { color: var(--foot-ink); }
+footer p { margin: 0 0 4px; }
 
-        /* Article body with floated image */
-        .post-body {
-            font-size: 1.08rem;
-            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
-        }
-        .post-image {
-            float: left;
-            max-width: 280px;
-            width: 40%;
-            margin: 0.3rem 1.8rem 1rem 0;
-            border-radius: 8px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            transition: box-shadow 0.3s;
-        }
-        .post-image:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        }
-        .post-body b {
-            display: inline;
-            font-family: 'Instrument Serif', serif;
-            font-size: 1.3rem;
-            font-weight: 400;
-            letter-spacing: -0.02em;
-            color: var(--text);
-        }
-        /* Section headings that appear after <br><br> need clear */
-        .post-body::after {
-            content: '';
-            display: table;
-            clear: both;
-        }
+@media (max-width: 640px) {
+  body { font-size: 1.08rem; }
+  .top nav { display: none; }
+  .entry a { grid-template-columns: minmax(0, 1fr); grid-template-areas: "d" "t" "x"; }
+  .entry .thumb { display: none; }
+  .pager { grid-template-columns: 1fr; }
+  .pager .next { text-align: left; }
+}
 
-        /* Navigation */
-        .post-nav {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin: 3rem 0 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            clear: both;
-            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
-        }
-        .post-nav a {
-            display: block;
-            padding: 1.2rem 1.5rem;
-            background: var(--bg-deep);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.88rem;
-            line-height: 1.4;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .post-nav a:hover {
-            border-color: var(--accent);
-            color: var(--text);
-            background: var(--accent-glow);
-            transform: translateY(-2px);
-        }
-
-        /* Footer */
-        .site-footer {
-            text-align: center;
-            padding: 2.5rem 2rem;
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-            border-top: 1px solid var(--border);
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-        }
-        .site-footer a {
-            color: var(--accent);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .site-footer a:hover { color: var(--accent-light); }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-            .site-header { padding: 1rem 1.2rem; }
-            .article-container { padding: 0 1.2rem; }
-            .title-block { padding: 2rem 0 1.5rem; }
-            .post-image {
-                float: none;
-                display: block;
-                max-width: 100%;
-                width: 100%;
-                margin: 0 0 1.5rem 0;
-            }
-            .post-nav { grid-template-columns: 1fr; }
-            .header-tag { display: none; }
-        }
-    </style>
+</style>
 </head>
 <body>
-    <header class="site-header">
-        <a href="../index.html" class="logo">Hahn<span class="mark">AI</span></a>
-        <span class="header-tag">Science &middot; AI &middot; Future</span>
-    </header>
+<header class="top">
+  <a class="home" href="../../">will.hahn.ai</a>
+  <nav aria-label="Site">
+    <ul>
+      <li><a href="../../#about">About</a></li>
+      <li><a href="../../#research">Research</a></li>
+      <li><a href="../../#talks">Talks</a></li>
+      <li><a href="../../#teaching">Teaching</a></li>
+      <li><a href="../" aria-current="page">Writing</a></li>
+    </ul>
+  </nav>
+</header>
 
-    <article class="article-container">
-        <div class="title-block">
-            <h1>Rolling the AI Dice: How Random Inputs Drive AI, And How It Mirrors Ancient Divination Techniques</h1>
-            <div class="post-meta">
-                <span>2023-10-26</span>
-                <span class="meta-divider"></span>
-                <span>Hahn AI</span>
-            </div>
-        </div>
-
-        <div class="post-body">
-            <img class="post-image" src="image.jpg" alt="Rolling the AI Dice: How Random Inputs Drive AI, And How It Mirrors Ancient Divination Techniques" loading="lazy">
-            It's not easy to imagine that the complex world of artificial intelligence (AI) can share anything in common with ancient techniques of divination such as augury, haruspicy, and anthropomancy. And yet, they do. The bridge between these vastly different practices is the concept of randomness. <br><br>
+<main>
+  <article class="post">
+    <a class="back" href="../">All essays</a>
+    <h1>Rolling the AI Dice: How Random Inputs Drive AI, And How It Mirrors Ancient Divination Techniques</h1>
+    
+    <p class="meta"><time datetime="2023-10-26">October 26, 2023</time></p>
+    <figure class="hero"><img src="image.jpg" alt="" loading="eager"></figure>
+    <div class="body">
+It's not easy to imagine that the complex world of artificial intelligence (AI) can share anything in common with ancient techniques of divination such as augury, haruspicy, and anthropomancy. And yet, they do. The bridge between these vastly different practices is the concept of randomness. <br><br>
 <b>The Language of Chance: How AI Uses Randomness</b>
 Artificial intelligence systems, especially Generative Adversarial Networks (GANs) and similar technologies, make extensive use of random inputs to function. These systems typically generate new outputs - like images, text, or other data types - by learning from large databases of information. Here's where the randomness comes in: to kickstart the generation process, these systems often need a random seed or starting point. This could be a random number or a random set of numbers, but it provides a starting point that influences the final result. <br><br>
 These random seeds act as catalysts for creativity in AI, stirring up the pot of possibilities. For example, in a GAN trained to generate images of cats, a random input can determine the unique features of the image generated, like the color of the cat, its breed, or its posture. Despite the large array of possibilities, the system still adheres to the "catness" it learned from the data. This dance between the unexpected and the structured forms the essence of these AI systems. <br><br>
@@ -283,16 +196,19 @@ Just as a GAN might generate a unique cat image based on a random input, so an a
 <b>AI and Divination: A Fascinating Confluence</b>
 The shared thread between AI and ancient divination practices is the leveraging of randomness within a structured framework to generate new information or insights. This isn't to say AI is a mystical practice - far from it. But the comparison helps us understand the role of randomness in sophisticated machine learning processes and how it sparks creativity and novelty within the bounds of learned patterns. <br><br>
 So next time you see an AI artwork, a predictive text, or a generative music piece, remember: you're witnessing a complex interaction between randomness and structure. And in that dance, you might just catch a fleeting glimpse of ancient augurs, haruspices, and anthropomancers, interpreting the future from the flights of birds and the entrails of beasts. After all, we've always sought to make sense of the world - and the future - in the patterns around us, no matter how random they may seem.
-        </div>
+    </div>
+    <div class="subscribe">
+      <p>New essays also go out by email. <a href="https://williamedwardhahn.substack.com/subscribe">Subscribe on Substack</a>.</p>
+    </div>
+    <nav class="pager" aria-label="More essays">
+      <a class="prev" href="../40/"><span>Earlier</span>Programming vs. Traditional Mathematics: The Reign of the Algorithm</a>
+      <a class="next" href="../42/"><span>Later</span>Microwave Auditory Effect: The Science Behind Sound Perception</a>
+    </nav>
+  </article>
+</main>
 
-        <nav class="post-nav">
-            <a href="../40/index.html">&larr; Programming vs. Traditional Mathematics: The Reign of the Algorithm</a>
-            <a href="../42/index.html">Microwave Auditory Effect: The Science Behind Sound Perception &rarr;</a>
-        </nav>
-    </article>
-
-    <footer class="site-footer">
-        &copy; Hahn AI &mdash; <a href="https://Hahn.ai">Hahn.ai</a>
-    </footer>
+<footer>
+  <p><a href="../../">William Edward Hahn</a>, Department of Mathematical Sciences, Florida Atlantic University. <a href="mailto:whahn@fau.edu">whahn@fau.edu</a></p>
+</footer>
 </body>
 </html>
