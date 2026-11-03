@@ -2,5 +2,7 @@
 __pycache__/
 *.pyc
 *.py
+# ...except the book's chapter code, published on purpose
+!book/code/*.py
 .env
 .DS_Store

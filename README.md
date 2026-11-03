@@ -12,6 +12,8 @@ change the server templates and republish.
     index.html       Home page (HTML5 UP template, assets/ and images/)
     blog/            Current blog: index.html + one folder per post (N/index.html, image.jpg, meta.json)
     blog2/           Archive of the 2023 blog, kept so old links still work
+    book/            Learning Deep Learning online edition. Deployed automatically by a GitHub
+                     Action in the private learning-deep-learning repo; don't hand-edit.
     demos/           Standalone interactive demos (Solresol, color naming, watermark, piano)
     CNAME            will.hahn.ai
 
