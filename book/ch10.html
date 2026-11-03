@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning by Guessing · Learning Deep Learning</title>
+<script>try{var t=localStorage.getItem('ldl-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script><link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'><rect width='4' height='4' fill='%23141210'/><rect x='1' y='1' width='2' height='2' fill='%23ff5a1f'/></svg>">
+</head>
+<body class="chapter-page" data-prev="ch09.html" data-next="ch11.html">
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span>Learning Deep Learning</a>
+  <span class="crumb">Chapter 10</span>
+  <button class="icon-btn" id="toc-btn" type="button" aria-label="Contents">Contents</button>
+  <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><span class="sun"></span></button>
+</header>
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="drawer" id="drawer"><div class="drawer-inner"><p class="drawer-h">Contents</p>
+<ol class="toc"><li><a href="preface.html">Preface</a></li><li><a href="howto.html">How to Use This Book</a></li></ol>
+<ol class="toc"><li class="toc-part"><span>Part I</span> Why Deep Learning</li><li><a href="ch01.html"><b>1</b> Eight Million Numbers, One Bit</a></li><li><a href="ch02.html"><b>2</b> The Pascaline Wager</a></li><li><a href="ch03.html"><b>3</b> A Short History of Thinking Machines</a></li><li><a href="ch04.html"><b>4</b> A Jungle of Brain Cells</a></li><li><a href="ch05.html"><b>5</b> If I Only Had a Brain</a></li><li class="toc-part"><span>Part II</span> Images Are Numbers</li><li><a href="ch06.html"><b>6</b> Arrays</a></li><li><a href="ch07.html"><b>7</b> Images as Arrays</a></li><li><a href="ch08.html"><b>8</b> Digits as Vectors</a></li><li class="toc-part"><span>Part III</span> Learning from Data</li><li><a href="ch09.html"><b>9</b> Chance</a></li><li><a href="ch10.html" aria-current="page"><b>10</b> Learning by Guessing</a></li><li><a href="ch11.html"><b>11</b> Following the Gradient</a></li><li><a href="ch12.html"><b>12</b> Going Deeper</a></li><li class="toc-part"><span>Part IV</span> Seeing with Convolutions</li><li><a href="ch13.html"><b>13</b> Convolution</a></li><li><a href="ch14.html"><b>14</b> A Convolutional Network</a></li><li><a href="ch15.html"><b>15</b> Inside AlexNet</a></li><li><a href="ch16.html"><b>16</b> Teaching an Old Network New Tricks</a></li><li><a href="ch17.html"><b>17</b> Random Features</a></li><li class="toc-part"><span>Part V</span> Machines That Imagine</li><li><a href="ch18.html"><b>18</b> Autoencoders</a></li><li><a href="ch19.html"><b>19</b> Two Networks at Play</a></li><li><a href="ch20.html"><b>20</b> Onward</a></li><li class="toc-part"><span>Appendix</span></li><li><a href="appa.html"><b>A</b> A Project of Your Own</a></li></ol></div></div>
+<div class="layout">
+<aside class="rail"><p class="rail-h">In this chapter</p><ol class="local"><li><a href="#enter-pytorch">Enter PyTorch</a></li><li><a href="#the-graphics-card">The graphics card</a></li><li><a href="#one-random-guess">One random guess</a></li><li><a href="#guess-a-thousand-times">Guess a thousand times</a></li><li><a href="#small-steps">Small steps</a></li><li><a href="#survival-of-the-fittest">Survival of the fittest</a></li><li><a href="#what-guessing-teaches">What guessing teaches</a></li><li><a href="#try-it">Try it</a></li></ol></aside>
+<main class="chapter">
+<header class="ch-head">
+  <div class="ch-digits" data-num="10" aria-hidden="true"></div>
+  <p class="kicker">Part III · Learning from Data</p>
+  <h1>Learning by Guessing</h1>
+</header>
+<article class="prose">
+<p>In <a href="ch08.html">Chapter 8</a> we built a classifier by hand. We averaged the images of each digit into a template, scored new images against the templates with one matrix multiplication, and picked the winner with <code>argmax</code>. The whole classifier was a <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>784</mn><mo>×</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">784\times10</annotation></semantics></math> matrix: one column of 784 weights per digit.</p>
+<p>Now we ask a different question. Forget averaging. Is there some other <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>784</mn><mo>×</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">784\times10</annotation></semantics></math> matrix that classifies digits even better, and could a computer find it without being told what a “typical 5” looks like? This chapter answers that question in the bluntest way possible: by guessing. It is not how neural networks are usually trained. But it shows, with nothing hidden, what “learning” means for a machine. Learning is a search through a space of possible weights for the ones that work.</p>
+<h2 class="reveal" id="enter-pytorch">Enter PyTorch</h2>
+<p>From here on we will do our heavy arithmetic in PyTorch. A PyTorch <em>tensor</em> is an array, much like a NumPy array, with two extra powers: it can live on a graphics processor, and it can keep track of the calculations done with it so that derivatives come for free. We will need the second power in the next chapter. For now, tensors look and behave like the arrays we already know:</p>
+<figure class="listing" data-name="gs_tensor"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_tensor.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span> <span class="o">@</span> <span class="n">t</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>tensor([2., 4., 6.])
+tensor(14.)
+torch.Size([3]) torch.float32</pre></div></figure>
+<p>Converting between the two libraries is easy:</p>
+<figure class="listing" data-name="gs_numpy"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_numpy.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>tensor([[0, 1, 2],
+        [3, 4, 5]])
+[[0 1 2]
+ [3 4 5]]</pre></div></figure>
+<p>The two libraries agree on almost everything, but a few names differ, and they trip up everyone who moves between them:</p>
+<div class="center">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">NumPy</th>
+<th style="text-align: left;">PyTorch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>a.sum(axis=1)</code></td>
+<td style="text-align: left;"><code>t.sum(dim=1)</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>keepdims=True</code></td>
+<td style="text-align: left;"><code>keepdim=True</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>a.astype(float)</code></td>
+<td style="text-align: left;"><code>t.float()</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>a.max(axis=1)</code></td>
+<td style="text-align: left;"><code>t.max(dim=1).values</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>a.argmax(axis=1)</code></td>
+<td style="text-align: left;"><code>t.max(dim=1).indices</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 class="reveal" id="the-graphics-card">The graphics card</h2>
+<p>Graphics processors were built to compute the colors of millions of pixels at once for video games. That turns out to be exactly the kind of work neural networks need: the same simple arithmetic repeated over huge arrays. The cheap, massively parallel graphics card is one of the main reasons deep learning took off when it did. PyTorch can use an NVIDIA card (<code>&#x27;cuda&#x27;</code>), the graphics hardware built into Apple-silicon Macs (<code>&#x27;mps&#x27;</code>), or fall back to the ordinary processor (<code>&#x27;cpu&#x27;</code>). This snippet picks the best one available:</p>
+<figure class="listing" data-name="gs_device"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_device.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cuda&#39;</span>                     <span class="c1"># an NVIDIA graphics card</span>
+<span class="k">elif</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;mps&#39;</span>                      <span class="c1"># an Apple-silicon Mac</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">device</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">device</span><span class="p">)</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>mps</pre></div></figure>
+<p>The output in this book was produced on a Mac, so it says <code>mps</code>. Yours may say something else; everything still works, only the speed changes. Random numbers are generated differently on different hardware, so your exact numbers in this and later chapters will differ slightly from the ones printed here, though the story they tell should not.</p>
+<p>We load MNIST exactly as in <a href="ch08.html">Chapter 8</a>: each image flattened into a row of 784 numbers and scaled to 0–1.</p>
+<figure class="listing" data-name="gs_load"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_load.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">torchvision.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">MNIST</span>
+
+<span class="n">train_set</span> <span class="o">=</span> <span class="n">MNIST</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test_set</span> <span class="o">=</span> <span class="n">MNIST</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">train</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">train_set</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.0</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">train_set</span><span class="o">.</span><span class="n">targets</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">test_set</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">784</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.0</span>
+<span class="n">Y_test</span> <span class="o">=</span> <span class="n">test_set</span><span class="o">.</span><span class="n">targets</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span></code></pre></figure>
+<p>Then we turn the NumPy arrays into tensors on the device. Labels are whole numbers, so they keep an integer type.</p>
+<figure class="listing" data-name="gs_to_device"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_to_device.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="n">Y_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">Y_test</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">X</span><span class="o">.</span><span class="n">device</span><span class="p">)</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>torch.Size([60000, 784]) mps:0</pre></div></figure>
+<p>As we saw in <a href="ch09.html">Chapter 9</a>, a computer’s random numbers come from a recipe that starts at a <em>seed</em>. PyTorch has its own generator, and fixing its seed makes every run of the code repeat exactly:</p>
+<figure class="listing" data-name="gs_seed"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_seed.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>    <span class="c1"># the same &quot;random&quot; numbers on every run</span></code></pre></figure>
+<h2 class="reveal" id="one-random-guess">One random guess</h2>
+<p>Let’s make a completely random weight matrix and see how it does:</p>
+<figure class="listing" data-name="gs_one_guess"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_one_guess.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="n">W</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+
+<span class="n">scores</span> <span class="o">=</span> <span class="n">X</span> <span class="o">@</span> <span class="n">W</span>              <span class="c1"># (60000, 784) @ (784, 10)</span>
+<span class="n">guesses</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">guesses</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Y</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="n">guesses</span> <span class="o">==</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="mi">4</span><span class="p">))</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>tensor([4, 7, 9, 7, 2, 8, 0, 9, 7, 9])
+tensor([5, 0, 4, 1, 9, 2, 1, 3, 1, 4])
+0.0628</pre></div></figure>
+<p>About six percent correct, which is no better than chance (ten percent with ten classes, give or take luck). We will be checking the accuracy of weight matrices a lot, so let’s give it a name:</p>
+<figure class="listing" data-name="gs_accuracy"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_accuracy.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="k">def</span><span class="w"> </span><span class="nf">matrix_accuracy</span><span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+    <span class="n">guesses</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">@</span> <span class="n">W</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">guesses</span> <span class="o">==</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></code></pre></figure>
+<h2 class="reveal" id="guess-a-thousand-times">Guess a thousand times</h2>
+<p>If one random matrix is useless, perhaps the best of a thousand is not. The loop below tries a thousand random matrices and prints a line each time it finds a new best one:</p>
+<figure class="listing" data-name="gs_search"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_search.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="n">best_acc</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">W</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">matrix_accuracy</span><span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">acc</span> <span class="o">&gt;</span> <span class="n">best_acc</span><span class="p">:</span>
+        <span class="n">best_acc</span><span class="p">,</span> <span class="n">W_best</span> <span class="o">=</span> <span class="n">acc</span><span class="p">,</span> <span class="n">W</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>0 0.062
+1 0.1441
+17 0.1503
+53 0.1591
+72 0.1611
+134 0.1664
+155 0.175
+238 0.2394</pre></div></figure>
+<p>Some random matrices are better than others. The best gets about 24 percent of the training images right, more than twice chance. But the improvements arrive more and more rarely, and that is the problem with pure guessing. A weight matrix has <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>784</mn><mo>×</mo><mn>10</mn><mo>=</mo><mn>7</mn><mo>,</mo><mn>840</mn></mrow><annotation encoding="application/x-tex">784\times10 = 7{,}840</annotation></semantics></math> numbers. The space of possible matrices is so vast that the chance of stumbling onto a good one at random is effectively zero.</p>
+<h2 class="reveal" id="small-steps">Small steps</h2>
+<p>A better strategy is to stop starting from scratch. Take the best matrix so far, nudge every weight by a little random noise, and keep the result only if it scores better. Repeat. This is <em>hill climbing</em>: blindfolded on a hillside, you take a random step and keep it only if you went up.</p>
+<p>To make each step quicker we score on the first 10<span>,</span>000 training images rather than all 60<span>,</span>000:</p>
+<figure class="listing" data-name="gs_climb"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_climb.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="c1"># a smaller set makes each guess quicker</span>
+<span class="n">X_small</span><span class="p">,</span> <span class="n">Y_small</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">10_000</span><span class="p">],</span> <span class="n">Y</span><span class="p">[:</span><span class="mi">10_000</span><span class="p">]</span>
+
+<span class="n">W</span> <span class="o">=</span> <span class="n">W_best</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">best_acc</span> <span class="o">=</span> <span class="n">matrix_accuracy</span><span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">X_small</span><span class="p">,</span> <span class="n">Y_small</span><span class="p">)</span>
+<span class="n">step</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20_000</span><span class="p">):</span>
+    <span class="n">W_new</span> <span class="o">=</span> <span class="n">W</span> <span class="o">+</span> <span class="n">step</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">matrix_accuracy</span><span class="p">(</span><span class="n">W_new</span><span class="p">,</span> <span class="n">X_small</span><span class="p">,</span> <span class="n">Y_small</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">acc</span> <span class="o">&gt;</span> <span class="n">best_acc</span><span class="p">:</span>
+        <span class="n">W</span><span class="p">,</span> <span class="n">best_acc</span> <span class="o">=</span> <span class="n">W_new</span><span class="p">,</span> <span class="n">acc</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">4000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">best_acc</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">best_acc</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>0 0.239
+4000 0.6698
+8000 0.6809
+12000 0.6811
+16000 0.6824
+final 0.6829</pre></div></figure><div class="widget" data-widget="climb"></div>
+<p>Sixty-eight percent. Most of the gain came in the first few thousand steps, after which progress slowed to a crawl: the last 16<span>,</span>000 steps added only about one point. What really matters is how the matrix does on images it was never scored on:</p>
+<figure class="listing" data-name="gs_climb_test"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_climb_test.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">matrix_accuracy</span><span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>0.6712</pre></div></figure>
+<p>Sixty-seven percent on the test set. The machine has found a matrix that does better than our hand-made dot-product templates from <a href="ch08.html">Chapter 8</a> (63 percent), and nobody told it what any digit looks like. It knew only how many answers each guess got right.</p>
+<h2 class="reveal" id="survival-of-the-fittest">Survival of the fittest</h2>
+<p>Hill climbing follows a single path, one guess at a time. Nature has another trick: keep a whole <em>population</em> of candidates, let the fittest survive, and fill the next generation with their mutated offspring. The graphics card lets us score a hundred candidate matrices at once. We stack them into one tensor <code>M</code> of shape (100, 784, 10) and score them all in a single operation. When one side of <code>@</code> has an extra axis in front, PyTorch repeats the multiplication for each entry along it, so <code>X_small @ M</code> is <code>X_small @ M[n]</code> for all hundred values of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math> at once, giving scores of shape (100, 10000, 10). After scoring, <code>parents.repeat(N // keep, 1, 1)</code> makes ten copies of the ten survivors, one after another, so the first ten children are the survivors themselves and only the other ninety are mutated.</p>
+<figure class="listing" data-name="gs_population"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_population.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="n">N</span><span class="p">,</span> <span class="n">keep</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span>       <span class="c1"># population size, number of survivors</span>
+<span class="n">M</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>    <span class="c1"># N candidate matrices</span>
+
+<span class="k">for</span> <span class="n">generation</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1001</span><span class="p">):</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">X_small</span> <span class="o">@</span> <span class="n">M</span>                          <span class="c1"># (N, 10000, 10)</span>
+    <span class="n">guesses</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>                  <span class="c1"># (N, 10000)</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="p">(</span><span class="n">guesses</span> <span class="o">==</span> <span class="n">Y_small</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="n">fitness</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">descending</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">keep</span><span class="p">]</span>  <span class="c1"># the survivors</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="n">best</span><span class="p">]</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="n">parents</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">N</span> <span class="o">//</span> <span class="n">keep</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># 10 copies of the 10</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="n">keep</span><span class="p">,</span> <span class="mi">784</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">children</span><span class="p">[</span><span class="n">keep</span><span class="p">:]</span> <span class="o">+=</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">noise</span>       <span class="c1"># mutate all but the survivors</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">children</span>
+    <span class="k">if</span> <span class="n">generation</span> <span class="o">%</span> <span class="mi">200</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">generation</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">fitness</span><span class="p">[</span><span class="n">best</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">W_evolved</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">matrix_accuracy</span><span class="p">(</span><span class="n">W_evolved</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>0 0.1763
+200 0.5456
+400 0.6094
+600 0.7438
+800 0.7782
+1000 0.7914
+test 0.7687</pre></div></figure>
+<p>Each generation, the ten best matrices survive unchanged and the other ninety places go to noisy copies of them. After a thousand generations the best matrix gets 77 percent of the <em>test</em> images right. Simulated evolution, with no knowledge of what a digit is, has found a classifier nearly as good as our distance-based templates (82 percent).</p>
+<p>Is evolution simply the smarter search? Not by this evidence. Count the guesses each method scored. Hill climbing scored 20<span>,</span>000 matrices. Evolution scored a hundred per generation for 1<span>,</span>001 generations: 100<span>,</span>100 matrices, five times as many. At generation 200, when it had scored about as many as the hill climber, its best was 55 percent, behind the hill climber’s 68. What the population really bought us is the graphics card’s parallelism: scoring a hundred matrices in one operation takes far less than a hundred times as long as scoring one, so we could afford many more guesses. (On the author’s laptop the thousand generations took about as long as the 20<span>,</span>000 hill-climbing steps, roughly 25 seconds each.) The two searches also took different step sizes, 0.1 for the hill climber and 0.05 for the mutations, so even this comparison is not perfectly even. A fair comparison of search methods always counts the budget, changes one thing at a time, and does not trust just the final score.</p>
+<p>Finally, let’s look at what was found. Each column of the weight matrix holds 784 numbers, one per pixel, so we can reshape each column back into a <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>28</mn><mo>×</mo><mn>28</mn></mrow><annotation encoding="application/x-tex">28\times28</annotation></semantics></math> image (<a href="#fig-gs_weights">Figure 10.1</a>).</p>
+<figure class="listing" data-name="gs_weights"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">gs_weights.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="n">columns</span> <span class="o">=</span> <span class="n">W_evolved</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">montage_plot</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">grid_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">symmetric</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code></pre></figure>
+<figure class="fig reveal" id="fig-gs_weights"><div class="fig-frame"><img src="fig/gs_weights.svg" alt="" loading="lazy"></div><figcaption><span class="fignum">Figure 10.1</span> The ten columns of the evolved weight matrix, drawn as images. Bright pixels vote for a digit and dark pixels vote against it.</figcaption></figure>
+<p>To the eye they are pure noise: no digit shapes at all. Yet this matrix gets 77 percent of the test images right, so the useful structure is there, spread thinly across thousands of weights and buried under the randomness the search started from. Random search keeps whatever happens to work and never cleans up anything that does no harm.</p>
+<h2 class="reveal" id="what-guessing-teaches">What guessing teaches</h2>
+<p>It is easy to dismiss what we just did as a toy, but every idea in it is central to deep learning:</p>
+<ul>
+<li><p>A classifier is a <em>function with adjustable numbers</em>: here, one matrix multiplication with 7<span>,</span>840 weights.</p></li>
+<li><p>A <em>score</em> tells us how good a particular setting of the weights is.</p></li>
+<li><p><em>Learning</em> is a search for weights with a better score, measured on training data and checked on test data.</p></li>
+</ul>
+<p>What was wasteful was the search itself. Each random step was blind: it tried a direction, looked at the score, and, once the easy gains were gone, threw almost every step away. Imagine instead that, at every point on the hillside, you could feel which way was uphill. You would never waste a step. That feeling for the slope has a name, the <em>gradient</em>, and computing it is what PyTorch does best. It is the subject of the next chapter.</p>
+<aside class="tryit reveal"><h2 class="reveal" id="try-it">Try it</h2>
+<ol>
+<li><p>In <code>gs_climb</code>, change <code>step = 0.1</code> to <code>0.01</code> and then to <code>1.0</code>. Which climbs fastest at first, and which ends highest after 20<span>,</span>000 steps?</p></li>
+<li><p>Give hill climbing the same budget as evolution: run <code>gs_climb</code> for 100<span>,</span>000 steps instead of 20<span>,</span>000 (it takes about five times as long). Does it catch up with the population’s 77 percent?</p></li>
+<li><p>In <code>gs_population</code>, try <code>keep = 1</code> (only the single best survives) and <code>keep = 50</code>, or change the mutation size <code>0.05</code> to <code>0.2</code>. Watch how the printed fitness changes.</p></li>
+<li><p>Start the hill climber from the class-average templates of <a href="ch08.html">Chapter 8</a> instead of the best random matrix: in <code>gs_climb</code>, replace <code>W_best.clone()</code> with <code>torch.stack([X[Y == k].mean(dim=0) for k in range(10)]).T</code>. Can random steps improve on the templates’ 63 percent?</p></li>
+</ol>
+</aside>
+
+</article>
+<nav class="pager"><a class="prev" href="ch09.html"><small>Previous</small><span>Chance</span></a><a class="next" href="ch11.html"><small>Next</small><span>Following the Gradient</span></a></nav>
+</main>
+</div>
+<script src="assets/data.js"></script><script src="assets/widgets.js"></script><script src="assets/app.js"></script>
+</body></html>

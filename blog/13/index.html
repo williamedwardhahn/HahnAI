@@ -145,6 +145,13 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.4rem, 6vw
 .pager a span { display: block; font-weight: 400; color: var(--ink-soft); font-size: 0.92rem; }
 .pager .next { text-align: right; }
 
+footer .profiles { margin: 0 0 18px; border-top: 1px solid rgba(242, 245, 251, 0.22); max-width: 900px; }
+footer .profiles > div { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: 4px 16px; padding: 10px 0; border-bottom: 1px solid rgba(242, 245, 251, 0.22); }
+footer .profiles dt { opacity: 0.75; font-size: 0.95rem; padding-top: 2px; }
+footer .profiles dd { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 22px; }
+footer .profiles dd a { color: var(--foot-ink); font-weight: 600; text-decoration: none; }
+footer .profiles dd a:hover { text-decoration: underline; }
+@media (max-width: 560px) { footer .profiles > div { grid-template-columns: minmax(0, 1fr); } }
 footer {
   margin-top: calc(var(--sq) * 5);
   padding: calc(var(--sq) * 1.5) var(--gutter) calc(var(--sq) * 2);
@@ -235,6 +242,16 @@ So, do breakaway civilizations already exist among us? We may never know for cer
 </main>
 
 <footer>
+  <dl class="profiles">
+    <div>
+      <dt>Research</dt>
+      <dd><a href="https://scholar.google.com/citations?user=eHyXKZAAAAAJ">Google Scholar</a><a href="https://www.researchgate.net/profile/William-Hahn-2">ResearchGate</a><a href="https://github.com/williamedwardhahn">GitHub</a><a href="/cv/William_Hahn_Resume.pdf">Résumé (PDF)</a></dd>
+    </div>
+    <div>
+      <dt>Follow</dt>
+      <dd><a href="https://www.youtube.com/@williamedwardhahn">YouTube</a><a href="https://x.com/will_hahn">X</a><a href="https://www.linkedin.com/in/william-edward-hahn-532654124/">LinkedIn</a><a href="/blog/">Writing</a><a href="https://williamedwardhahn.substack.com">Substack</a><a href="mailto:whahn@fau.edu">Email</a></dd>
+    </div>
+  </dl>
   <p><a href="../../">William Edward Hahn</a>, Department of Mathematical Sciences, Florida Atlantic University. <a href="mailto:whahn@fau.edu">whahn@fau.edu</a></p>
 </footer>
 </body>

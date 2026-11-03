@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to Use This Book · Learning Deep Learning</title>
+<script>try{var t=localStorage.getItem('ldl-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script><link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'><rect width='4' height='4' fill='%23141210'/><rect x='1' y='1' width='2' height='2' fill='%23ff5a1f'/></svg>">
+</head>
+<body class="chapter-page" data-prev="preface.html" data-next="ch01.html">
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span>Learning Deep Learning</a>
+  <span class="crumb"></span>
+  <button class="icon-btn" id="toc-btn" type="button" aria-label="Contents">Contents</button>
+  <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><span class="sun"></span></button>
+</header>
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="drawer" id="drawer"><div class="drawer-inner"><p class="drawer-h">Contents</p>
+<ol class="toc"><li><a href="preface.html">Preface</a></li><li><a href="howto.html">How to Use This Book</a></li></ol>
+<ol class="toc"><li class="toc-part"><span>Part I</span> Why Deep Learning</li><li><a href="ch01.html"><b>1</b> Eight Million Numbers, One Bit</a></li><li><a href="ch02.html"><b>2</b> The Pascaline Wager</a></li><li><a href="ch03.html"><b>3</b> A Short History of Thinking Machines</a></li><li><a href="ch04.html"><b>4</b> A Jungle of Brain Cells</a></li><li><a href="ch05.html"><b>5</b> If I Only Had a Brain</a></li><li class="toc-part"><span>Part II</span> Images Are Numbers</li><li><a href="ch06.html"><b>6</b> Arrays</a></li><li><a href="ch07.html"><b>7</b> Images as Arrays</a></li><li><a href="ch08.html"><b>8</b> Digits as Vectors</a></li><li class="toc-part"><span>Part III</span> Learning from Data</li><li><a href="ch09.html"><b>9</b> Chance</a></li><li><a href="ch10.html"><b>10</b> Learning by Guessing</a></li><li><a href="ch11.html"><b>11</b> Following the Gradient</a></li><li><a href="ch12.html"><b>12</b> Going Deeper</a></li><li class="toc-part"><span>Part IV</span> Seeing with Convolutions</li><li><a href="ch13.html"><b>13</b> Convolution</a></li><li><a href="ch14.html"><b>14</b> A Convolutional Network</a></li><li><a href="ch15.html"><b>15</b> Inside AlexNet</a></li><li><a href="ch16.html"><b>16</b> Teaching an Old Network New Tricks</a></li><li><a href="ch17.html"><b>17</b> Random Features</a></li><li class="toc-part"><span>Part V</span> Machines That Imagine</li><li><a href="ch18.html"><b>18</b> Autoencoders</a></li><li><a href="ch19.html"><b>19</b> Two Networks at Play</a></li><li><a href="ch20.html"><b>20</b> Onward</a></li><li class="toc-part"><span>Appendix</span></li><li><a href="appa.html"><b>A</b> A Project of Your Own</a></li></ol></div></div>
+<div class="layout">
+<aside class="rail"><p class="rail-h">In this chapter</p><ol class="local"></ol></aside>
+<main class="chapter">
+<header class="ch-head">
+  
+  <p class="kicker">Front matter</p>
+  <h1>How to Use This Book</h1>
+</header>
+<article class="prose">
+<p>Part I is for reading, and you may skip it and start at Part II, coming back to it later. From Part II on, the book is for doing: every idea comes with code, and the best way to learn it is to type that code in, run it, and then break it. Change a number and see what happens. Delete a line and read the error message. The networks in this book are small enough to train in seconds or minutes on an ordinary laptop, so experimenting is cheap.</p>
+<h2 class="unnumbered" id="what-you-need">What you need</h2>
+<p>You need Python 3.9 or later and a handful of libraries:</p>
+<pre><code>pip install torch torchvision numpy scipy scikit-image matplotlib</code></pre>
+<p>The PyTorch website, <a href="https://pytorch.org" class="uri">https://pytorch.org</a>, gives the exact command for your operating system and hardware. If you would rather not install anything, a free hosted notebook service such as Google Colab already has all of these libraries installed and offers a graphics processor.</p>
+<p>A graphics processor (GPU) helps but is not required. <a href="ch10.html">Chapter 10</a> shows how the code picks the best hardware available, whether an NVIDIA card, an Apple-silicon Mac, or the ordinary processor, and everything in the book runs on all three. Only the speed changes.</p>
+<p>The datasets, the pretrained AlexNet weights and the sample photographs are all downloaded automatically, by the code that first uses them, into a folder called <code>data</code>.</p>
+<h2 class="unnumbered" id="the-code-and-its-output">The code and its output</h2>
+<p>Every listing in this book was run exactly as printed, and the results shown were produced by those runs. Listings that print something are followed by their output. Here is one from <a href="ch06.html">Chapter 6</a>, which computes a dot product (that chapter explains what one is):</p>
+<figure class="listing" data-name="arr_dot"><div class="lst-bar"><span class="lst-dots"><i></i><i></i><i></i></span><span class="lst-name">arr_dot.py</span><button class="copy" type="button" aria-label="Copy code">copy</button></div><pre class="code"><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>     <span class="c1"># an input</span>
+<span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>    <span class="c1"># a weight for each input</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">w</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span> <span class="o">@</span> <span class="n">w</span><span class="p">)</span></code></pre><div class="lst-out"><span class="lst-out-label">output</span><pre>4.5
+4.5</pre></div></figure><div class="widget" data-widget="neuron"></div>
+<p>All of the plots and images in the figures were produced the same way. The complete code for each chapter, as a single file you can run from top to bottom, is available at <a href="https://will.hahn.ai/book/code/" class="uri">https://will.hahn.ai/book/code/</a>.</p>
+<p>Each listing’s name is printed in small type at its top right, like <code>arr_dot</code> above. It is the name of the block in the chapter’s code file, and the exercises use it to say which listing to change. Within a chapter, each listing builds on the ones before it, so run them in order. Each chapter starts fresh: it loads its own data and defines what it needs, apart from a few small helper functions that are introduced once and then reused, such as <code>montage_plot</code> for drawing many images at once. A chapter that reuses one says so, and the chapter’s code file defines it again so that the file runs on its own.</p>
+<p>Random numbers play a big part in deep learning, from the starting weights to the order of the training examples. The code fixes the random seed so that it gives the same results every time it runs, but different hardware generates random numbers differently, so your numbers will not exactly match the ones printed here. They should be close, and they should tell the same story.</p>
+<h2 class="unnumbered" id="python-beyond-the-basics">Python beyond the basics</h2>
+<p>The book assumes basic Python: variables, lists, loops, <code>if</code> and functions. A few other pieces of the language turn up along the way, and here is all you need to know to read them:</p>
+<ul>
+<li><p><code>f&#x27;{x:.3f}&#x27;</code> is an <em>f-string</em>: the value of <code>x</code> is written into the text, here with three decimal places.</p></li>
+<li><p><code>with torch.no_grad():</code> runs the indented lines inside a setting, here “do not record for gradients,” and switches it off afterwards.</p></li>
+<li><p><code>[f(x) for x in items]</code> builds a list in one line; without the brackets, as in <code>sum(f(x) for x in items)</code>, the values are made one at a time and used as they come.</p></li>
+<li><p><code>lambda x: x * 2</code> is a function without a name, handy when one is needed for a single line.</p></li>
+<li><p><code>a, b = pair</code> unpacks two values at once, and <code>**options</code> passes on whatever keyword arguments a function was given.</p></li>
+<li><p>A <code>class</code> bundles data with the functions that work on it; you will only need to read one, in <a href="ch11.html">Chapter 11</a>.</p></li>
+</ul>
+<h2 class="unnumbered" id="conventions">Conventions</h2>
+<p>Code and names from code appear in a <code>typewriter</code> font. Pictures and plots are drawn with matplotlib (<code>plt.figure</code>, <code>plt.imshow</code>, <code>plt.plot</code>, <code>plt.subplot</code> for a grid of panels); the book uses only a handful of its commands, and you can treat them as recipes. Throughout the book, <code>X</code> holds the inputs (images), <code>Y</code> the correct answers (labels), and <code>X_test</code> and <code>Y_test</code> the examples held back for testing. Weights are kept in a list called <code>w</code>, and the device the computation runs on is called <code>device</code>.</p>
+<p>Terms are set in <em>italics</em> where they are defined, and the index points to those definitions.</p>
+
+</article>
+<nav class="pager"><a class="prev" href="preface.html"><small>Previous</small><span>Preface</span></a><a class="next" href="ch01.html"><small>Next</small><span>Eight Million Numbers, One Bit</span></a></nav>
+</main>
+</div>
+<script src="assets/data.js"></script><script src="assets/widgets.js"></script><script src="assets/app.js"></script>
+</body></html>

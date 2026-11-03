@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>If I Only Had a Brain · Learning Deep Learning</title>
+<script>try{var t=localStorage.getItem('ldl-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script><link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'><rect width='4' height='4' fill='%23141210'/><rect x='1' y='1' width='2' height='2' fill='%23ff5a1f'/></svg>">
+</head>
+<body class="chapter-page" data-prev="ch04.html" data-next="ch06.html">
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span>Learning Deep Learning</a>
+  <span class="crumb">Chapter 5</span>
+  <button class="icon-btn" id="toc-btn" type="button" aria-label="Contents">Contents</button>
+  <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><span class="sun"></span></button>
+</header>
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="drawer" id="drawer"><div class="drawer-inner"><p class="drawer-h">Contents</p>
+<ol class="toc"><li><a href="preface.html">Preface</a></li><li><a href="howto.html">How to Use This Book</a></li></ol>
+<ol class="toc"><li class="toc-part"><span>Part I</span> Why Deep Learning</li><li><a href="ch01.html"><b>1</b> Eight Million Numbers, One Bit</a></li><li><a href="ch02.html"><b>2</b> The Pascaline Wager</a></li><li><a href="ch03.html"><b>3</b> A Short History of Thinking Machines</a></li><li><a href="ch04.html"><b>4</b> A Jungle of Brain Cells</a></li><li><a href="ch05.html" aria-current="page"><b>5</b> If I Only Had a Brain</a></li><li class="toc-part"><span>Part II</span> Images Are Numbers</li><li><a href="ch06.html"><b>6</b> Arrays</a></li><li><a href="ch07.html"><b>7</b> Images as Arrays</a></li><li><a href="ch08.html"><b>8</b> Digits as Vectors</a></li><li class="toc-part"><span>Part III</span> Learning from Data</li><li><a href="ch09.html"><b>9</b> Chance</a></li><li><a href="ch10.html"><b>10</b> Learning by Guessing</a></li><li><a href="ch11.html"><b>11</b> Following the Gradient</a></li><li><a href="ch12.html"><b>12</b> Going Deeper</a></li><li class="toc-part"><span>Part IV</span> Seeing with Convolutions</li><li><a href="ch13.html"><b>13</b> Convolution</a></li><li><a href="ch14.html"><b>14</b> A Convolutional Network</a></li><li><a href="ch15.html"><b>15</b> Inside AlexNet</a></li><li><a href="ch16.html"><b>16</b> Teaching an Old Network New Tricks</a></li><li><a href="ch17.html"><b>17</b> Random Features</a></li><li class="toc-part"><span>Part V</span> Machines That Imagine</li><li><a href="ch18.html"><b>18</b> Autoencoders</a></li><li><a href="ch19.html"><b>19</b> Two Networks at Play</a></li><li><a href="ch20.html"><b>20</b> Onward</a></li><li class="toc-part"><span>Appendix</span></li><li><a href="appa.html"><b>A</b> A Project of Your Own</a></li></ol></div></div>
+<div class="layout">
+<aside class="rail"><p class="rail-h">In this chapter</p><ol class="local"><li><a href="#what-would-a-brain-have-to-do">What would a brain have to do?</a></li><li><a href="#whose-values">Whose values?</a></li></ol></aside>
+<main class="chapter">
+<header class="ch-head">
+  <div class="ch-digits" data-num="5" aria-hidden="true"></div>
+  <p class="kicker">Part I · Why Deep Learning</p>
+  <h1>If I Only Had a Brain</h1>
+</header>
+<article class="prose">
+<blockquote class="epigraph"><p>I could think of things I never thunk before.</p><cite>The Scarecrow, <em>The Wizard of Oz</em> (1939)</cite></blockquote>
+<p>In the 1939 classic <em>The Wizard of Oz</em>, the Scarecrow sings about what he would do if he “only had a brain.” If we want to understand the near future of AI, we need only listen to the Scarecrow.</p>
+<p>“I could while away the hours, conferrin’ with the flowers.” Computer vision could let robotic gardeners tend each plant individually, making mixed plantings practical and perhaps reducing the need for chemicals. Ironically, if the Scarecrow gets a brain, he may find himself right back in the cornfield.</p>
+<p>“With the thoughts I’d be thinkin’ I could be another Lincoln.” Software already searches evidence in litigation. What are the legal and ethical considerations of letting it make important decisions?</p>
+<p>“I’d unravel every riddle for any individ’le, in trouble or in pain.” In 2011 IBM’s Watson beat the <em>Jeopardy!</em> champions Ken Jennings and Brad Rutter, and within days IBM announced plans to apply it to medicine.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Deep learning vision systems have since become competitive with human radiologists on some narrow tasks, tasks that radiologists train for many years to perform. The work of doctors and lawyers is going to change profoundly, and few of the schools that train them teach these ideas yet.</p><aside class="sidenote"><span class="sn-num">1</span> IBM and Nuance Communications announced the healthcare collaboration on February 17, 2011, the day after the final <em>Jeopardy!</em> broadcast. IBM sold off its Watson Health business in 2022.</aside>
+<h2 class="reveal" id="what-would-a-brain-have-to-do">What would a brain have to do?</h2>
+<p>It is much less clear what the Scarecrow’s brain would have to <em>do</em>. How do little bursts of chemistry add up to a system that can learn to play the piano, or catch a football?</p>
+<p>One of the most illuminating answers came from a board game. In 2016 DeepMind’s AlphaGo beat Lee Sedol, one of the strongest Go players in the world, years before most experts expected a machine to win.</p>
+<p>We usually praise computers for predicting exactly what will happen after a sequence of moves. That works for simple games, but in Go the number of possibilities explodes too fast to look very far ahead. So alongside its search, AlphaGo used two neural networks. One, a <em>policy</em> network, suggested promising moves — a policy is just a rule for choosing an action in a situation. The other, a <em>value</em> network, gave something we are all familiar with: a gut feeling. Given a position, it returned a single number saying how likely this side was to win. Like the plus or minus grades of elementary school, the signal carries little information, but its meaning is clear: does this feel good or bad? Shifting from <em>what will happen?</em> to <em>how does this situation feel?</em> was a major part of the breakthrough.</p>
+<p>How do you teach a gut feeling? Imagine a whole game as a filmstrip: the first frame is the empty board, the last frame shows the winner. Pull frames at random from the middle and quiz the computer: who do you think will win? Because the last frame holds the answer, every frame becomes a training example. With millions of such frames the network learns what it is about a position that makes one side win.</p>
+<div class="widget" data-widget="value"></div><h2 class="reveal" id="whose-values">Whose values?</h2>
+<p>Getting machines to share human values — what researchers now call <em>alignment</em> — has grown into a large field, and it should be. The famous thought experiment asks a machine to make paper clips, and it melts down the planet to make as many as it can. The story is as old as the genie’s lamp: we never get what we asked for, because we were not careful enough to say what we actually cared about. Building machine culture deserves as much care as building machine intelligence.</p>
+<p>There is a darker possibility, too: a world in which very few companies or countries understand AI. Imagine an app that can tell you whether the mole on your skin is cancer. It could save your life, but like most applications it will be protected by a password. When life-saving medicine is an application, who controls the passwords? That is why I believe AI should be more than open source; it needs to become part of our popular culture. My advice to every student is to learn AI programming early and often.</p>
+<p>Does the good outweigh the bad? Asking that implies we have a great deal of control. When I imagine convincing the world to simply stop, I picture the plants in some prehistoric meadow agreeing that they don’t want the animals to start showing up. We will need intellectual tools this century just as we needed mechanical tools in the previous ones.</p>
+<p>The Scarecrow is getting his brain. The question is whether we will understand it.</p>
+<p>Understanding starts with building. Before a network can turn millions of numbers into one bit, we need to get comfortable with the numbers themselves: what an image looks like to a computer, and how a handwritten digit becomes a list of 784 of them. Pick up your pencil and eraser. It’s time to compute.</p>
+<section id="footnotes" class="footnotes" role="doc-endnotes"><h2>Notes</h2>
+<hr />
+<ol>
+<li id="fn1"><p>IBM and Nuance Communications announced the healthcare collaboration on February 17, 2011, the day after the final <em>Jeopardy!</em> broadcast. IBM sold off its Watson Health business in 2022.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</article>
+<nav class="pager"><a class="prev" href="ch04.html"><small>Previous</small><span>A Jungle of Brain Cells</span></a><a class="next" href="ch06.html"><small>Next</small><span>Arrays</span></a></nav>
+</main>
+</div>
+<script src="assets/data.js"></script><script src="assets/widgets.js"></script><script src="assets/app.js"></script>
+</body></html>

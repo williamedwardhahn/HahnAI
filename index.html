@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Person","name":"William Edward Hahn","alternateName":"Will Hahn","honorificSuffix":"Ph.D.","jobTitle":"Associate Professor of Mathematical Sciences","url":"https://will.hahn.ai/","email":"mailto:whahn@fau.edu","image":"https://will.hahn.ai/images/spotlight01.jpg","worksFor":{"@type":"CollegeOrUniversity","name":"Florida Atlantic University","url":"https://www.fau.edu"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Florida Atlantic University"},"knowsAbout":["Compressed sensing","Sparse coding","Neural networks","Computer vision","Hyperdimensional computing","Cellular automata","Artificial life","Unconventional computing"],"sameAs":["https://scholar.google.com/citations?user=eHyXKZAAAAAJ","https://github.com/williamedwardhahn","https://x.com/will_hahn","https://www.youtube.com/@williamedwardhahn","https://mpcrlab.com"]}
+{"@context":"https://schema.org","@type":"Person","name":"William Edward Hahn","alternateName":"Will Hahn","honorificSuffix":"Ph.D.","jobTitle":"Associate Professor of Mathematical Sciences","url":"https://will.hahn.ai/","email":"mailto:whahn@fau.edu","image":"https://will.hahn.ai/images/spotlight01.jpg","worksFor":{"@type":"CollegeOrUniversity","name":"Florida Atlantic University","url":"https://www.fau.edu"},"alumniOf":{"@type":"CollegeOrUniversity","name":"Florida Atlantic University"},"knowsAbout":["Compressed sensing","Sparse coding","Neural networks","Computer vision","Hyperdimensional computing","Cellular automata","Artificial life","Unconventional computing"],"sameAs":["https://scholar.google.com/citations?user=eHyXKZAAAAAJ","https://www.linkedin.com/in/william-edward-hahn-532654124/","https://www.researchgate.net/profile/William-Hahn-2","https://github.com/williamedwardhahn","https://x.com/will_hahn","https://www.youtube.com/@williamedwardhahn","https://mpcrlab.com"]}
 </script>
 <style>
 :root {
@@ -157,17 +157,17 @@ main, header, footer { position: relative; z-index: 1; }
 }
 @media (min-width: 1080px) {
   .intro { grid-template-columns: minmax(0, var(--measure)) minmax(16rem, 21rem); justify-content: space-between; align-items: start; row-gap: 8px; }
-  .intro .head { grid-column: 1 / -1; }
+  .intro .head { grid-column: 1; grid-row: 1; }
+  .intro .now { grid-column: 2; grid-row: 1 / span 2; margin-top: 18px; }
 }
 h1 {
   font-family: var(--display); font-weight: 400;
-  font-size: clamp(2.6rem, 6.4vw, 5.25rem); line-height: 1.02; letter-spacing: -0.01em;
+  font-size: clamp(2.6rem, 5.6vw, 4.6rem); line-height: 1.02; letter-spacing: -0.01em;
   margin: 0 0 6px;
 }
 .title { font-family: var(--display); font-style: italic; font-size: clamp(1.25rem, 2vw, 1.5rem); color: var(--ink-soft); margin: 0 0 24px; }
 .lede { font-size: clamp(1.25rem, 2vw, 1.45rem); line-height: 1.45; margin: 0 0 14px; }
 .heard { color: var(--ink-soft); margin: 0 0 18px; }
-.elsewhere { display: flex; flex-wrap: wrap; gap: 4px 24px; margin: 0; padding: 0; list-style: none; }
 
 .now { font-size: 1.02rem; background: var(--tint); border-top: 3px solid var(--c-old); padding: 14px 18px 4px; }
 .now dl { border-top-color: transparent; }
@@ -179,6 +179,7 @@ h1 {
 
 /* ---------- sections ---------- */
 main > section { padding: calc(var(--sq) * 4) var(--gutter) 0; }
+#about { padding-top: calc(var(--sq) * 3); }
 main > section.tight { padding-top: calc(var(--sq) * 3); }
 .col { max-width: var(--measure); }
 h2 {
@@ -195,6 +196,7 @@ h2::after {
   content: ""; display: block; width: 3.5rem; border-top: 2px solid var(--sec); margin-top: 10px;
 }
 #about { --sec: var(--c-old); }
+#book { --sec: var(--c-new); }
 #research { --sec: var(--c-violet); }
 #talks { --sec: var(--c-new); }
 #teaching { --sec: var(--c-mid); }
@@ -236,6 +238,26 @@ a.row:hover h3 { text-decoration-thickness: 2px; }
 .talks .t { font-weight: 600; }
 .talks .v { display: block; color: var(--ink-soft); font-size: 1.02rem; }
 
+.more-talks { margin-top: 18px; }
+.more-talks summary { cursor: pointer; color: var(--red); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+.more-talks summary:hover { text-decoration-thickness: 2px; }
+.more-talks .talks { margin-top: 12px; }
+.lab figcaption a { color: inherit; }
+.book-title { font-family: var(--display); font-size: 1.45rem; line-height: 1.25; margin: 0 0 12px; }
+.book-parts { margin: 0 0 16px; padding-left: 1.4em; color: var(--ink-soft); columns: 2; column-gap: 2rem; }
+.book-parts li { break-inside: avoid; }
+.book-links { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 26px; }
+.book-links .bl { white-space: nowrap; }
+.book-links a { font-weight: 600; }
+.book-links .bl > span { color: var(--ink-soft); font-size: 0.95rem; }
+@media (max-width: 560px) { .book-parts { columns: 1; } }
+footer .profiles { margin: 0 0 18px; border-top: 1px solid rgba(242, 245, 251, 0.22); max-width: 900px; }
+footer .profiles > div { display: grid; grid-template-columns: 6rem minmax(0, 1fr); gap: 4px 16px; padding: 10px 0; border-bottom: 1px solid rgba(242, 245, 251, 0.22); }
+footer .profiles dt { opacity: 0.75; font-size: 0.95rem; padding-top: 2px; }
+footer .profiles dd { margin: 0; display: flex; flex-wrap: wrap; gap: 4px 22px; }
+footer .profiles dd a { color: var(--foot-ink); font-weight: 600; text-decoration: none; }
+footer .profiles dd a:hover { text-decoration: underline; }
+@media (max-width: 560px) { footer .profiles > div { grid-template-columns: minmax(0, 1fr); } }
 footer {
   margin-top: calc(var(--sq) * 5);
   padding: calc(var(--sq) * 1.5) var(--gutter) calc(var(--sq) * 2);
@@ -263,6 +285,7 @@ footer p { margin: 0 0 4px; }
   <nav aria-label="Sections">
     <ul>
       <li><a href="#about">About</a></li>
+      <li><a href="#book">Book</a></li>
       <li><a href="#research">Research</a></li>
       <li><a href="#talks">Talks</a></li>
       <li><a href="#teaching">Teaching</a></li>
@@ -291,20 +314,14 @@ footer p { margin: 0 0 4px; }
     <div>
       <p class="lede">I study how natural and artificial systems compute, from sparse codes in the visual cortex to agents that learn inside synthetic worlds.</p>
       <p class="heard">Heard me on Theories of Everything? <a href="#talks">Start with those conversations</a>.</p>
-      <ul class="elsewhere">
-        <li><a href="https://scholar.google.com/citations?user=eHyXKZAAAAAJ">Google Scholar</a></li>
-        <li><a href="https://www.youtube.com/@williamedwardhahn">YouTube</a></li>
-        <li><a href="https://github.com/williamedwardhahn">GitHub</a></li>
-        <li><a href="https://x.com/will_hahn">X</a></li>
-        <li><a href="blog/">Blog</a></li>
-        <li><a href="mailto:whahn@fau.edu">Email</a></li>
-      </ul>
     </div>
     <aside class="now" aria-labelledby="now-h">
       <h2 id="now-h">Now</h2>
       <dl>
         <dt>Teaching, Fall 2026</dt>
-        <dd><a href="https://williamedwardhahn.github.io/DataSci26/">Data Science</a> and <a href="https://williamedwardhahn.github.io/algebra26/">Intermediate Algebra</a></dd>
+        <dd><a href="https://williamedwardhahn.github.io/DataSci26/">Mathematics of Data Science</a> and <a href="https://williamedwardhahn.github.io/intermediate-algebra/">Intermediate Algebra</a> (MAT 1033)</dd>
+        <dt>New book</dt>
+        <dd><a href="book/"><i>Learning Deep Learning</i></a>, free to read online</dd>
         <dt>Latest talk, November 2025</dt>
         <dd>From Turing to Hyperorganisms, Frontier Tower, San Francisco</dd>
         <dt>Latest essay</dt>
@@ -319,20 +336,42 @@ footer p { margin: 0 0 4px; }
     <div class="lab">
       <div>
         <h2 id="about-h">About</h2>
-        <p>I’m an Associate Professor of Mathematical Sciences and Associate Director of the Center for Complex Systems at Florida Atlantic University. I studied mathematics and physics at Guilford College and earned my Ph.D. in Complex Systems and Brain Sciences at FAU in 2016, with a thesis on sparse coding and compressed sensing.</p>
+        <p>I’m an Associate Professor of Mathematical Sciences and Associate Director of the Center for Complex Systems at Florida Atlantic University, and Director of Research Initiatives and AGI at FAU’s <a href="https://www.fau.edu/future-mind/">Center for the Future Mind</a>. I’m also a visiting lecturer at the Max Planck Florida Institute for Neuroscience. I studied mathematics and physics at Guilford College and earned my Ph.D. in Complex Systems and Brain Sciences at FAU in 2016, with a thesis on sparse coding and compressed sensing.</p>
         <p>My work comes at one question from several directions: what does it take for a physical system to perceive, learn and compute? It has taken me from models of visual cortex to self-driving cars, quadruped robots and drug-discovery networks, and now to vision-language-action models and the foundations of computation. I’m writing a book on the last of these, <i>Memory and Words: Foundations of Computation</i>.</p>
         <p>In 2014 Elan Barenholtz and I co-founded the <a href="https://mpcrlab.com">MPCR Lab</a>. In 2019 I was lead PI on the $1 million gift from Rubin and Cindy Gruber that built the <a href="https://www.fau.edu/sandbox/">Gruber AI Sandbox</a>. I’m principal investigator on a <a href="https://www.sbir.gov/awards/216792">$1.25 million U.S. Air Force SBIR Phase II award</a> for quantum-resistant secure communication for drones.</p>
         <ul class="highlights" aria-label="Highlights">
           <li>More than $2.8 million as PI since 2017, from the U.S. Air Force, the Gruber Foundation, Ghost Robotics and Nvidia</li>
           <li>College of Science Teacher of the Year, 2023</li>
           <li>Lab alumni at MIT, Stanford, Yale, Caltech, Harvard Law and Los Alamos National Laboratory</li>
-          <li>Research featured in <i>Science</i> (“Could robots be psychology’s new lab rats?”, 2019)</li>
+          <li>Research featured in <i>Science</i> (“Could robots be psychology’s new lab rats?”, 2019); lab members interviewed by the BBC, Reuters, <i>Scientific American</i> and <i>Wired</i></li>
           <li>Papers in Nature’s <i>Scientific Reports</i>, <i>Robotics and Autonomous Systems</i> and the <i>Journal of Chemical Information and Modeling</i></li>
         </ul>
       </div>
       <figure>
         <img src="images/spotlight02.jpg" alt="A quadruped robot dog with a yellow body panel and red joints, standing on a lab floor." width="975" height="650" loading="lazy" decoding="async">
-        <figcaption>Astro, the MPCR Lab’s quadruped robot.</figcaption>
+        <figcaption>Astro, the MPCR Lab’s quadruped robot, covered by <a href="https://www.cbsnews.com/miami/news/fau-robo-pup-named-astro-described-as-first-of-its-kind-in-the-world/">CBS Miami</a>, <a href="https://www.therobotreport.com/robot-dog-deep-neural-networks-3d-printed-head/">The Robot Report</a>, <a href="https://www.digitaltrends.com/cool-tech/astro-dog-robot/">Digital Trends</a>, <a href="https://techxplore.com/news/2019-08-astro-robot-dog.html">TechXplore</a> and <a href="https://3dprintingindustry.com/news/watch-astro-the-robot-dog-brought-to-life-using-3d-printing-160254/">3D Printing Industry</a>.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="book" aria-labelledby="book-h">
+    <div class="lab">
+      <div>
+        <h2 id="book-h">Book</h2>
+        <p class="book-title"><i>Learning Deep Learning: From Pixels to Perception with PyTorch</i></p>
+        <p>A hands-on book that builds the machinery of modern AI from scratch. You turn photographs into arrays and handwritten digits into lists of 784 numbers, build a machine that learns by guessing, then one that follows the slope downhill, then networks that see, take apart a famous one, and finish with machines that imagine images of their own. Every listing runs, and the online edition has live demos you can draw on.</p>
+        <ol class="book-parts">
+          <li>Why Deep Learning</li>
+          <li>Images Are Numbers</li>
+          <li>Learning from Data</li>
+          <li>Seeing with Convolutions</li>
+          <li>Machines That Imagine</li>
+        </ol>
+        <p class="book-links"><span class="bl"><a href="book/">Read it online</a></span><span class="bl"><a href="book/Learning-Deep-Learning-Hahn.pdf">Download the PDF</a> <span>(301 pages)</span></span><span class="bl"><a href="book/code/">Get the code</a> <span>(MIT License)</span></span></p>
+      </div>
+      <figure>
+        <a href="book/"><img src="images/book-learning-deep-learning.jpg" alt="The cover page of the online edition of Learning Deep Learning, with a hand-drawn digit feeding a small neural network." width="990" height="600" loading="lazy" decoding="async"></a>
+        <figcaption>The online edition opens with a network you can draw digits for.</figcaption>
       </figure>
     </div>
   </section>
@@ -362,13 +401,30 @@ footer p { margin: 0 0 4px; }
       <h2 id="talks-h">Talks</h2>
       <p class="note">Long conversations where I lay out the ideas I keep coming back to.</p>
       <ol class="talks" reversed>
-        <li><time datetime="2025-11">Nov 2025</time><div><span class="t">From Turing to Hyperorganisms: Rethinking Intelligence and Mind in the Age of LLMs</span><span class="v">Frontier Tower, San Francisco</span></div></li>
+        <li><time datetime="2025-11">Nov 2025</time><div><a class="t" href="https://youtu.be/HEh-g0_7CXQ">From Turing to Hyperorganisms: Rethinking Intelligence and Mind in the Age of LLMs</a><span class="v">Frontier Tower, San Francisco</span></div></li>
+        <li><time datetime="2025-11">Nov 2025</time><div><a class="t" href="https://youtu.be/zHbFlRJToVU">Unconventional Computing and Cognition</a><span class="v">Keynote, Florida Atlantic University</span></div></li>
         <li><time datetime="2025-10">Oct 2025</time><div><a class="t" href="https://youtu.be/Efky9u1e-Ms">2D Cellular Automata and Image Convolutions</a><span class="v">Wolfram Institute. The idea behind the grid at the top of this page.</span></div></li>
         <li><time datetime="2025-07">Jul 2025</time><div><a class="t" href="https://youtu.be/Ca_RbPXraDE">The Theory That Your Thoughts Were Never Your Own</a><span class="v">Theories of Everything, with Elan Barenholtz</span></div></li>
-        <li><time datetime="2025-02">Feb 2025</time><div><a class="t" href="https://youtu.be/3fkg0uTA3qU">Wolfram, Leibniz and Consciousness</a><span class="v">Theories of Everything</span></div></li>
-        <li><time datetime="2024-10">Oct 2024</time><div><a class="t" href="https://youtu.be/xr4R7eh5f_M">Our Minds Could Be Running on Virtual Machines</a><span class="v">Theories of Everything (on YouTube as “These Thoughts Will Literally Destroy You”)</span></div></li>
+        <li><time datetime="2025-04">Apr 2025</time><div><a class="t" href="https://youtu.be/abzXzPBW4_s">Extraordinary Advances in Artificial Intelligence Medicine</a><span class="v">Theories of Everything, recorded at FAU</span></div></li>
+        <li><time datetime="2025-02">Feb 2025</time><div><a class="t" href="https://youtu.be/3fkg0uTA3qU">Wolfram, Leibniz and Consciousness</a><span class="v">Theories of Everything. Also on <a href="https://open.spotify.com/episode/0hDbcACvxXkQVYD0jLN2bb">Spotify</a></span></div></li>
+        <li><time datetime="2024-10">Oct 2024</time><div><a class="t" href="https://youtu.be/xr4R7eh5f_M">Our Minds Could Be Running on Virtual Machines</a><span class="v">Theories of Everything (on YouTube as “These Thoughts Will Literally Destroy You”). Also on <a href="https://open.spotify.com/episode/14Z5faQnsyDQAdgXuElbOX">Spotify</a></span></div></li>
         <li><time datetime="2023">2023</time><div><span class="t">Artificial Immune Systems and AI Safety</span><span class="v">NIU AI Safety Conference, Washington, DC</span></div></li>
       </ol>
+      <details class="more-talks">
+        <summary>More talks and conversations</summary>
+        <ol class="talks" reversed>
+          <li><time datetime="2025-10">Oct 2025</time><div><a class="t" href="https://youtu.be/Nx9CVwEESQM">Biological Information Hazards</a><span class="v">Ekkolápto</span></div></li>
+          <li><time datetime="2025-10">Oct 2025</time><div><span class="t">Interdisciplinary Biology, Cybernetics and Complex Systems Hackathon</span><span class="v">MIT Media Lab</span></div></li>
+          <li><time datetime="2025-06">Jun 2025</time><div><span class="t">AI Innovation Center Conference</span><span class="v">Beth Israel Lahey Health</span></div></li>
+          <li><time datetime="2025-06">Jun 2025</time><div><a class="t" href="https://youtu.be/-mlc7A6ID7s">Digital Psychedelics, Infohazards, Synesthesia</a><span class="v">Ekkolápto Polymath Salon, with Elan Barenholtz</span></div></li>
+          <li><time datetime="2025">2025</time><div><span class="t">Polymath Medical</span><span class="v">Gruber AI Sandbox, with Michael Levin, Dan Elton and Gil Blander</span></div></li>
+          <li><time datetime="2024-11">Nov 2024</time><div><a class="t" href="https://youtu.be/k74alauFBdI">Are Languages Alive?</a><span class="v">Ekkolápto at FAU, with Subhosit Ray and Misha Klopukh</span></div></li>
+          <li><time datetime="2024-10">Oct 2024</time><div><a class="t" href="https://youtu.be/4kE1o39XUjY">Abstract Biology and Unconventional Computers</a><span class="v">Ekkolápto at FAU</span></div></li>
+          <li><time datetime="2024-09">Sep 2024</time><div><a class="t" href="https://youtu.be/E3WZcBOnEk8">Unconventional Computing</a><span class="v">Lecture at the Gruber AI Sandbox</span></div></li>
+          <li><time datetime="2023">2023</time><div><span class="t">AI and the Second Renaissance</span><span class="v">Guilford College</span></div></li>
+          <li><time datetime="2021">2021</time><div><span class="t">Neurons in Silico: Foundations of Data Science</span><span class="v">Max Planck Florida Institute for Neuroscience</span></div></li>
+        </ol>
+      </details>
       <a class="more" href="https://www.youtube.com/@williamedwardhahn">More on YouTube</a>
     </div>
   </section>
@@ -376,7 +432,8 @@ footer p { margin: 0 0 4px; }
   <section id="teaching" aria-labelledby="teaching-h">
     <div class="col">
       <h2 id="teaching-h">Teaching</h2>
-      <p>I’ve taught more than 25 courses at FAU, from Matrix Theory and Biostatistics to Deep Reinforcement Learning and Minds as Machines, and I was the College of Science Teacher of the Year in 2023. My courses run in the browser with nothing to install, and more than a hundred of my GitHub repositories are open teaching material.</p>
+      <p>I’ve taught more than 25 courses at FAU, from Matrix Theory and Biostatistics to Deep Reinforcement Learning and Minds as Machines, and I was the College of Science Teacher of the Year in 2023. My courses run in the browser with nothing to install, and more than a hundred of my GitHub repositories are open teaching material. I also built zero-install AI modules that faculty now teach in <a href="https://williamedwardhahn.github.io/birdsong/">biology</a>, <a href="https://williamedwardhahn.github.io/Geo_AI/">geoscience</a> and <a href="https://williamedwardhahn.github.io/Chem_AI/">chemistry</a>.</p>
+      <p>Students I’ve supervised have taken first place twice at the FAU Undergraduate Research Symposium, and at FAU Wave and GPSA Research Day. A Broward County Regional Science Fair project earned first place and a NASA Special Recognition Award.</p>
       <p>MPCR Lab alumni have gone on to MIT, Stanford, Yale, Caltech, Harvard Law School, Brown Medical School, Northwestern, Georgia Tech, Notre Dame and the University of Florida; to research posts at Los Alamos National Laboratory, the Naval Postgraduate School and the Department of Homeland Security; to tenure-track faculty jobs; and to founding their own AI startups.</p>
       <p>If you want to join, <a href="mailto:whahn@fau.edu">email me</a> with a short note on what you want to build.</p>
     </div>
@@ -384,6 +441,16 @@ footer p { margin: 0 0 4px; }
 </main>
 
 <footer>
+  <dl class="profiles">
+    <div>
+      <dt>Research</dt>
+      <dd><a href="https://scholar.google.com/citations?user=eHyXKZAAAAAJ">Google Scholar</a><a href="https://www.researchgate.net/profile/William-Hahn-2">ResearchGate</a><a href="https://github.com/williamedwardhahn">GitHub</a><a href="/cv/William_Hahn_Resume.pdf">Résumé (PDF)</a></dd>
+    </div>
+    <div>
+      <dt>Follow</dt>
+      <dd><a href="https://www.youtube.com/@williamedwardhahn">YouTube</a><a href="https://x.com/will_hahn">X</a><a href="https://www.linkedin.com/in/william-edward-hahn-532654124/">LinkedIn</a><a href="/blog/">Writing</a><a href="https://williamedwardhahn.substack.com">Substack</a><a href="mailto:whahn@fau.edu">Email</a></dd>
+    </div>
+  </dl>
   <p class="also">Also: <a href="blog/"><!-- blog:count -->71<!-- /blog:count --> essays</a>, <a href="https://dividingengine.com">The Dividing Engine</a>, <a href="https://solresol.xyz">Solresol</a> and <a href="demos/">demos</a>.</p>
   <p>William Edward Hahn, Ph.D. Department of Mathematical Sciences, Florida Atlantic University, 777 Glades Road, Boca Raton, FL 33431. <a href="mailto:whahn@fau.edu">whahn@fau.edu</a></p>
 </footer>

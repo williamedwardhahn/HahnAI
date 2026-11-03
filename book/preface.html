@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preface · Learning Deep Learning</title>
+<script>try{var t=localStorage.getItem('ldl-theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script><link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 4'><rect width='4' height='4' fill='%23141210'/><rect x='1' y='1' width='2' height='2' fill='%23ff5a1f'/></svg>">
+</head>
+<body class="chapter-page" data-prev="" data-next="howto.html">
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true"></span>Learning Deep Learning</a>
+  <span class="crumb"></span>
+  <button class="icon-btn" id="toc-btn" type="button" aria-label="Contents">Contents</button>
+  <button class="icon-btn" id="theme-btn" type="button" aria-label="Toggle dark mode"><span class="sun"></span></button>
+</header>
+<div class="progress" aria-hidden="true"><i></i></div>
+<div class="drawer" id="drawer"><div class="drawer-inner"><p class="drawer-h">Contents</p>
+<ol class="toc"><li><a href="preface.html">Preface</a></li><li><a href="howto.html">How to Use This Book</a></li></ol>
+<ol class="toc"><li class="toc-part"><span>Part I</span> Why Deep Learning</li><li><a href="ch01.html"><b>1</b> Eight Million Numbers, One Bit</a></li><li><a href="ch02.html"><b>2</b> The Pascaline Wager</a></li><li><a href="ch03.html"><b>3</b> A Short History of Thinking Machines</a></li><li><a href="ch04.html"><b>4</b> A Jungle of Brain Cells</a></li><li><a href="ch05.html"><b>5</b> If I Only Had a Brain</a></li><li class="toc-part"><span>Part II</span> Images Are Numbers</li><li><a href="ch06.html"><b>6</b> Arrays</a></li><li><a href="ch07.html"><b>7</b> Images as Arrays</a></li><li><a href="ch08.html"><b>8</b> Digits as Vectors</a></li><li class="toc-part"><span>Part III</span> Learning from Data</li><li><a href="ch09.html"><b>9</b> Chance</a></li><li><a href="ch10.html"><b>10</b> Learning by Guessing</a></li><li><a href="ch11.html"><b>11</b> Following the Gradient</a></li><li><a href="ch12.html"><b>12</b> Going Deeper</a></li><li class="toc-part"><span>Part IV</span> Seeing with Convolutions</li><li><a href="ch13.html"><b>13</b> Convolution</a></li><li><a href="ch14.html"><b>14</b> A Convolutional Network</a></li><li><a href="ch15.html"><b>15</b> Inside AlexNet</a></li><li><a href="ch16.html"><b>16</b> Teaching an Old Network New Tricks</a></li><li><a href="ch17.html"><b>17</b> Random Features</a></li><li class="toc-part"><span>Part V</span> Machines That Imagine</li><li><a href="ch18.html"><b>18</b> Autoencoders</a></li><li><a href="ch19.html"><b>19</b> Two Networks at Play</a></li><li><a href="ch20.html"><b>20</b> Onward</a></li><li class="toc-part"><span>Appendix</span></li><li><a href="appa.html"><b>A</b> A Project of Your Own</a></li></ol></div></div>
+<div class="layout">
+<aside class="rail"><p class="rail-h">In this chapter</p><ol class="local"></ol></aside>
+<main class="chapter">
+<header class="ch-head">
+  
+  <p class="kicker">Front matter</p>
+  <h1>Preface</h1>
+</header>
+<article class="prose">
+<p>In this book you will build, from scratch, the machinery behind modern artificial intelligence. You will turn photographs into arrays of numbers and handwritten digits into lists of 784 of them. You will get to know chance, then build a machine that learns by guessing, then one that learns by following the slope downhill, then networks with many layers. You will build convolutional networks that see, take apart a famous one, find out how much a network with random weights can already do, and finally build machines that imagine images of their own — ending with the attention mechanism at the heart of today’s language models.</p>
+<p>Feynman said you have to build something to understand it.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> I agree, and that is why this is a hands-on book. The first part is about <em>why</em>; every part after it is something you will type, run and change yourself.</p><aside class="sidenote"><span class="sn-num">1</span> On his blackboard at Caltech at the time of his death in 1988 Feynman had written, “What I cannot create, I do not understand.” Photograph, Caltech Archives, image 1.10-29.</aside>
+<h2 class="unnumbered" id="the-one-idea">The one idea</h2>
+<p>Here is the whole book in a sentence: <em>every learning machine is a list of weights, a function that uses them, a loss that says how wrong the function is, and a loop that nudges the weights to make the loss smaller.</em> Everything else is arrangement and scale. The weights are just numbers. The function is built from two parts, weighted sums and a bend called a nonlinearity. The loss is one number. The loop is guessing at first, and then following the slope downhill. Every chapter adds one piece to that picture or puts the same four pieces together in a new way, and the last chapter shows that the machine behind today’s chatbots is no exception. When you get lost, come back to this paragraph and ask: which of the four am I looking at?</p>
+<h2 class="unnumbered" id="why-pixels-in-the-age-of-chatbots">Why pixels, in the age of chatbots?</h2>
+<p>It is fair to ask why a book written in the era of large language models spends its time on pixels and convolutional networks. The answer is that everything inside a language model — arrays of numbers, weights, layers, gradients, the softmax that turns scores into probabilities, the cross-entropy that measures how wrong a prediction is — is exactly what you will build here. Images just let you <em>see</em> it working. By the time we reach attention in the last chapter, it will be assembled from parts you already made with your own hands.</p>
+<h2 class="unnumbered" id="who-this-book-is-for">Who this book is for</h2>
+<p>I believe neural network technology should be taught to students of all ages, as soon as possible, and not only to computer scientists. (For readers who want to see the ideas before any code, younger readers included, the web edition opens with a page of things to try in the browser: draw, label, train and watch.) If you are a student in medicine, law, finance, biology, art or anything else, and you suspect that what you do is about to change, this book is for you. If you are a programmer who has used deep learning libraries without ever looking inside them, this book is for you too.</p>
+<h2 class="unnumbered" id="what-you-need">What you need</h2>
+<p>The book assumes basic Python: variables, lists, loops and functions. If you have never programmed, learn those first — any introductory Python tutorial will do, and a weekend is enough. Everything else, including NumPy and PyTorch, is introduced as we go.</p>
+<p>The mathematics is gentler than you might fear. The basic concepts underlying neural networks need addition, multiplication, and one idea from calculus — the slope — and the book builds that idea from scratch. If you remember <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mi>m</mi><mi>x</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">y = mx + b</annotation></semantics></math> from high school, you are ready. What makes neural networks powerful is not difficult mathematics; it is doing a great many simple operations, very quickly, with numbers that the data itself has chosen.</p>
+<h2 class="unnumbered" id="a-journey-and-a-guide">A journey and a guide</h2>
+<p>This book is a journey and a guide. A journey through the jungles of research into who we are, what makes us tick, and whether a machine can be made in our image. A guide to the intellectual revolutions already well under way, which are changing the ways we live, learn, communicate and create.</p>
+<p>First and foremost it is a work of compression: a distillation of the ideas and scaffolding behind our understanding of brains and of the machines we are now building in their image, drawn from computer science, neuroscience, mathematics and physics. Compression is not just the boring thing you do to JPEGs. As Geordie Rose, a co-founder of D-Wave, put it in a talk, “the more that you can compress something the more that you understand it.”<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p><aside class="sidenote"><span class="sn-num">2</span> Geordie Rose, public talk; transcribed by the author from a recording.</aside>
+<p>Along the way I have tried to leave many of the original voices — Lovelace, Butler, Turing, von Neumann and others — in their own words. I also take an unconventional, and somewhat controversial, point of view: that computers are more than tools, that they are the star of the show. You will not agree with everything I say. Good. You will have to furnish your own map at times, and, like the explorers of old, here there be monsters.</p>
+<div class="flushright">
+<p>William Edward Hahn<br />
+Boca Raton, Florida, 2026</p>
+</div>
+<section id="footnotes" class="footnotes" role="doc-endnotes"><h2>Notes</h2>
+<hr />
+<ol>
+<li id="fn1"><p>On his blackboard at Caltech at the time of his death in 1988 Feynman had written, “What I cannot create, I do not understand.” Photograph, Caltech Archives, image 1.10-29.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Geordie Rose, public talk; transcribed by the author from a recording.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</article>
+<nav class="pager"><span></span><a class="next" href="howto.html"><small>Next</small><span>How to Use This Book</span></a></nav>
+</main>
+</div>
+<script src="assets/data.js"></script><script src="assets/widgets.js"></script><script src="assets/app.js"></script>
+</body></html>
