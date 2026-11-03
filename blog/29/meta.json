@@ -3,5 +3,8 @@
   "title": "Duality in the Cosmos: Exploring the Intersection of Technology and Perception",
   "topic": "Duality in the Cosmos: Exploring the Intersection of Technology and Perception",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#3B3F9C",
+  "thumb": "thumb.jpg"
 }

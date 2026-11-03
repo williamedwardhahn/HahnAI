@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "189111005",
   "substack_slug": "when-the-world-went-online",
-  "substack_url": "https://williamedwardhahn.substack.com/p/when-the-world-went-online"
+  "substack_url": "https://williamedwardhahn.substack.com/p/when-the-world-went-online",
+  "image_kind": "title-card",
+  "card_ink": "#1E7F6A",
+  "thumb": "thumb.jpg"
 }

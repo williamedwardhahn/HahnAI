@@ -3,5 +3,8 @@
   "title": "Analog Computers: Bridging the Past and Future with AI",
   "topic": "Analog Computers: Bridging the Past and Future with AI",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#12708A",
+  "thumb": "thumb.jpg"
 }

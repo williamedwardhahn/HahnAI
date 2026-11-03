@@ -3,5 +3,8 @@
   "title": "Rolling the AI Dice: How Random Inputs Drive AI, And How It Mirrors Ancient Divination Techniques",
   "topic": "Rolling the AI Dice: How Random Inputs Drive AI, And How It Mirrors Ancient Divination Techniques",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#2B4BA8",
+  "thumb": "thumb.jpg"
 }

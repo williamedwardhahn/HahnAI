@@ -3,5 +3,8 @@
   "title": "Ghost in the Machine: AI and the Occult",
   "topic": "Ghost in the Machine: AI and the Occult",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#B7791F",
+  "thumb": "thumb.jpg"
 }

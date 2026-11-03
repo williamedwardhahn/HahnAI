@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "200356143",
   "substack_slug": "profanity",
-  "substack_url": "https://williamedwardhahn.substack.com/p/profanity"
+  "substack_url": "https://williamedwardhahn.substack.com/p/profanity",
+  "image_kind": "title-card",
+  "card_ink": "#1E7F6A",
+  "thumb": "thumb.jpg"
 }

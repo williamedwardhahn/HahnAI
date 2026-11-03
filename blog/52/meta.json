@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "188896837",
   "substack_slug": "the-polite-refusal",
-  "substack_url": "https://williamedwardhahn.substack.com/p/the-polite-refusal"
+  "substack_url": "https://williamedwardhahn.substack.com/p/the-polite-refusal",
+  "image_kind": "title-card",
+  "card_ink": "#C8412C",
+  "thumb": "thumb.jpg"
 }

@@ -3,5 +3,8 @@
   "title": "Natural Computing: Harnessing Nature's Algorithms for Problem Solving",
   "topic": "Natural Computing: Harnessing Nature's Algorithms for Problem Solving",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#6A3D9A",
+  "thumb": "thumb.jpg"
 }

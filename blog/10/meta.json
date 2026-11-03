@@ -3,5 +3,8 @@
   "title": "Disrupting Time: How the Antikythera Mechanism Rewrites Technological History",
   "topic": "Disrupting Time: How the Antikythera Mechanism Rewrites Technological History",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#8A5A2B",
+  "thumb": "thumb.jpg"
 }

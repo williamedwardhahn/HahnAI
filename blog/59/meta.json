@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "195053780",
   "substack_slug": "hyperconsciousness",
-  "substack_url": "https://williamedwardhahn.substack.com/p/hyperconsciousness"
+  "substack_url": "https://williamedwardhahn.substack.com/p/hyperconsciousness",
+  "image_kind": "title-card",
+  "card_ink": "#3B3F9C",
+  "thumb": "thumb.jpg"
 }

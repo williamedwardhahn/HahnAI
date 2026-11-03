@@ -3,5 +3,8 @@
   "title": "The Hidden Complexity: Understanding Breakaway Civilizations",
   "topic": "The Hidden Complexity: Understanding Breakaway Civilizations",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#1E7F6A",
+  "thumb": "thumb.jpg"
 }

@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "203744624",
   "substack_slug": "kicking-rocks",
-  "substack_url": "https://williamedwardhahn.substack.com/p/kicking-rocks"
+  "substack_url": "https://williamedwardhahn.substack.com/p/kicking-rocks",
+  "image_kind": "title-card",
+  "card_ink": "#A3264B",
+  "thumb": "thumb.jpg"
 }

@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "195488304",
   "substack_slug": "the-ipad-generation",
-  "substack_url": "https://williamedwardhahn.substack.com/p/the-ipad-generation"
+  "substack_url": "https://williamedwardhahn.substack.com/p/the-ipad-generation",
+  "image_kind": "title-card",
+  "card_ink": "#8A5A2B",
+  "thumb": "thumb.jpg"
 }

@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "199624828",
   "substack_slug": "faith-in-the-future",
-  "substack_url": "https://williamedwardhahn.substack.com/p/faith-in-the-future"
+  "substack_url": "https://williamedwardhahn.substack.com/p/faith-in-the-future",
+  "image_kind": "title-card",
+  "card_ink": "#C8412C",
+  "thumb": "thumb.jpg"
 }

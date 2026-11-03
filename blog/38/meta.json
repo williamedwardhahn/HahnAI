@@ -3,5 +3,8 @@
   "title": "Technological Arms Race: Phase Transitions and Technological Capabilities",
   "topic": "Technological Arms Race: Phase Transitions and Technological Capabilities",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#5F7A1F",
+  "thumb": "thumb.jpg"
 }

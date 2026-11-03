@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "190613978",
   "substack_slug": "progress-corrupted",
-  "substack_url": "https://williamedwardhahn.substack.com/p/progress-corrupted"
+  "substack_url": "https://williamedwardhahn.substack.com/p/progress-corrupted",
+  "image_kind": "title-card",
+  "card_ink": "#6A3D9A",
+  "thumb": "thumb.jpg"
 }

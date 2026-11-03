@@ -3,5 +3,8 @@
   "title": "Beyond Turing: Navigating the Universe of Hypercomputation",
   "topic": "Beyond Turing: Navigating the Universe of Hypercomputation",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#2B4BA8",
+  "thumb": "thumb.jpg"
 }

@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "188101933",
   "substack_slug": "the-forbidden-equation",
-  "substack_url": "https://williamedwardhahn.substack.com/p/the-forbidden-equation"
+  "substack_url": "https://williamedwardhahn.substack.com/p/the-forbidden-equation",
+  "image_kind": "title-card",
+  "card_ink": "#3B3F9C",
+  "thumb": "thumb.jpg"
 }

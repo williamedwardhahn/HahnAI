@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "204311836",
   "substack_slug": "the-magic-is-real",
-  "substack_url": "https://williamedwardhahn.substack.com/p/the-magic-is-real"
+  "substack_url": "https://williamedwardhahn.substack.com/p/the-magic-is-real",
+  "image_kind": "title-card",
+  "card_ink": "#3B3F9C",
+  "thumb": "thumb.jpg"
 }

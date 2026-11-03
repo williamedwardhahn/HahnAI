@@ -3,5 +3,8 @@
   "title": "Order, Chaos, and Everything in Between: A Journey through Complex Systems",
   "topic": "Order, Chaos, and Everything in Between: A Journey through Complex Systems",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#B7791F",
+  "thumb": "thumb.jpg"
 }

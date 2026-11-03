@@ -3,5 +3,8 @@
   "title": "Bits with Bite: When Power Meets Computation",
   "topic": "Bits with Bite: When Power Meets Computation",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#A3264B",
+  "thumb": "thumb.jpg"
 }

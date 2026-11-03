@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "197810063",
   "substack_slug": "soli-deo-gloria",
-  "substack_url": "https://williamedwardhahn.substack.com/p/soli-deo-gloria"
+  "substack_url": "https://williamedwardhahn.substack.com/p/soli-deo-gloria",
+  "image_kind": "title-card",
+  "card_ink": "#2B4BA8",
+  "thumb": "thumb.jpg"
 }

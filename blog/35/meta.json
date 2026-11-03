@@ -3,5 +3,8 @@
   "title": "The AI John Henry: What We Get Wrong About Artificial Intelligence",
   "topic": "The AI John Henry: What We Get Wrong About Artificial Intelligence",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#6A3D9A",
+  "thumb": "thumb.jpg"
 }

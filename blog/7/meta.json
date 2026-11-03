@@ -3,5 +3,8 @@
   "title": "From Silicon Chips to Quantum Optics: The Future Generations of AI",
   "topic": "From Silicon Chips to Quantum Optics: The Future Generations of AI",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#A3264B",
+  "thumb": "thumb.jpg"
 }

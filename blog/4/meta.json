@@ -3,5 +3,8 @@
   "title": "Crashing Reality: The Intersection of Perception, Information, and Threat in the Digital Age",
   "topic": "Crashing Reality: The Intersection of Perception, Information, and Threat in the Digital Age",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#B7791F",
+  "thumb": "thumb.jpg"
 }

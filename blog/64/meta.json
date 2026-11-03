@@ -9,5 +9,8 @@
   "status": "published",
   "substack_id": "201613190",
   "substack_slug": "hard-to-imagine",
-  "substack_url": "https://williamedwardhahn.substack.com/p/hard-to-imagine"
+  "substack_url": "https://williamedwardhahn.substack.com/p/hard-to-imagine",
+  "image_kind": "title-card",
+  "card_ink": "#B7791F",
+  "thumb": "thumb.jpg"
 }

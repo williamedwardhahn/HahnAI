@@ -3,5 +3,8 @@
   "title": "The Journey of Thought: From Aristotle to Chaos Theory - Is History Ready for its Own Revolution?",
   "topic": "The Journey of Thought: From Aristotle to Chaos Theory - Is History Ready for its Own Revolution?",
   "date": "2023-10-26",
-  "image": "image.jpg"
+  "image": "image.jpg",
+  "image_kind": "title-card",
+  "card_ink": "#3B3F9C",
+  "thumb": "thumb.jpg"
 }
