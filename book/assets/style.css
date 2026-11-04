@@ -438,3 +438,9 @@ button.mm-cell { cursor: pointer; }
 .mm-err { font-family: var(--mono); font-size: 14px; color: var(--accent-ink); border: 1px dashed var(--accent); border-radius: 6px; padding: 8px 12px; }
 @media (max-width: 600px) { .tl-card { min-height: 236px; } }
 .play-step .w-note { display: none; }   /* the Play page says it in its own, simpler words */
+/* kernel demo on a phone: input and output side by side, the kernel below them */
+@media (max-width: 600px) {
+  .kr-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .kr-in { grid-column: 1; grid-row: 1; } .kr-out { grid-column: 2; grid-row: 1; } .kr-k { grid-column: 1 / -1; grid-row: 2; }
+}
+.w-sub { font-size: 11px; color: var(--ink-2); }

@@ -124,10 +124,11 @@
   }
   const onTheme = (f) => addEventListener('themechange', f);
   // keyboard control for a canvas: arrow keys call fn(dx, dy, shift)
-  function keys(c, label, fn) {
+  function keys(c, label, fn, act) {          // act: what Enter or Space does, if anything
     c.tabIndex = 0;
     c.setAttribute('aria-label', label);
     c.addEventListener('keydown', (e) => {
+      if (act && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); act(); return; }
       const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
       if (!d) return;
       e.preventDefault();
@@ -730,10 +731,10 @@
       img(b, out, neg);
     }
     const ch = chips(Object.keys(presets), name, (n) => { name = n; k = presets[n].slice(); inputs.forEach((inp, i) => { inp.value = k[i]; }); run(); });
-    el.append(h('div', { class: 'w-row' },
-      h('div', {}, h('div', { class: 'w-kv' }, 'input'), a),
-      h('div', {}, h('div', { class: 'w-kv' }, 'kernel'), grid),
-      h('div', {}, h('div', { class: 'w-kv' }, 'output'), b)),
+    el.append(h('div', { class: 'w-row kr-row' },
+      h('div', { class: 'kr-in' }, h('div', { class: 'w-kv' }, 'input'), a),
+      h('div', { class: 'kr-k' }, h('div', { class: 'w-kv' }, 'kernel'), grid),
+      h('div', { class: 'kr-out' }, h('div', { class: 'w-kv' }, 'output'), b)),
       h('div', { style: 'margin-top:14px' }, ch));
     run(); onTheme(run);
   };
@@ -1370,6 +1371,12 @@
     c.addEventListener('pointerdown', (e) => { down = true; c.setPointerCapture(e.pointerId); poke(...at(e)); draw(); });
     c.addEventListener('pointermove', (e) => { if (down) { poke(...at(e)); draw(); } });
     c.addEventListener('pointerup', () => { down = false; });
+    // keyboard: arrows move a cursor, Enter or Space pokes the world there
+    let kc = [N >> 1, N >> 1];
+    const drawPlain = draw;
+    draw = function () { drawPlain(); if (document.activeElement === c) { const sz = 320 / N; ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2; ctx.strokeRect((kc[1] - 3) * sz, (kc[0] - 3) * sz, 7 * sz, 7 * sz); } };
+    keys(c, 'The world. Arrow keys move a cursor; Enter or Space pokes the world there.', (dx, dy, fast) => { kc = [clamp(kc[0] + dy * (fast ? 1 : 4), 0, N - 1), clamp(kc[1] + dx * (fast ? 1 : 4), 0, N - 1)]; draw(); }, () => { poke(kc[0], kc[1]); draw(); });
+    c.addEventListener('focus', () => draw()); c.addEventListener('blur', () => draw());
     c.style.cursor = 'crosshair';
     const go = btn('run', run, 'accent');
     el.append(h('div', { class: 'w-row' }, c, h('div', { class: 'w-col' },
@@ -1633,6 +1640,15 @@
     c.addEventListener('pointermove', (e) => { if (drawing) paint(e); });
     c.addEventListener('pointerup', () => { drawing = false; });
     c.style.cursor = 'crosshair';
+    // keyboard: left and right pick a bar, up and down change its height
+    let kb = 11;
+    const drawPlain = draw;
+    draw = function () { drawPlain(); if (document.activeElement === c) { const bw = Wd / B; ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2; ctx.strokeRect(kb * bw + 0.5, 4, bw - 1, Ht - 28); } };
+    keys(c, 'The target. Left and right arrows pick a bar; up and down change its height; Enter plays or pauses.', (dx, dy) => {
+      if (dx) kb = clamp(kb + dx, 0, B - 1); else target[kb] = clamp(target[kb] - dy * 0.1, 0, 1);
+      draw();
+    }, () => play());
+    c.addEventListener('focus', () => draw()); c.addEventListener('blur', () => draw());
     function play() {
       if (timer) { cancelAnimationFrame(timer); timer = null; pb.textContent = 'play'; pb.classList.remove('on'); return; }
       pb.textContent = 'pause'; pb.classList.add('on');
@@ -1703,6 +1719,11 @@
       drawMap(code.length >= 2 ? code : null);
     }
     mc.style.cursor = 'crosshair'; mc.style.border = '1px solid var(--rule)';
+    let mk = [130, 130];
+    keys(mc, 'The map of codes. Arrow keys move around it and decode the code under the cursor.', (dx, dy) => {
+      mk = [clamp(mk[0] + dx * 10, 10, 250), clamp(mk[1] + dy * 10, 10, 250)];
+      mc.dispatchEvent(new PointerEvent('pointerdown', { clientX: mc.getBoundingClientRect().left + mk[0] / 260 * mc.getBoundingClientRect().width, clientY: mc.getBoundingClientRect().top + mk[1] / 260 * mc.getBoundingClientRect().height }));
+    });
     mc.addEventListener('pointerdown', (e) => {
       const r = mc.getBoundingClientRect(); const code = fromMap((e.clientX - r.left) / r.width * 260, (e.clientY - r.top) / r.height * 260);
       const img = decode(code); showImage(img); drawMap(code);
@@ -2129,8 +2150,9 @@
       if (!ok) { tbl.innerHTML = '<tr><td>too small: a layer would have no pixels left</td></tr>'; tot.textContent = ''; return; }
       const W0 = rows.reduce((s, r) => s + r.w, 0), M0 = rows.reduce((s, r) => s + r.mult, 0);
       const bar = (v, t, cls) => `<span class="w-mini ${cls}" style="width:${Math.max(v / t * 100, v ? 1 : 0).toFixed(1)}%"></span>`;
-      tbl.innerHTML = '<tr><th>layer</th><th>output</th><th>weights</th><th>multiplications</th><th>sees</th></tr>' +
-        rows.map((r) => `<tr><td>${r.name}</td><td>${r.shape}</td><td>${r.w ? fmt(r.w) : ''}<div class="w-minibox">${bar(r.w, W0, 'w')}</div></td><td>${r.mult ? fmt(r.mult) : ''}<div class="w-minibox">${bar(r.mult, M0, 'm')}</div></td><td>${r.rf ? r.rf + ' px' : ''}</td></tr>`).join('');
+      const narrow = (el.clientWidth || 800) < 560;   // a phone: what a unit sees goes under its shape, so the table fits
+      tbl.innerHTML = `<tr><th>layer</th><th>output</th><th>weights</th><th>${narrow ? 'mults' : 'multiplications'}</th>${narrow ? '' : '<th>sees</th>'}</tr>` +
+        rows.map((r) => `<tr><td>${r.name}</td><td>${r.shape}${narrow && r.rf ? `<div class="w-sub">sees ${r.rf} px</div>` : ''}</td><td>${r.w ? fmt(r.w) : ''}<div class="w-minibox">${bar(r.w, W0, 'w')}</div></td><td>${r.mult ? fmt(r.mult) : ''}<div class="w-minibox">${bar(r.mult, M0, 'm')}</div></td>${narrow ? '' : `<td>${r.rf ? r.rf + ' px' : ''}</td>`}</tr>`).join('');
       tot.innerHTML = `total: <b>${W0.toLocaleString()}</b> weights · <b>${fmt(M0)}</b> multiplications per image` + (N === 224 ? ' (the 61,100,840 printed by <code>ax_count</code>)' : '');
     }
     el.append(h('div', { class: 'w-ctrl' }, slider('input size', 63, 448, 1, N, (v) => v + '×' + v, (v) => { N = v; render(); })), h('div', { class: 'w-scroll' }, tbl), tot);
@@ -2138,13 +2160,10 @@
   };
 
   /* ---------------- echo: a reservoir continues a signal */
-  W.echo = (el) => {
-    frame(el, 'A random memory, live',
-      'A reservoir of 200 randomly connected tanh units is fed a signal. Only the readout, one number per unit, is solved for, by least squares on 2,000 steps, so that it predicts the next value. Then the input is cut off and the reservoir runs on its own, fed back by its own predictions (orange). With 200 units it drifts sooner than the book\'s 500. On Mackey–Glass, turn the <b>strength</b> of the random connections down and the memory is too short; up and the reservoir makes its own chaos. A plain sine needs almost no memory at all. Try a new random reservoir, too.');
-    const Nn = 200, Wd = 340, Ht = 150;
-    const [c, ctx] = canvas(Wd, Ht);
-    const info = h('div', { class: 'w-kv' });
-    let sig = 'Mackey–Glass', g = 0.95, seed = 8, bend = true;
+  /* the reservoir's arithmetic, self-contained so it can run in a Web Worker (about 0.2 s of solving) */
+  function reservoirRun({ sig, g, seed, bend, Nn }) {
+    const mulberry = (a) => () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const gauss = (rand) => { const u = 1 - rand(), v = rand(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
     function signal(kind, T) {
       if (kind === 'sine') return Float64Array.from({ length: T }, (_, t) => Math.sin(t / 6));
       if (kind === 'two waves') return Float64Array.from({ length: T }, (_, t) => 0.6 * Math.sin(t / 5) + 0.4 * Math.sin(t / 13.7));
@@ -2166,7 +2185,6 @@
       for (let i = n - 1; i >= 0; i--) { let s = bv[i]; for (let q = i + 1; q < n; q++) s -= Am[i][q] * x[q]; x[i] = s / Am[i][i]; }
       return x;
     }
-    function run() {
       const T0 = 100, T1 = 2000, T2 = 300, u = signal(sig, T0 + T1 + T2 + 1);
       const r = mulberry(seed), gs = () => gauss(r);
       const Wr = Array.from({ length: Nn }, () => Float64Array.from({ length: Nn }, () => gs() * g / Math.sqrt(Nn)));
@@ -2184,6 +2202,37 @@
       const out = new Float64Array(T2); let x = u[T0 + T1];
       for (let t = 0; t < T2; t++) { s = step(s, x); x = s.reduce((a, v, i) => a + v * wo[i], 0); if (!isFinite(x) || Math.abs(x) > 1e3) x = NaN; out[t] = x; }
       const truth = u.subarray(T0 + T1 + 1, T0 + T1 + 1 + T2), past = u.subarray(T0 + T1 - 120, T0 + T1 + 1);
+      return { past: Array.from(past), truth: Array.from(truth), out: Array.from(out) };
+  }
+  const reservoirWorker = (() => {
+    let w = null, tried = false, id = 0; const wait = {};
+    return (params) => new Promise((ok) => {
+      if (!tried) {
+        tried = true;
+        try {
+          w = new Worker(URL.createObjectURL(new Blob([`const reservoirRun = ${reservoirRun.toString()};\nself.onmessage = (e) => self.postMessage({ id: e.data.id, r: reservoirRun(e.data.p) });`], { type: 'text/javascript' })));
+          w.onmessage = (e) => { const f = wait[e.data.id]; delete wait[e.data.id]; if (f) f(e.data.r); };
+          w.onerror = () => { w = null; };
+        } catch (e) { w = null; }
+      }
+      if (!w) { ok(reservoirRun(params)); return; }
+      const k = ++id; wait[k] = ok; w.postMessage({ id: k, p: params });
+    });
+  })();
+
+  W.echo = (el) => {
+    frame(el, 'A random memory, live',
+      'A reservoir of 200 randomly connected tanh units is fed a signal. Only the readout, one number per unit, is solved for, by least squares on 2,000 steps, so that it predicts the next value. Then the input is cut off and the reservoir runs on its own, fed back by its own predictions (orange). With 200 units it drifts sooner than the book\'s 500. On Mackey–Glass, turn the <b>strength</b> of the random connections down and the memory is too short; up and the reservoir makes its own chaos. A plain sine needs almost no memory at all. Try a new random reservoir, too.');
+    const Nn = 200, Wd = 340, Ht = 150;
+    const [c, ctx] = canvas(Wd, Ht);
+    const info = h('div', { class: 'w-kv' });
+    let sig = 'Mackey–Glass', g = 0.95, seed = 8, bend = true;
+    let gen = 0, last = null;
+    async function run() {
+      const my = ++gen, T2 = 300;
+      const r = await reservoirWorker({ sig, g, seed, bend, Nn });
+      if (my !== gen) return;               // a newer setting is already on its way
+      last = r; const { past, truth, out } = r;
       draw(past, truth, out);
       const err = (n) => { let e = 0; for (let t = 0; t < n; t++) e += Math.abs(truth[t] - out[t]); return e / n; };
       const e1 = err(100), e3 = err(T2);
@@ -2207,7 +2256,7 @@
       chips(['tanh', 'no bend'], 'tanh', (v) => { bend = v === 'tanh'; later(); })),
       h('div', { class: 'w-ctrl' }, slider('strength', 0.1, 1.6, 0.05, g, (v) => v.toFixed(2), (v) => { g = v; later(); }),
         btn('new random reservoir', () => { seed++; later(); })));
-    later(); onTheme(later);
+    later(); onTheme(() => { if (last) draw(last.past, last.truth, last.out); });
   };
 
   /* ---------------- MENACE: a learning machine made of matchboxes */
@@ -2640,6 +2689,9 @@
       const at = (e) => { const r = mc.getBoundingClientRect(); return [clamp(Math.floor((e.clientY - r.top) / r.height * a.H), 0, a.H - 1), clamp(Math.floor((e.clientX - r.left) / r.width * a.H), 0, a.H - 1)]; };
       mc.addEventListener('pointermove', (e) => drawMap(at(e)));
       mc.addEventListener('pointerdown', (e) => { cellNow = at(e); drawMap(cellNow); if (tracing) trace(); });
+      keys(mc, `map ${pick} enlarged. Arrow keys move to a unit and show what it sees; Enter traces it to the pixels.`, (dx, dy) => {
+        const c0 = cellNow || [a.H >> 1, a.H >> 1]; cellNow = [clamp(c0[0] + dy, 0, a.H - 1), clamp(c0[1] + dx, 0, a.H - 1)]; drawMap(cellNow);
+      }, () => { if (!tracing) { tracing = traceOn = true; traceBtn.remove(); } trace(); });
       mc.style.cursor = 'crosshair';
       detail.replaceChildren(
         h('div', { class: 'w-kv' }, `all ${a.C} maps of ${l.name} for this photo, each scaled to its own brightest point · click one`), ac,
