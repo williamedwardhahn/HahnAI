@@ -196,14 +196,14 @@
     }
     return { el: c, clear, load };
   }
-  function drawDigit(ctx, x, X, Y, size, color) {
-    const cell = size / 28;
-    for (let i = 0; i < 784; i++) if (x[i] > 0.02) {
-      ctx.globalAlpha = x[i];
-      ctx.fillStyle = color;
-      ctx.fillRect(X + (i % 28) * cell, Y + ((i / 28) | 0) * cell, cell + 0.3, cell + 0.3);
-    }
-    ctx.globalAlpha = 1;
+  const rgbOf = (() => { const t = document.createElement('canvas').getContext('2d', { willReadFrequently: true }); t.canvas.width = t.canvas.height = 1;
+    return (color) => { t.clearRect(0, 0, 1, 1); t.fillStyle = color; t.fillRect(0, 0, 1, 1); return t.getImageData(0, 0, 1, 1).data; }; })();
+  function drawDigit(ctx, x, X, Y, size, color) {   // one 28x28 image scaled up, so there are no seams between cells
+    const t = document.createElement('canvas'); t.width = t.height = 28;
+    const g = t.getContext('2d'), im = g.createImageData(28, 28), [r, gg, b] = rgbOf(color);
+    for (let i = 0; i < 784; i++) { im.data[i * 4] = r; im.data[i * 4 + 1] = gg; im.data[i * 4 + 2] = b; im.data[i * 4 + 3] = Math.round(255 * clamp(x[i], 0, 1)); }
+    g.putImageData(im, 0, 0);
+    const sm = ctx.imageSmoothingEnabled; ctx.imageSmoothingEnabled = false; ctx.drawImage(t, X, Y, size, size); ctx.imageSmoothingEnabled = sm;
   }
   const samples = b64(D.samples);
   const randomSample = () => { const k = (Math.random() * D.sampleLabels.length) | 0; return samples.subarray(k * 784, k * 784 + 784); };
@@ -221,7 +221,7 @@
     function draw() {
       const Wd = c.W;
       ctx.clearRect(0, 0, Wd, c.H);
-      const mid = Wd / 2, scale = Wd / 8;
+      const sum = x.reduce((a, v, i) => a + v * w[i], 0), mid = Wd / 2, scale = Wd / 2 / (Math.max(4, Math.abs(sum)) * 1.7);   // room for the sum's label
       ctx.fillStyle = css('--rule'); ctx.fillRect(mid - 0.5, 0, 1, 112);
       let s = 0;
       x.forEach((xi, i) => {
@@ -240,7 +240,7 @@
       ctx.fillStyle = css('--ink'); ctx.font = `600 ${fpx(c, 13)}px "JetBrains Mono", monospace`;
       ctx.textAlign = s >= 0 ? 'left' : 'right';
       ctx.fillText(`sum = ${s.toFixed(2)}`, s >= 0 ? mid + s * scale + 8 : mid + s * scale - 8, y + 15);
-      total.innerHTML = `x @ w = ${x.map((v, i) => `(${v.toFixed(1)})(${w[i].toFixed(1)})`).join(' + ')} = <b>${s.toFixed(3)}</b> &nbsp;→&nbsp; ${s > 0 ? '<b style="color:var(--accent)">fires</b>' : 'stays quiet'}`;
+      total.innerHTML = `x @ w = ${x.map((v, i) => `(${v.toFixed(2)})(${w[i].toFixed(2)})`).join(' + ')} = <b>${s.toFixed(2)}</b> &nbsp;→&nbsp; ${s > 0 ? '<b style="color:var(--accent)">fires</b>' : 'stays quiet'}`;
     }
     x.forEach((_, i) => rows.append(h('div', { class: 'w-ctrl', style: 'margin:0' },
       slider(`x${i + 1}`, 0, 1, 0.05, x[i], (v) => v.toFixed(2), (v) => { x[i] = v; draw(); }),
@@ -334,6 +334,7 @@
     const [tc, tctx] = canvas(300, 120);
     const b = bars(10);
     let mode = 'distance', x = new Float32Array(784), winner = -1;
+    const hint = h('div', { class: 'w-kv', style: 'margin-bottom:6px' }, 'the shortest bar wins: smaller is closer'), result = h('div', { class: 'w-kv', style: 'margin-top:6px' });
     function score() {
       const dot = T.map((t) => t.reduce((s, u, i) => s + u * x[i], 0));
       const dist = T.map((t) => t.reduce((s, u, i) => s + (u - x[i]) ** 2, 0));
@@ -360,8 +361,18 @@
     el.append(h('div', { class: 'w-row' },
       h('div', {}, p.el, h('div', { class: 'w-ctrl' }, btn('clear', p.clear), btn('a real digit', () => p.load(randomSample())))),
       h('div', { class: 'w-col' }, tc,
-        h('div', { class: 'w-ctrl', style: 'margin:10px 0 12px' }, chips(['dot product', 'distance'], mode, (m) => { mode = m; score(); })),
-        b)));
+        h('div', { class: 'w-ctrl', style: 'margin:10px 0 12px' }, chips(['dot product', 'distance'], mode, (m) => { mode = m; score(); hint.textContent = m === 'distance' ? 'the shortest bar wins: smaller is closer' : 'the longest bar wins'; })),
+        hint, b, h('div', { class: 'w-ctrl' }, btn('test both on 120 real digits', testAll)), result)));
+    function testAll() {               // the chapter's comparison, on the 120 test digits this page carries
+      let rd = 0, rq = 0;
+      for (let k = 0; k < D.sampleLabels.length; k++) {
+        const y = Float32Array.from(samples.subarray(k * 784, k * 784 + 784), (v) => v / 255);
+        const dot = T.map((t) => t.reduce((s, u, i) => s + u * y[i], 0)), dist = T.map((t) => t.reduce((s, u, i) => s + (u - y[i]) ** 2, 0));
+        rd += dot.indexOf(Math.max(...dot)) === D.sampleLabels[k]; rq += dist.indexOf(Math.min(...dist)) === D.sampleLabels[k];
+      }
+      const n = D.sampleLabels.length;
+      result.innerHTML = `dot product: <b>${rd}</b> of ${n} right (${(rd / n * 100).toFixed(0)}%) · distance: <b>${rq}</b> of ${n} (${(rq / n * 100).toFixed(0)}%)`;
+    }
     p.load(randomSample()); onTheme(drawT);
   };
 
@@ -379,6 +390,7 @@
       drawDigit(ictx, last.x, 0, 0, 112, '#fff');
       const r = last.r, mx = Math.max(...r.h, 1e-6);
       hctx.clearRect(0, 0, 256, 34);
+      if (last.empty) { hctx.fillStyle = css('--rule'); for (let j = 0; j < 64; j++) hctx.fillRect((j % 32) * 8, ((j / 32) | 0) * 17, 7, 16); return; }   // nothing drawn: nothing to show
       for (let j = 0; j < 64; j++) {
         hctx.fillStyle = css('--accent'); hctx.globalAlpha = 0.08 + 0.92 * r.h[j] / mx;
         hctx.fillRect((j % 32) * 8, ((j / 32) | 0) * 17, 7, 16);
@@ -388,7 +400,8 @@
     const p = pad((x) => {
       const r = mlp.forward(x);
       last = { x, r };
-      b.set(Math.max(...x) > 0 ? r.p : new Array(10).fill(0), (v) => (v * 100).toFixed(0) + '%', 1);
+      const empty = !(Math.max(...x) > 0); last.empty = empty;
+      b.set(empty ? new Array(10).fill(0) : r.p, (v) => (empty ? '–' : (v * 100).toFixed(0) + '%'), 1, empty ? -1 : undefined);
       draw();
     });
     el.append(h('div', { class: 'w-row' },
@@ -404,7 +417,7 @@
   /* ---------------- 5. random search vs hill climbing on a landscape */
   W.climb = (el) => {
     frame(el, 'Guessing, with and without memory',
-      'The landscape is a score to maximize over two weights (brighter is better). <b>Random search</b> throws darts anywhere. <b>Hill climbing</b> keeps its best guess and tries small random changes to it, keeping a change only if it scores higher. It can stall on a lesser peak; try a few runs.');
+      'The landscape is a score to maximize over two weights (the stronger the color, the higher). <b>Random search</b> throws darts anywhere. <b>Hill climbing</b> keeps its best guess and tries small random changes to it, keeping a change only if it scores higher. It can stall on a lesser peak; try a few runs. With only two weights, random darts do well too. With the 7,840 weights of this chapter\'s digit classifier, a random guess almost never lands anywhere good, and only climbing gets anywhere.');
     const N = 200;
     const peaks = [[0.72, 0.3, 0.13, 1], [0.25, 0.7, 0.1, 0.75], [0.6, 0.78, 0.07, 0.6], [0.2, 0.2, 0.09, 0.5]];
     const f = (x, y) => peaks.reduce((s, [a, b, r, hgt]) => s + hgt * Math.exp(-((x - a) ** 2 + (y - b) ** 2) / (2 * r * r)), 0)
@@ -461,14 +474,15 @@
         ctx.fillStyle = p.kept ? css('--ink') : 'rgba(127,127,127,.5)';
         ctx.fillRect(p.x * 340 - (p.kept ? 2.5 : 1.5), p.y * 340 - (p.kept ? 2.5 : 1.5), p.kept ? 5 : 3, p.kept ? 5 : 3);
       }
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+      ctx.strokeStyle = css('--ink'); ctx.lineWidth = 2;
       ctx.beginPath(); ctx.arc(best.x * 340, best.y * 340, 7, 0, 7); ctx.stroke();
       info.innerHTML = `${mode} · guesses <b>${steps}</b> · best score <b>${(best.v / fmax * 100).toFixed(1)}%</b> of the highest peak`;
     }
     function run() {
       if (timer) { clearInterval(timer); timer = null; go.textContent = 'run'; go.classList.remove('on'); return; }
       go.textContent = 'pause'; go.classList.add('on');
-      timer = setInterval(() => { step(); if (steps >= 300) run(); }, reduced ? 0 : 30);
+      const stopAt = steps + 300;
+      timer = setInterval(() => { step(); if (steps >= stopAt) run(); }, reduced ? 0 : 30);
     }
     const go = btn('run', run, 'accent');
     el.append(h('div', { class: 'w-row' }, h('div', {}, c),
@@ -482,65 +496,63 @@
   /* ---------------- 6. gradient descent on a parabola */
   W.descent = (el) => {
     frame(el, 'Follow the slope downhill',
-      'The loss is <i>f</i>(<i>w</i>) = <i>w</i>², whose slope is 2<i>w</i>. Each step moves <i>w</i> by −(learning rate)·slope. Drag the dot to choose a start, then step. Small rates crawl; past 1.0 every step overshoots further than the last, and the descent diverges.');
-    let lr = 0.2, w0 = 3.6, path = [];
+      'The same loss as the listing: <i>f</i>(<i>x</i>) = (<i>x</i> − 2)², smallest at <i>x</i> = 2, with slope 2(<i>x</i> − 2), starting at <i>x</i> = −3. Each step moves <i>x</i> by −(learning rate)·slope. Try the listing\'s two rates: 0.1 walks in; 1.1 overshoots a little more every step. Drag the dot to start elsewhere.');
+    let lr = 0.1, x0 = -3, path = [];
     const [c, ctx] = canvas(560, 300);
     const info = h('div', { class: 'w-kv', style: 'margin-top:8px;min-height:2.6em' });
-    const X = (w) => 280 + w * 62, Y = (v) => 282 - v * 13.6;
-    function reset() { path = [w0]; draw(); }
+    const X = (x) => 280 + (x - 2) * 25, Y = (v) => 286 - v * 2.3, R = 11;   // wide enough to watch 1.1 overshoot for several steps
+    const fmt = (v) => (Math.abs(v) < 1e3 ? v.toFixed(4) : v.toExponential(2));
+    function reset() { path = [x0]; draw(); }
     function step() {
-      const w = path[path.length - 1];
-      if (Math.abs(w) > 1e3) return;
-      path.push(w - lr * 2 * w);
+      const x = path[path.length - 1];
+      if (Math.abs(x - 2) > 1e3) return;
+      path.push(x - lr * 2 * (x - 2));
       draw();
     }
     function draw() {
       ctx.clearRect(0, 0, 560, 300);
       ctx.strokeStyle = css('--rule'); ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(560, Y(0)); ctx.moveTo(X(0), 0); ctx.lineTo(X(0), 300); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, Y(0)); ctx.lineTo(560, Y(0)); ctx.moveTo(X(2), 0); ctx.lineTo(X(2), 300); ctx.stroke();
+      ctx.fillStyle = css('--ink-2'); ctx.font = fpx(c, 10) + 'px "JetBrains Mono", monospace'; ctx.fillText('x = 2', X(2) + 4, 12);
       ctx.strokeStyle = css('--ink'); ctx.lineWidth = 2; ctx.beginPath();
-      for (let px = 0; px <= 560; px += 2) { const w = (px - 280) / 62; ctx[px ? 'lineTo' : 'moveTo'](px, Y(w * w)); }
+      for (let px = 0; px <= 560; px += 2) { const x = (px - 280) / 25 + 2; ctx[px ? 'lineTo' : 'moveTo'](px, Y((x - 2) ** 2)); }
       ctx.stroke();
-      // zigzag path
+      const shown = path.filter((x) => Math.abs(x - 2) <= R);
       ctx.strokeStyle = css('--accent'); ctx.lineWidth = 1.5; ctx.setLineDash([4, 3]); ctx.beginPath();
-      path.forEach((w, i) => { const x = X(w), y = Y(w * w); ctx[i ? 'lineTo' : 'moveTo'](x, y); });
-      ctx.stroke(); ctx.setLineDash([]);
-      path.forEach((w, i) => {
-        const last = i === path.length - 1;
-        ctx.fillStyle = last ? css('--accent') : css('--ink');
-        ctx.globalAlpha = last ? 1 : 0.35 + 0.65 * i / path.length;
-        ctx.beginPath(); ctx.arc(X(w), Y(w * w), last ? 7 : 3.5, 0, 7); ctx.fill();
+      shown.forEach((x, i) => ctx[i ? 'lineTo' : 'moveTo'](X(x), Y((x - 2) ** 2))); ctx.stroke(); ctx.setLineDash([]);
+      shown.forEach((x, i) => {
+        const last = i === shown.length - 1;
+        ctx.fillStyle = last ? css('--accent') : css('--ink'); ctx.globalAlpha = last ? 1 : 0.35 + 0.65 * i / shown.length;
+        ctx.beginPath(); ctx.arc(X(x), Y((x - 2) ** 2), last ? 7 : 3.5, 0, 7); ctx.fill();
       });
       ctx.globalAlpha = 1;
-      const w = path[path.length - 1];
-      // tangent at current point
-      if (Math.abs(w) < 5) {
-        const g = 2 * w;
+      const x = path[path.length - 1], g = 2 * (x - 2), n = path.length - 1;
+      if (Math.abs(x - 2) < R - 0.5) {
         ctx.strokeStyle = css('--neg'); ctx.lineWidth = 1.5; ctx.beginPath();
-        ctx.moveTo(X(w - 0.8), Y(w * w - 0.8 * g)); ctx.lineTo(X(w + 0.8), Y(w * w + 0.8 * g)); ctx.stroke();
+        ctx.moveTo(X(x - 0.8), Y((x - 2) ** 2 - 0.8 * g)); ctx.lineTo(X(x + 0.8), Y((x - 2) ** 2 + 0.8 * g)); ctx.stroke();
       }
-      const n = path.length - 1;
-      info.innerHTML = Math.abs(w) > 4.5
-        ? `step ${n}: w = <b>${w.toExponential(2)}</b>, off the chart. <b style="color:var(--accent)">Diverged.</b> Each step multiplies w by (1 − 2·lr) = ${(1 - 2 * lr).toFixed(2)}.`
-        : `step ${n}: w = <b>${w.toFixed(4)}</b>, loss = <b>${(w * w).toFixed(4)}</b>, slope = ${(2 * w).toFixed(3)}<br>next w = ${w.toFixed(3)} − ${lr.toFixed(2)} × ${(2 * w).toFixed(3)} = ${(w - lr * 2 * w).toFixed(3)}`;
+      info.innerHTML = Math.abs(x - 2) > R
+        ? `step ${n}: x = <b>${fmt(x)}</b>, off the chart. <b style="color:var(--accent)">Diverged.</b> Each step multiplies the distance to 2 by (1 − 2·lr) = ${(1 - 2 * lr).toFixed(2)}.`
+        : `step ${n}: x = <b>${fmt(x)}</b>, loss = <b>${fmt((x - 2) ** 2)}</b>, slope = ${g.toFixed(3)}<br>next x = ${x.toFixed(3)} − ${lr.toFixed(2)} × ${g.toFixed(3)} = ${(x - lr * g).toFixed(3)}`;
     }
     let dragging = false;
     c.addEventListener('pointerdown', (e) => { dragging = true; c.setPointerCapture(e.pointerId); move(e); });
     c.addEventListener('pointermove', (e) => { if (dragging) move(e); });
     c.addEventListener('pointerup', () => { dragging = false; });
-    function move(e) { const r = c.getBoundingClientRect(); w0 = clamp(((e.clientX - r.left) / r.width * 560 - 280) / 62, -4.2, 4.2); reset(); }
-    keys(c, 'Loss curve. Left and right arrows choose the starting point.', (dx) => { w0 = clamp(w0 + dx * 0.2, -4.2, 4.2); reset(); });
+    function move(e) { const r = c.getBoundingClientRect(); x0 = clamp(((e.clientX - r.left) / r.width * 560 - 280) / 25 + 2, 2 - R + 0.2, 2 + R - 0.2); reset(); }
+    keys(c, 'Loss curve. Left and right arrows choose the starting point.', (dx) => { x0 = clamp(x0 + dx * 0.2, 2 - R + 0.2, 2 + R - 0.2); reset(); });
     c.style.cursor = 'grab';
     let timer = null;
     function play() {
       if (timer) { clearInterval(timer); timer = null; pb.textContent = 'play'; return; }
       pb.textContent = 'pause';
-      timer = setInterval(() => { step(); if (path.length > 40 || Math.abs(path[path.length - 1]) > 4.5) play(); }, 380);
+      timer = setInterval(() => { step(); if (path.length > 40 || Math.abs(path[path.length - 1] - 2) > R) play(); }, 320);
     }
     const pb = btn('play', play, 'accent');
-    el.append(c, info, h('div', { class: 'w-ctrl' },
-      slider('learning rate', 0.02, 1.1, 0.01, lr, (v) => v.toFixed(2), (v) => { lr = v; reset(); }),
-      pb, btn('step', step), btn('reset', reset)));
+    const lrS = slider('learning rate', 0.02, 1.1, 0.01, lr, (v) => v.toFixed(2), (v) => { lr = v; reset(); });
+    const preset = (v) => () => { lr = v; lrS.set(v); x0 = -3; reset(); };
+    el.addEventListener('w-offscreen', () => { if (timer) play(); });
+    el.append(c, info, h('div', { class: 'w-ctrl' }, lrS, btn('0.1', preset(0.1)), btn('1.1', preset(1.1)), pb, btn('step', step), btn('reset', reset)));
     reset(); onTheme(draw);
   };
 
@@ -652,14 +664,14 @@
       data.push([x, y, brush === 'orange' ? 1 : 0]);
       lastLoss = train(0) || 0; draw();
     });
-    el.append(h('div', { class: 'w-row' }, h('div', { style: `max-width:${S}px` }, c, info),
+    el.append(h('div', { class: 'w-row' }, h('div', { style: `max-width:${S}px` }, c, info, h('div', { class: 'w-ctrl' }, pb, btn('reset', restart))),
       h('div', { class: 'w-col' },
         h('div', { class: 'w-kv' }, 'data'), chips(['blobs', 'circles', 'xor', 'spiral', 'yours'], set, (s) => { set = s; makeData(); restart(); }),
         h('div', { class: 'w-kv', style: 'margin-top:14px' }, 'click to add'), chips(['orange', 'blue'], brush, (b) => { brush = b; }),
         h('div', { class: 'w-kv', style: 'margin-top:14px' }, 'activation'), chips(['relu', 'tanh'], act, (a) => { act = a; restart(); }),
         h('div', { class: 'w-ctrl' }, slider('hidden units', 0, 32, 1, H, (v) => String(v), (v) => { H = v; restart(); })),
-        h('div', { class: 'w-ctrl' }, slider('learning rate', 0.005, 0.2, 0.005, lr, (v) => v.toFixed(3), (v) => { lr = v; })),
-        h('div', { class: 'w-ctrl' }, pb, btn('reset', restart)))));
+        h('div', { class: 'w-ctrl' }, slider('learning rate', 0.005, 0.2, 0.005, lr, (v) => v.toFixed(3), (v) => { lr = v; })))));
+    el.addEventListener('w-offscreen', () => { if (timer) play(); });
     makeData(); restart(); onTheme(draw);
   };
 
@@ -729,7 +741,7 @@
   /* ---------------- 9. the sliding window, one position at a time */
   W.slide = (el) => {
     frame(el, 'The loop, slowed down',
-      'This is what the double loop computes. The kernel (a vertical-edge detector) visits every position of a 12×12 crop of a digit; at each one, nine multiplications are added into a single output number.');
+      'This is what the double loop computes. The kernel (a vertical-edge detector) visits every position of a 12×12 crop of a digit; at each one, nine multiplications are added into a single output number (the sum below skips the kernel\'s zeros).');
     const base = samples.subarray(784 * 3, 784 * 4);
     const N = 12, K = 3, M = N - K + 1, off = 8;
     const x = Array.from({ length: N * N }, (_, i) => base[(((i / N) | 0) + off) * 28 + (i % N) + off] / 255);
@@ -765,7 +777,7 @@
       ctx.fillStyle = ink; ctx.font = '' + fpx(c, 18) + 'px "JetBrains Mono", monospace'; ctx.fillText('→', N * cs + 20, (r + 1.5) * cs);
       const m = 2.2;
       for (let i = 0; i < M * M; i++) {
-        ctx.fillStyle = out[i] == null ? css('--paper-2') : div(out[i] / m);
+        ctx.fillStyle = out[i] == null ? css('--rule') : div(out[i] / m);
         ctx.fillRect(ox + (i % M) * cs, ((i / M) | 0) * cs, cs - 1, cs - 1);
       }
       ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.strokeRect(ox + q * cs - 1, r * cs - 1, cs + 1, cs + 1);
@@ -777,6 +789,7 @@
       pb.textContent = 'pause'; timer = setInterval(step, 140);
     }
     const pb = btn('play', play, 'accent');
+    el.addEventListener('w-offscreen', () => { if (timer) play(); });
     el.append(c, sum, h('div', { class: 'w-ctrl' }, pb, btn('step', step), btn('fill all', () => {
       if (timer) play();
       for (let p = 0; p < M * M; p++) out[p] = compute(p).s; pos = M * M - 1; draw(); pos = 0;
@@ -816,7 +829,8 @@
         actx.font = '12px "JetBrains Mono", monospace'; actx.textAlign = 'center'; actx.textBaseline = 'middle';
         actx.fillText(att[p].toFixed(2), (p % 4) * 63 + 32, ((p / 4) | 0) * 63 + 32);
       }
-      info.innerHTML = `query = patch <b>${q}</b> · attention weights sum to 1 · the biggest goes to patch <b>${att.indexOf(am)}</b>`;
+      const amin = Math.min(...att), win = att.indexOf(am);
+      info.innerHTML = `query = patch <b>${q}</b> · attention weights sum to 1 · ` + (am - amin < 1e-3 ? 'all equal: an empty patch matches nothing better than anything else' : `the biggest goes to patch <b>${win}</b>` + (win === q ? ' (itself: a patch always matches its own strokes best; look at the second-largest)' : ''));
     }
     c.style.cursor = 'pointer';
     keys(c, 'Digit cut into 16 patches. Arrow keys choose the query patch.', (dx, dy) => {
@@ -831,14 +845,14 @@
   /* ---------------- 11. a line is a decision */
   W.line = (el) => {
     frame(el, 'A line is a decision',
-      'Drag either handle to move the line. Everything on the shaded side is called “yes.” Can you find a line that gets every point right? Then press <b>learn</b> and let the perceptron rule nudge the line one mistake at a time.');
+      'Drag either handle to move the line. Everything on the shaded side is called “yes.” Can you find a line that gets every point right? Then press <b>learn</b>: the perceptron rule (Rosenblatt, 1958) picks a point on the wrong side and tilts the line toward it, one mistake at a time. Try <b>tangled</b> data, where no line can get every point.');
     const S = 340;
     const rnd = (() => { let s = 3; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
-    const pts = Array.from({ length: 40 }, (_, i) => {
-      const l = i % 2, g = () => (rnd() + rnd() + rnd() - 1.5) * 0.5;
-      return [l ? 0.66 + g() * 0.5 : 0.34 + g() * 0.5, l ? 0.36 + g() * 0.5 : 0.64 + g() * 0.5, l];
+    const make = (spread) => Array.from({ length: 40 }, (_, i) => {
+      const l = i % 2, g = () => (rnd() + rnd() + rnd() - 1.5) * spread;
+      return [clamp(l ? 0.66 + g() : 0.34 + g(), 0.03, 0.97), clamp(l ? 0.36 + g() : 0.64 + g(), 0.03, 0.97), l];
     });
-    let A = [0.1, 0.2], B = [0.9, 0.55], drag = null, timer = null;
+    let pts = make(0.25), A = [0.1, 0.2], B = [0.9, 0.55], drag = null, timer = null, hit = null, rule = '';
     const [c, ctx] = canvas(S, S);
     const info = h('div', { class: 'w-kv', style: 'margin-top:8px' });
     // line through A,B as w·p + b = 0
@@ -866,11 +880,13 @@
         ctx.fill();
         if (!ok) { ctx.strokeStyle = css('--ink'); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x * S, y * S, 9, 0, 7); ctx.stroke(); }
       }
+      if (hit) { ctx.strokeStyle = css('--accent'); ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(hit[0] * S, hit[1] * S, 13, 0, 7); ctx.stroke(); }   // the mistake the rule just used
       for (const P of [A, B]) {
         ctx.fillStyle = css('--card'); ctx.strokeStyle = css('--ink'); ctx.lineWidth = 2;
         ctx.beginPath(); ctx.arc(P[0] * S, P[1] * S, 8, 0, 7); ctx.fill(); ctx.stroke();
       }
-      info.innerHTML = `<b>${right}</b> of ${pts.length} correct${right === pts.length ? ' · <b style="color:var(--accent)">a perfect line</b>' : ' · circled points are on the wrong side'}`;
+      const m = -(B[1] - A[1]) / (B[0] - A[0] || 1e-9), b0 = (1 - A[1]) - m * A[0];   // with y measured upward, as in the text
+      info.innerHTML = `<b>${right}</b> of ${pts.length} correct${right === pts.length ? ' · <b style="color:var(--accent)">a perfect line</b>' : ' · circled points are on the wrong side'} · the line: y = ${m.toFixed(2)}x ${b0 < 0 ? '−' : '+'} ${Math.abs(b0).toFixed(2)}` + (rule ? `<br>${rule}` : '');
       return right;
     }
     const pos = (e) => { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height]; };
@@ -893,8 +909,9 @@
       let [w, b] = wb(), it = 0;
       timer = setInterval(() => {
         const bad = pts.filter(([x, y, l]) => (w[0] * x + w[1] * y + b > 0) !== (l === 1));
-        if (!bad.length || it++ > 200) { learn(); return; }
+        if (!bad.length || it++ > 200) { learn(); hit = null; rule = bad.length ? 'stopped after 200 updates: no line gets every point here' : 'no mistakes left, so the rule stops'; draw(); return; }
         const [x, y, l] = bad[(Math.random() * bad.length) | 0], t = l ? 1 : -1, r = 0.08;
+        hit = [x, y]; rule = `a ${l ? 'circle' : 'square'} on the wrong side: w ← w ${t > 0 ? '+' : '−'} 0.08 · (${x.toFixed(2)}, ${y.toFixed(2)}), b ← b ${t > 0 ? '+' : '−'} 0.08`;
         w = [w[0] + r * t * x, w[1] + r * t * y]; b += r * t;
         // the line's points closest to the center, spread along its direction
         const n2 = w[0] * w[0] + w[1] * w[1], c0 = [0.5, 0.5], s = (w[0] * c0[0] + w[1] * c0[1] + b) / n2;
@@ -905,7 +922,9 @@
       }, reduced ? 0 : 120);
     }
     const lb = btn('learn', learn, 'accent');
-    el.append(c, info, h('div', { class: 'w-ctrl' }, lb, btn('reset', () => { if (timer) learn(); A = [0.1, 0.2]; B = [0.9, 0.55]; draw(); })));
+    const again = () => { if (timer) learn(); A = [0.1, 0.2]; B = [0.9, 0.55]; hit = null; rule = ''; draw(); };
+    el.append(c, info, h('div', { class: 'w-ctrl' }, lb, btn('reset', again),
+      chips(['separable', 'tangled'], 'separable', (v) => { pts = make(v === 'tangled' ? 0.55 : 0.25); again(); })));
     draw(); onTheme(draw);
   };
 
@@ -915,14 +934,14 @@
       'Every milestone in this story is something you will build. Choose one to see where.');
     // Links follow the web edition's chapter numbering (ch01 = Chapter 1).
     const M = [
-      [1958, 'The perceptron', 'Frank Rosenblatt’s machine learns to classify patterns by adjusting the strengths of its connections.', 'ch01.html', 'Chapter 1 · a line is a decision'],
-      [1969, '<i>Perceptrons</i>', 'Minsky and Papert show exactly what a single layer cannot compute. Funding drains away: an AI winter.', 'ch12.html', 'Chapter 12 · why one layer is not enough'],
-      [1980, 'Neocognitron', 'Kunihiko Fukushima builds a layered network for visual patterns, inspired by the visual cortex.', 'ch13.html', 'Chapter 13 · convolution'],
-      [1986, 'Backpropagation', 'Rumelhart, Hinton and Williams popularize sending the error backward through many layers.', 'ch11.html', 'Chapter 11 · following the gradient'],
-      [1998, 'LeNet and MNIST', 'Yann LeCun’s convolutional networks read handwritten digits well enough for practical use.', 'ch14.html', 'Chapter 14 · a convolutional network'],
+      [1958, 'The perceptron', 'Frank Rosenblatt’s machine learns to classify patterns by adjusting the strengths of its connections.', 'ch01.html#a-line-is-a-decision', 'Chapter 1 · a line is a decision, and the perceptron rule'],
+      [1969, '<i>Perceptrons</i>', 'Minsky and Papert show exactly what a single layer cannot compute. Funding drains away: an AI winter.', 'ch12.html#a-network-with-a-hidden-layer', 'Chapter 12 · why one layer is not enough'],
+      [1980, 'Neocognitron', 'Kunihiko Fukushima builds a layered network for visual patterns, inspired by the visual cortex.', 'ch13.html#from-filters-to-networks', 'Chapter 13 · convolution'],
+      [1986, 'Backpropagation', 'Rumelhart, Hinton and Williams popularize sending the error backward through many layers.', 'ch11.html#the-chain-rule-backwards', 'Chapter 11 · following the gradient'],
+      [1998, 'LeNet and MNIST', 'Yann LeCun’s convolutional networks read handwritten digits well enough for practical use.', 'ch14.html#the-network', 'Chapter 14 · a convolutional network'],
       [2012, 'AlexNet', 'LeNet’s design, made much larger and trained on graphics processors, wins ImageNet by a wide margin.', 'ch15.html', 'Chapter 15 · inside AlexNet'],
-      [2017, 'The transformer', 'A network built around attention becomes the engine of language models.', 'ch20.html', 'Chapter 20 · attention'],
-      [2022, 'ChatGPT', 'A large language model reaches the public, built from the same ideas as everything above.', 'ch20.html', 'Chapter 20 · onward'],
+      [2017, 'The transformer', 'A network built around attention becomes the engine of language models.', 'ch20.html#attention', 'Chapter 20 · attention'],
+      [2022, 'ChatGPT', 'A large language model reaches the public, built from the same ideas as everything above.', 'ch20.html#from-attention-to-language-models', 'Chapter 20 · onward'],
     ];
     const y0 = 1950, y1 = 2030, pct = (y) => ((y - y0) / (y1 - y0) * 100).toFixed(2) + '%';
     const track = h('div', { class: 'tl-track' },
@@ -999,6 +1018,7 @@
       ctx.strokeStyle = acc; ctx.lineWidth = 1.5;
       for (const t of spikes) { const x = sx + sw - (now - t) / 1500 * sw; ctx.beginPath(); ctx.moveTo(x, 130); ctx.lineTo(x, 50); ctx.stroke(); }
       ctx.fillStyle = muted; ctx.fillRect(sx + sw + 4, 130 - v * 80, 3, v * 80);
+      ctx.save(); ctx.translate(sx + sw + 14, 130); ctx.rotate(-Math.PI / 2); ctx.font = fpx(c, 9) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'left'; ctx.fillText('voltage', 0, 0); ctx.restore();   // label the membrane bar
       ctx.fillText(`${(spikes.length / 1.5).toFixed(0)} spikes/s`, col * 2.5, 170);
       if (running) requestAnimationFrame(draw);
     }
@@ -1014,7 +1034,7 @@
     const N = 10, P = 2 * N + 1;
     const wins = new Array(P).fill(0), seen = new Array(P).fill(0);
     let games = 0, film = [], winner = 0, timer = null;
-    const [strip, sctx] = canvas(600, 64);
+    const [strip, sctx] = canvas(600, 50), stripNote = h('div', { class: 'w-kv', style: 'margin:2px 0 10px' }, 'play a game to see its filmstrip here');
     const [c, ctx] = canvas(600, 220);
     const info = h('div', { class: 'w-kv', style: 'margin-top:6px' });
     function play() {
@@ -1028,13 +1048,11 @@
       const n = film.length, k = Math.min(n, 60), w = 600 / 60;
       for (let i = 0; i < k; i++) {
         const fi = Math.round(i * (n - 1) / Math.max(1, k - 1)), x = film[fi];
-        sctx.fillStyle = css('--paper-2'); sctx.fillRect(i * w + 0.5, 4, w - 1, 44);
+        sctx.fillStyle = css('--rule'); sctx.fillRect(i * w + 0.5, 4, w - 1, 44);
         sctx.fillStyle = x > 0 ? css('--pos') : x < 0 ? css('--neg') : css('--ink');
         sctx.fillRect(i * w + 1.5, 4 + (1 - (x + N) / (2 * N)) * 40, w - 3, 4);
       }
-      sctx.fillStyle = winner ? css('--pos') : css('--neg'); sctx.font = '' + fpx(strip, 11) + 'px "JetBrains Mono", monospace';
-      sctx.textAlign = 'left'; sctx.textBaseline = 'top';
-      if (games) sctx.fillText(`last game: ${film.length - 1} moves · every frame labeled “${winner ? 'orange' : 'blue'} wins”`, 0, 52);
+      stripNote.innerHTML = games ? `last game: ${film.length - 1} moves · every frame labeled <b style="color:var(${winner ? '--pos' : '--neg'})">${winner ? 'orange' : 'blue'} wins</b>` : 'play a game to see its filmstrip here';
     }
     function draw() {
       ctx.clearRect(0, 0, 600, 220);
@@ -1044,11 +1062,12 @@
       for (let i = 0; i < P; i++) {
         const v = seen[i] ? wins[i] / seen[i] : null;
         if (i === 0 || i === P - 1) continue;
-        ctx.fillStyle = v == null ? css('--paper-2') : div((v - 0.5) * 2);
+        const t = v == null ? 0 : (v - 0.5) * 2;
+        ctx.fillStyle = v == null ? css('--rule') : div(Math.sign(t) * (0.35 + 0.65 * Math.abs(t)) || 0.35);   // never fades to nothing near the middle
         const hgt = v == null ? 3 : Math.max(2, v * 170);
         ctx.fillRect(i * bw + 2, base - hgt, bw - 4, hgt);
       }
-      ctx.fillStyle = css('--neg'); ctx.fillRect(0, base - 170, bw - 2, 170);
+      ctx.fillStyle = css('--neg'); ctx.fillRect(0, base - 4, bw - 2, 4); ctx.beginPath(); ctx.arc(bw / 2 - 1, base - 10, 5, 0, 7); ctx.fill();   // blue has won: the value is 0
       ctx.fillStyle = css('--pos'); ctx.fillRect(600 - bw + 2, base - 170, bw - 2, 170);
       ctx.fillStyle = css('--muted'); ctx.font = '' + fpx(c, 10.5) + 'px "JetBrains Mono", monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       ctx.fillText('start', 300, base + 8);
@@ -1064,7 +1083,7 @@
       timer = setInterval(() => { many(Math.max(1, games >> 3)); if (games > 5000) auto(); }, 120);
     }
     const ab = btn('keep playing', auto, 'accent');
-    el.append(strip, c, info, h('div', { class: 'w-ctrl' }, btn('play one game', () => many(1)), ab,
+    el.append(strip, stripNote, c, info, h('div', { class: 'w-ctrl' }, btn('play one game', () => many(1)), ab,
       btn('forget', () => { if (timer) auto(); wins.fill(0); seen.fill(0); games = 0; film = []; drawStrip(); draw(); })));
     drawStrip(); draw(); onTheme(() => { drawStrip(); draw(); });
   };
@@ -1159,7 +1178,7 @@
   /* ---------------- chance: pi from random darts */
   W.darts = (el) => {
     frame(el, 'Throwing darts at π',
-      'Darts land uniformly in the square. The fraction inside the circle, times four, estimates π. Watch the error: it shrinks, but only as one over the square root of the number of darts, so each extra correct digit costs a hundred times as many throws.');
+      'Darts land uniformly in the square. The fraction inside the circle, times four, estimates π. The chart plots the error on log scales: it shrinks along the dashed line, as one over the square root of the number of darts, so each extra correct digit costs a hundred times as many throws.');
     const S = 260;
     const [c, ctx] = canvas(S, S);
     const [g, gctx] = canvas(300, 150);
@@ -1188,14 +1207,18 @@
       const est = n ? 4 * inside / n : NaN;
       big.textContent = n ? est.toFixed(4) : '—';
       info.innerHTML = n ? `darts <b>${n.toLocaleString()}</b> · inside <b>${inside.toLocaleString()}</b><br>error <b>${Math.abs(est - Math.PI).toFixed(4)}</b> · typical error for this many ≈ <b>${(1.31 / Math.sqrt(n)).toFixed(4)}</b>` : 'press a button to throw';
+      // the error itself, on log-log axes: a straight line of slope -1/2 is the 1/sqrt(n) law
       gctx.clearRect(0, 0, 300, 150);
-      const lx = (v) => 30 + (Math.log10(v) / 6) * 260, ly = (v) => 75 - (v - Math.PI) * 120;
-      gctx.strokeStyle = 'rgba(127,127,127,.5)'; gctx.beginPath(); gctx.moveTo(30, ly(Math.PI)); gctx.lineTo(292, ly(Math.PI)); gctx.stroke();
+      const lx = (v) => 34 + (Math.log10(v) / 6) * 258, ly = (e) => 8 + (-Math.log10(Math.max(e, 1e-5)) / 5) * 124;   // 1 at the top, 0.00001 at the bottom
+      gctx.strokeStyle = css('--rule'); gctx.lineWidth = 1; gctx.beginPath();
+      [1, 0.1, 0.01, 0.001, 0.0001].forEach((e) => { gctx.moveTo(34, ly(e)); gctx.lineTo(292, ly(e)); }); gctx.stroke();
       gctx.fillStyle = css('--ink-2'); gctx.font = '' + fpx(g, 10) + 'px "JetBrains Mono", monospace';
-      gctx.fillText('π', 18, ly(Math.PI) + 3);
-      [1, 100, 10000, 1000000].forEach((v) => gctx.fillText(v >= 1e6 ? '1M' : v >= 1e4 ? '10k' : String(v), lx(v) - 6, 146));
+      [1, 0.01, 0.0001].forEach((e) => gctx.fillText(String(e), 0, ly(e) + 3));
+      [1, 100, 10000, 1000000].forEach((v) => gctx.fillText(v >= 1e6 ? '1M' : v >= 1e4 ? '10k' : String(v), lx(v) - 6, 147));
+      gctx.strokeStyle = css('--muted'); gctx.setLineDash([4, 3]); gctx.beginPath(); gctx.moveTo(lx(1), ly(1.31)); gctx.lineTo(lx(1e6), ly(1.31e-3)); gctx.stroke(); gctx.setLineDash([]);
+      gctx.fillStyle = css('--muted'); gctx.fillText('1.31/√n', lx(3e4), ly(1.31 / Math.sqrt(3e4)) - 6);
       gctx.strokeStyle = css('--accent'); gctx.lineWidth = 1.5; gctx.beginPath();
-      hist.forEach(([k, e], i) => { const X = lx(k), Y = clamp(ly(e), 4, 134); i ? gctx.lineTo(X, Y) : gctx.moveTo(X, Y); });
+      hist.forEach(([k, e], i) => { const X = lx(k), Y = ly(Math.abs(e - Math.PI)); i ? gctx.lineTo(X, Y) : gctx.moveTo(X, Y); });
       gctx.stroke();
     }
     function auto() {
@@ -1213,7 +1236,7 @@
   /* ---------------- images: bit depth and dithering */
   W.bitdepth = (el) => {
     frame(el, 'How many shades does a picture need?',
-      'Slide the bit depth down from 8 (256 shades) to 1 (black and white). <b>Rounding</b> snaps each pixel to the nearest shade on its own. <b>Dithering</b> passes each pixel\'s rounding error on to its neighbors, so that patterns of dots stand in for the missing shades.');
+      'Slide the bit depth between 8 (256 shades) and 1 (black and white); it starts at 2. <b>Rounding</b> snaps each pixel to the nearest shade on its own. <b>Dithering</b> passes each pixel\'s rounding error on to its neighbors, so that patterns of dots stand in for the missing shades.');
     const im = D.cat, raw = b64(im.px), iw = im.w, ih = im.h, Z = 2;
     const px = Uint8Array.from({ length: iw * ih }, (_, i) => (raw[i * 3] + raw[i * 3 + 1] + raw[i * 3 + 2]) / 3);
     const [c, ctx] = canvas(iw * Z, ih * Z);
@@ -1341,6 +1364,7 @@
       const tick = () => { step(); draw(); timer = requestAnimationFrame(tick); };
       tick();
     }
+    el.addEventListener('w-offscreen', () => { if (timer) run(); });
     let down = false;
     const at = (e) => { const rc = c.getBoundingClientRect(); return [Math.floor((e.clientY - rc.top) / rc.height * N), Math.floor((e.clientX - rc.left) / rc.width * N)]; };
     c.addEventListener('pointerdown', (e) => { down = true; c.setPointerCapture(e.pointerId); poke(...at(e)); draw(); });
@@ -1358,7 +1382,7 @@
   /* ---------------- random features: a curve from random tanh neurons */
   W.randfit = (el) => {
     frame(el, 'Fitting with random neurons',
-      'Each faint curve is one hidden neuron, tanh(<i>wx</i> + <i>b</i>) with random <i>w</i> and <i>b</i>. Only the weights of their sum are chosen, by solving a least-squares problem. Add neurons and the fit improves, until there are as many neurons as points and it swings wildly between them. Then raise the <b>ridge</b>.');
+      'Each faint curve is one hidden neuron, tanh(<i>wx</i> + <i>b</i>) with random <i>w</i> and <i>b</i>. Only the weights of their sum are chosen, by solving a least-squares problem. Add neurons: the error on the points keeps falling, but the error against the true curve, everywhere between them, gets much worse as the neurons approach the number of points and the fit swings wildly. Then raise the <b>ridge</b> and watch that second number come back down.');
     const rand0 = mulberry(7);
     const P = 30, xs = [], ys = [];
     for (let i = 0; i < P; i++) { const x = -10 + 20 * rand0(); xs.push(x); ys.push(Math.exp(-0.02 * (x - 4) ** 2) + 0.1 * gauss(rand0)); }
@@ -1393,7 +1417,8 @@
       xs.forEach((x, i) => { ctx.beginPath(); ctx.arc(X(x), Y(ys[i]), 3, 0, 7); ctx.fill(); });
       const err = xs.reduce((s, x, i) => s + (feats(x).reduce((t, u, j) => t + u * coef[j], 0) - ys[i]) ** 2, 0) / P;
       const big = Math.max(...coef.map(Math.abs));
-      info.innerHTML = `<b>${hN}</b> random neurons, <b>${P}</b> points · training error <b>${err.toExponential(1)}</b> · largest weight <b>${big.toExponential(1)}</b>`;
+      let test = 0; for (let k = 0; k <= 200; k++) { const x = -10 + k / 10, f = feats(x); test += (f.reduce((t, u, j) => t + u * coef[j], 0) - Math.exp(-0.02 * (x - 4) ** 2)) ** 2; } test /= 201;
+      info.innerHTML = `<b>${hN}</b> random neurons, <b>${P}</b> points · error on the points <b>${err.toExponential(1)}</b> · error against the true curve, everywhere <b>${test.toExponential(1)}</b> · largest weight <b>${big.toExponential(1)}</b>`;
     }
     el.append(c, info, h('div', { class: 'w-ctrl' },
       slider('neurons', 1, 40, 1, hN, (v) => v, (v) => { hN = v; solve(); }),
@@ -1447,7 +1472,8 @@
       } else info.innerHTML = `output ${n}×${n} = <b>${n * n}</b> numbers instead of 784`;
     }
     a.addEventListener('pointermove', (e) => { const rc = a.getBoundingClientRect(), n = 28 / size; hover = [clamp(Math.floor((e.clientY - rc.top) / rc.height * n), 0, n - 1), clamp(Math.floor((e.clientX - rc.left) / rc.width * n), 0, n - 1)]; draw(); });
-    a.addEventListener('pointerleave', () => { hover = null; draw(); });
+    a.addEventListener('pointerdown', (e) => a.dispatchEvent(new PointerEvent('pointermove', e)));
+    a.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') { hover = null; draw(); } });   // a finger lifting is not leaving
     el.append(h('div', { class: 'w-row' }, h('div', {}, h('div', { class: 'w-kv' }, 'input 28×28'), a), h('div', {}, h('div', { class: 'w-kv' }, 'pooled'), b)), info,
       h('div', { class: 'w-ctrl' }, chips(['max', 'average'], mode, (m) => { mode = m; draw(); }),
         chips(['2×2', '4×4', '7×7'], '2×2', (s) => { size = +s[0]; hover = null; draw(); }),
@@ -1482,7 +1508,7 @@
           thctx.fillStyle = '#000'; thctx.fillRect(k * 30, lab * 42, 28, 28);
           drawDigit(thctx, x, k * 30, lab * 42, 28, lab ? css('--neg') : css('--pos'));
         });
-        thctx.fillStyle = css('--ink-2'); thctx.font = '' + fpx(th, 10) + 'px "JetBrains Mono", monospace';
+        thctx.fillStyle = css('--ink-2'); thctx.font = '' + fpx(th, 12) + 'px "JetBrains Mono", monospace';
         thctx.fillText(`${names[lab]}: ${ex.filter((e) => e[1] === lab).length}`, 0, lab * 42 + 39);
       });
     }
@@ -1528,7 +1554,7 @@
   /* ---------------- generative: a tiny GAN learns a distribution you draw */
   W.gan1d = (el) => {
     frame(el, 'A tiny GAN learns what you draw',
-      'Drag over the gray bars to draw a target: how often each number from -1 to 1 should come up. Then press <b>play</b>. The generator turns random noise into numbers; the discriminator tries to tell them from samples of your target, and its opinion is the dashed line. Both are small networks trained by gradient descent, against each other. Give it half a minute: the orange line, a histogram of the generator\'s output, moves toward yours and never quite settles, because each player keeps answering the other. The dashed line crosses the dotted 0.5 line where the discriminator stops being sure. Watch the gaps: one noise number goes in, so the generator can only stretch and squeeze it, and it leaves a thin bridge of samples between hills. Press <b>new players</b> a few times, and sometimes it piles everything into narrow spikes instead, a small taste of the mode collapse of Chapter 19.');
+      'Drag over the gray bars to draw a target: how often each number from -1 to 1 should come up. Then press <b>play</b>. The generator turns random noise into numbers; the discriminator tries to tell them from samples of your target, and its opinion is the dashed line. Both are small networks trained by gradient descent, against each other. Give it half a minute: the orange line, a histogram of the generator\'s output, moves toward yours but never quite settles. It leaves a thin bridge between hills, because it can only stretch one noise number; press <b>new players</b> and sometimes it piles everything into spikes, a small mode collapse. The dashed line means something only where there are samples.');
     const B = 40, Wd = 340, Ht = 220;
     const [c, ctx] = canvas(Wd, Ht);
     let target = new Float32Array(B).map((_, i) => Math.exp(-((i - 11) ** 2) / 24) + Math.exp(-((i - 28) ** 2) / 24));
@@ -1614,6 +1640,7 @@
       timer = requestAnimationFrame(loop);
     }
     const pb = btn('play', play, 'accent');
+    el.addEventListener('w-offscreen', () => { if (timer) play(); });
     el.append(c, info, h('div', { class: 'w-ctrl' }, pb,
       btn('new players', () => { G = mk(1); D = mk(3); step = 0; draw(); }),
       btn('clear target', () => { target.fill(0); draw(); })));
@@ -1678,7 +1705,8 @@
     mc.style.cursor = 'crosshair'; mc.style.border = '1px solid var(--rule)';
     mc.addEventListener('pointerdown', (e) => {
       const r = mc.getBoundingClientRect(); const code = fromMap((e.clientX - r.left) / r.width * 260, (e.clientY - r.top) / r.height * 260);
-      showImage(decode(code)); drawMap(code);
+      const img = decode(code); showImage(img); drawMap(code);
+      mctx.fillStyle = '#000'; mctx.fillRect(196, 4, 60, 60); drawDigit(mctx, Float32Array.from(img, (v) => clamp(v, 0, 1)), 198, 6, 56, '#fff');
       codeBars.textContent = `code: [${code.map((v) => v.toFixed(1)).join(', ')}]`;
       info.innerHTML = 'decoded from just these <b>2</b> numbers: a digit nobody drew';
     });
@@ -1694,12 +1722,12 @@
   /* ---------------- matrix product: every entry is one dot product */
   W.matmul = (el) => {
     frame(el, 'Every entry is a dot product',
-      'Point at (or tab to) any number in the answer <b>C = A @ B</b>. Its row of A and its column of B light up, and the sum that made it is spelled out below. Change the sizes: the inner sizes must match, because each row of A is laid against a column of B, number by number.');
-    let n = 2, k = 3, m = 2, A, B, sel = [0, 0];
+      'Point at (or tab to) any number in the answer <b>C = A @ B</b>. Its row of A and its column of B light up, and the sum that made it is spelled out below. Change the sizes: the columns of A must match the rows of B, because each row of A is laid against a column of B, number by number.');
+    let n = 2, k = 3, kb = 3, m = 2, A, B, sel = [0, 1];
     const rnd = mulberry(11);
     const fill = () => {
       A = Array.from({ length: n }, () => Array.from({ length: k }, () => Math.floor(rnd() * 7) - 3));
-      B = Array.from({ length: k }, () => Array.from({ length: m }, () => Math.floor(rnd() * 7) - 3));
+      B = Array.from({ length: kb }, () => Array.from({ length: m }, () => Math.floor(rnd() * 7) - 3));
     };
     const area = h('div', { class: 'mm-area' }), sum = h('div', { class: 'w-kv mm-sum' });
     function grid(M, cls, onCell) {
@@ -1714,6 +1742,12 @@
     }
     function render() {
       sel = [Math.min(sel[0], n - 1), Math.min(sel[1], m - 1)];
+      if (k !== kb) {                  // the shapes do not fit: show the error NumPy would give
+        area.replaceChildren(h('div', { class: 'mm-block' }, h('div', { class: 'w-kv' }, h('b', {}, 'A'), ` ${n}×${k}`), grid(A, 'mm-a')), h('span', { class: 'mm-op' }, '@'),
+          h('div', { class: 'mm-block' }, h('div', { class: 'w-kv' }, h('b', {}, 'B'), ` ${kb}×${m}`), grid(B, 'mm-b')), h('span', { class: 'mm-op' }, '='), h('span', { class: 'mm-err' }, 'error'));
+        sum.innerHTML = `ValueError: a row of A has <b>${k}</b> numbers but a column of B has <b>${kb}</b>, so they cannot be laid side by side. Make the columns of A equal the rows of B.`;
+        return;
+      }
       const C = A.map((row) => B[0].map((_, j) => row.reduce((s, a, t) => s + a * B[t][j], 0)));
       const gA = grid(A, 'mm-a'), gB = grid(B, 'mm-b'), gC = grid(C, 'mm-c', (i, j) => { sel = [i, j]; mark(); });
       const lab = (t, g, shape) => h('div', { class: 'mm-block' }, h('div', { class: 'w-kv' }, h('b', {}, t), ' ' + shape), g);
@@ -1731,7 +1765,8 @@
     fill();
     el.append(area, sum, h('div', { class: 'w-ctrl' },
       slider('rows of A', 1, 4, 1, n, String, (v) => { n = v; fill(); render(); }),
-      slider('inner size', 1, 5, 1, k, String, (v) => { k = v; fill(); render(); }),
+      slider('columns of A', 1, 5, 1, k, String, (v) => { k = v; fill(); render(); }),
+      slider('rows of B', 1, 5, 1, kb, String, (v) => { kb = v; fill(); render(); }),
       slider('columns of B', 1, 4, 1, m, String, (v) => { m = v; fill(); render(); }),
       btn('new numbers', () => { fill(); render(); })));
     render();
@@ -1740,7 +1775,7 @@
   /* ---------------- uint8 overflow: brighten the cat */
   W.overflow = (el) => {
     frame(el, 'Brighter, and the trap',
-      'Multiply every pixel of the cat by a number. With <b>wrap</b>, the result is stored as an 8-bit integer the way NumPy\'s <code>uint8</code> does: anything past 255 wraps around to the bottom, so bright fur turns dark. With <b>clip</b>, values past 255 are held at 255. Point at the photo to see the arithmetic for one pixel. The histogram shows how many pixels have each brightness.');
+      'Multiply every pixel of the cat by a number. With <b>wrap</b>, the cat is multiplied by a whole number while staying <code>uint8</code>, as <code>cat * 2</code> does in NumPy: anything past 255 wraps around to the bottom, so bright fur turns dark. With <b>clip</b>, values past 255 are held at 255. Point at the photo to see the arithmetic for one pixel. The histogram shows how many pixels have each brightness.');
     const { w, h: ht, px } = D.cat, src = b64(px);
     const [c, ctx] = canvas(w, ht), [hc, hx] = canvas(256, 110);
     const img = ctx.createImageData(w, ht);
@@ -1748,7 +1783,8 @@
     const off = document.createElement('canvas'); off.width = w; off.height = ht;
     let k = 2, mode = 'wrap', probe = null;
     const info = h('div', { class: 'w-kv' });
-    const f = (v) => { const y = Math.round(v * k); return mode === 'wrap' ? ((y % 256) + 256) % 256 : Math.min(255, y); };
+    const kk = () => (mode === 'wrap' ? Math.max(1, Math.round(k)) : k);   // NumPy wraps only in integer arithmetic
+    const f = (v) => { const y = Math.round(v * kk()); return mode === 'wrap' ? ((y % 256) + 256) % 256 : Math.min(255, y); };
     function draw() {
       const hist = new Float32Array(256);
       for (let i = 0; i < w * ht; i++) for (let ch = 0; ch < 3; ch++) { const v = f(src[i * 3 + ch]); img.data[i * 4 + ch] = v; hist[v]++; }
@@ -1761,24 +1797,24 @@
       hx.fillStyle = css('--accent');
       for (let v = 0; v < 256; v++) { const hh = Math.min(1, hist[v] / mx) * 96; hx.fillRect(v, 100 - hh, 1, hh); }
       hx.fillStyle = css('--ink-2'); hx.font = fpx(hc, 10) + 'px "JetBrains Mono", monospace';
-      hx.fillText('0', 0, 110); hx.fillText('255', 256 - fpx(hc, 20), 110);
+      hx.textBaseline = 'bottom'; hx.fillText('0', 1, 110); hx.fillText('255', 256 - fpx(hc, 20), 110); hx.textBaseline = 'alphabetic';
       if (probe) {
-        const i = (probe[1] * w + probe[0]) * 3, r = src[i], y = Math.round(r * k);
-        info.innerHTML = `red channel here: ${r} × ${k} = ${y} → stored as <b>${f(r)}</b>` + (y > 255 ? (mode === 'wrap' ? ` (${y} − 256${y > 511 ? ' − 256' : ''})` : ' (held at 255)') : '');
+        const i = (probe[1] * w + probe[0]) * 3, r = src[i], y = Math.round(r * kk());
+        info.innerHTML = `red channel here: ${r} × ${kk()} = ${y} → stored as <b>${f(r)}</b>` + (y > 255 ? (mode === 'wrap' ? ` (${y} − 256${y > 511 ? ' − 256' : ''})` : ' (held at 255)') : '');
       } else info.innerHTML = 'point at the photo';
     }
     c.addEventListener('pointermove', (e) => { const r = c.getBoundingClientRect(); probe = [clamp(Math.floor((e.clientX - r.left) / r.width * w), 0, w - 1), clamp(Math.floor((e.clientY - r.top) / r.height * ht), 0, ht - 1)]; draw(); });
     c.addEventListener('pointerdown', (e) => c.dispatchEvent(new PointerEvent('pointermove', e)));
     el.append(h('div', { class: 'w-row' }, c, h('div', {}, h('div', { class: 'w-kv' }, 'how many pixels have each value'), hc, info)),
       h('div', { class: 'w-ctrl' }, slider('multiply by', 0.5, 3, 0.1, k, (v) => v.toFixed(1), (v) => { k = v; draw(); }),
-        chips(['wrap', 'clip'], mode, (v) => { mode = v; draw(); })));
+        chips(['wrap', 'clip'], mode, (v) => { mode = v; draw(); }), h('span', { class: 'w-kv' }, '(wrap rounds to a whole number)')));
     draw(); onTheme(draw);
   };
 
   /* ---------------- count every picture */
   W.count = (el) => {
     frame(el, 'Count every picture',
-      'Click squares to draw a black-and-white picture. Read as a binary number, square by square, it is one picture out of all possible ones, and it lights up in the full list on the right. Each square you add doubles the list. Then try the size and shades sliders to see how fast the count grows.');
+      'Click squares to draw a black-and-white picture. Read as a binary number, square by square, it is one picture out of all possible ones, and it lights up in the full list of every possible picture. Each square you add doubles the list. Then try the size and shades sliders to see how fast the count grows.');
     let n = 3, cells = new Uint8Array(9);
     const [gc, gx] = canvas(150, 150), [lc, lx] = canvas(320, 160);
     const info = h('div', { class: 'w-kv' }), big = h('div', { class: 'w-kv' });
@@ -1823,7 +1859,7 @@
     frame(el, 'Monty Hall, played',
       'Pick a door. The host, who knows where the car is, opens a different door with a goat behind it. Then stay or switch. Play a few rounds by hand, then let the computer play a thousand of each and watch the two win rates settle.');
     const doors = h('div', { class: 'mh-doors' }), say = h('div', { class: 'w-kv' }), tally = h('div', { class: 'bars' });
-    const stat = { stay: [0, 0], switch: [0, 0] };
+    const stat = { stay: [0, 0], switch: [0, 0] }, hand = { stay: [0, 0], switch: [0, 0] };   // your rounds are counted apart from the computer's
     const bb = bars(2, ['stay', 'switch']);
     bb.classList.add('wide-labels');
     let car, pick, opened, done;
@@ -1845,19 +1881,20 @@
     }
     function finish(sw) {
       if (done || pick == null) return;
-      done = true;
+      done = true; stayB.disabled = swB.disabled = true;
       const fin = sw ? 3 - pick - opened : pick, win = fin === car;
       ds.forEach((d, i) => { d.textContent = i === car ? '🚗' : '🐐'; d.disabled = true; });
       ds[fin].classList.add(win ? 'mh-win' : 'mh-lose');
-      record(sw, win);
+      record(sw, win, true);
       say.innerHTML = `You ${sw ? 'switched' : 'stayed'} and ${win ? '<b>won the car</b>' : 'got a goat'}. <button type="button" class="w-btn">again</button>`;
       say.querySelector('button').onclick = reset;
     }
-    function record(sw, win) { const s = stat[sw ? 'switch' : 'stay']; s[0] += win; s[1]++; show(); }
+    function record(sw, win, byHand) { const s = (byHand ? hand : stat)[sw ? 'switch' : 'stay']; s[0] += win; s[1]++; show(); }
     function show() {
-      const r = ['stay', 'switch'].map((k) => (stat[k][1] ? stat[k][0] / stat[k][1] : 0));
+      const src = stat.stay[1] + stat.switch[1] ? stat : hand, r = ['stay', 'switch'].map((k) => (src[k][1] ? src[k][0] / src[k][1] : 0));
       bb.set(r, (v) => (v * 100).toFixed(1) + '%', 1);
-      tally.textContent = `stay: won ${stat.stay[0]} of ${stat.stay[1]} · switch: won ${stat.switch[0]} of ${stat.switch[1]}`;
+      const line = (o) => `stay won ${o.stay[0]} of ${o.stay[1]} · switch won ${o.switch[0]} of ${o.switch[1]}`;
+      tally.textContent = (hand.stay[1] + hand.switch[1] ? 'your rounds: ' + line(hand) : '') + (stat.stay[1] ? (hand.stay[1] + hand.switch[1] ? ' | ' : '') + 'the computer: ' + line(stat) : '');
     }
     function many() {
       for (let t = 0; t < 1000; t++) for (const sw of [false, true]) {
@@ -1867,14 +1904,14 @@
       }
     }
     tally.className = 'w-kv';
-    el.append(doors, say, h('div', { class: 'w-ctrl' }, stayB, swB, btn('play 1000 of each', many), btn('reset counts', () => { stat.stay = [0, 0]; stat.switch = [0, 0]; show(); })), bb, tally);
+    el.append(doors, say, h('div', { class: 'w-ctrl' }, stayB, swB, btn('play 1000 of each', many), btn('reset counts', () => { for (const o of [stat, hand]) { o.stay = [0, 0]; o.switch = [0, 0]; } show(); })), bb, tally);
     reset(); show();
   };
 
   /* ---------------- softmax and cross-entropy */
   W.softmax = (el) => {
     frame(el, 'Scores to probabilities',
-      'Drag the top bars to set the network\'s ten scores, one per digit. Below them, softmax turns the scores into probabilities that add up to 1. Click a digit\'s label to say which one is right: the loss is minus the log of the probability on the right answer. Try raising every score by the same amount, and try a confident wrong answer.');
+      'Drag the top bars to set the network\'s ten scores, one per digit. Below them, softmax turns the scores into probabilities that add up to 1. Click a digit\'s label to say which one is right: the loss is minus the log of the probability on the right answer. Try shifting every score by the same amount (the probabilities do not move), and try a confident wrong answer.');
     const N = 10, Wd = 340, Ht = 260, top = 124, y0 = 16;
     const [c, ctx] = canvas(Wd, Ht);
     let s = [0.5, -1, 2, 0, -0.5, 1, -2, 0.2, 3, -1], truth = 8;
@@ -1915,7 +1952,7 @@
       if (dx) truth = (truth + dx + N) % N; else s[truth] = clamp(Math.round((s[truth] - dy * 0.5) * 10) / 10, -sMax, sMax); draw();
     });
     el.append(c, info, h('div', { class: 'w-ctrl' },
-      btn('+1 to every score', () => { s = s.map((v) => Math.min(sMax, v + 1)); draw(); }),
+      btn('+1 to every score', () => { const d = Math.max(...s) + 1 > sMax ? -4 : 1; s = s.map((v) => Math.max(-sMax, v + d)); draw(); }),   // at the top, shift everything down instead: the point is that a shift changes nothing
       btn('confident and wrong', () => { s = s.map(() => -1); s[(truth + 3) % N] = 5; draw(); }),
       btn('all equal', () => { s = s.map(() => 0); draw(); })));
     draw(); onTheme(draw);
@@ -1924,7 +1961,7 @@
   /* ---------------- occlusion: what does the network look at? */
   W.occlude = (el) => {
     frame(el, 'Cover part of the digit',
-      'This is the small trained network from this chapter\'s demos, looking at a handwritten test digit. Move the black square over the digit to erase that part, and watch the probabilities change. Press <b>map</b> to slide the square over every position: red marks the pixels whose loss hurts the network\'s answer most.');
+      'This is the small trained network from this chapter\'s demos, looking at a handwritten test digit. Move the black square over the digit to erase that part, and watch the probabilities change. Press <b>map</b> to slide the square over every position: the colored pixels are the ones whose loss hurts the network\'s answer most.');
     const S = 224, cell = S / 28;
     const [c, ctx] = canvas(S, S);
     let k = 1 + ((Math.random() * 119) | 0), x0 = null, size = 8, heat = null, sq = [10, 10];
@@ -1938,22 +1975,37 @@
       drawDigit(ctx, y, 0, 0, S, '#fff');
       if (heat) {
         const m = Math.max(...heat, 1e-6);
-        for (let i = 0; i < 784; i++) if (heat[i] > 0) { ctx.fillStyle = `rgba(239,68,68,${0.75 * heat[i] / m})`; ctx.fillRect((i % 28) * cell, ((i / 28) | 0) * cell, cell, cell); }
+        const [hr, hg, hb] = hex(css('--pos'));
+        for (let i = 0; i < 784; i++) if (heat[i] > 0) { ctx.fillStyle = `rgba(${hr},${hg},${hb},${0.8 * heat[i] / m})`; ctx.fillRect((i % 28) * cell, ((i / 28) | 0) * cell, cell, cell); }
       }
+      // the cover: a hatched gray square, so it shows even on the black background
+      ctx.save(); ctx.beginPath(); ctx.rect(sq[0] * cell, sq[1] * cell, size * cell, size * cell); ctx.clip();
+      ctx.fillStyle = 'rgba(128,128,128,.35)'; ctx.fillRect(sq[0] * cell, sq[1] * cell, size * cell, size * cell);
+      ctx.strokeStyle = 'rgba(160,160,160,.6)'; ctx.lineWidth = 1; ctx.beginPath();
+      for (let d = -size * cell; d < size * cell; d += 6) { ctx.moveTo(sq[0] * cell + d, sq[1] * cell); ctx.lineTo(sq[0] * cell + d + size * cell, sq[1] * cell + size * cell); }
+      ctx.stroke(); ctx.restore();
       ctx.strokeStyle = css('--accent'); ctx.lineWidth = 2; ctx.strokeRect(sq[0] * cell, sq[1] * cell, size * cell, size * cell);
       const p0 = mlp.forward(x).p, p = mlp.forward(y).p, best = p0.indexOf(Math.max(...p0));
       pb.set(p, (v) => v.toFixed(2), 1);
       const now = p.indexOf(Math.max(...p));
       info.innerHTML = `the digit is a <b>${D.sampleLabels[k]}</b> · uncovered, the network says ${best} (${(p0[best] * 100).toFixed(0)}%) · covered, it says <b>${now}</b> (${(p[now] * 100).toFixed(0)}%)`;
     }
-    function map() {
-      const x = x0, p0 = mlp.forward(x).p, t = p0.indexOf(Math.max(...p0));
+    let mapGen = 0;
+    function map() {                    // a few rows of square positions per frame, so the page never stalls
+      const my = ++mapGen, x = x0, p0 = mlp.forward(x).p, t = p0.indexOf(Math.max(...p0));
       const acc = new Float32Array(784), cnt = new Float32Array(784);
-      for (let sy = -size + 1; sy < 28; sy += 1) for (let sx = -size + 1; sx < 28; sx += 1) {
-        const drop = Math.max(0, p0[t] - mlp.forward(covered(x, sx, sy)).p[t]);
-        for (let r = Math.max(0, sy); r < Math.min(28, sy + size); r++) for (let q = Math.max(0, sx); q < Math.min(28, sx + size); q++) { acc[r * 28 + q] += drop; cnt[r * 28 + q]++; }
-      }
-      heat = acc.map((v, i) => (cnt[i] ? v / cnt[i] : 0)); draw();
+      let sy = -size + 1;
+      const chunk = () => {
+        if (my !== mapGen) return;
+        const t0 = performance.now();
+        for (; sy < 28 && performance.now() - t0 < 12; sy++) for (let sx = -size + 1; sx < 28; sx += 1) {
+          const drop = Math.max(0, p0[t] - mlp.forward(covered(x, sx, sy)).p[t]);
+          for (let r = Math.max(0, sy); r < Math.min(28, sy + size); r++) for (let q = Math.max(0, sx); q < Math.min(28, sx + size); q++) { acc[r * 28 + q] += drop; cnt[r * 28 + q]++; }
+        }
+        heat = acc.map((v, i) => (cnt[i] ? v / cnt[i] : 0)); draw();
+        if (sy < 28) requestAnimationFrame(chunk);
+      };
+      chunk();
     }
     const place = (e) => { const r = c.getBoundingClientRect(); sq = [Math.round((e.clientX - r.left) / r.width * 28 - size / 2), Math.round((e.clientY - r.top) / r.height * 28 - size / 2)]; draw(); };
     let down = false;
@@ -1962,10 +2014,10 @@
     c.addEventListener('pointerup', () => { down = false; });
     c.style.cursor = 'none';
     keys(c, 'digit with a movable black square', (dx, dy) => { sq = [sq[0] + dx, sq[1] + dy]; draw(); });
-    const next = () => { k = (k + 1 + ((Math.random() * 118) | 0)) % 120; x0 = digit(); heat = null; draw(); };
+    const next = () => { k = (k + 1 + ((Math.random() * 118) | 0)) % 120; x0 = digit(); mapGen++; heat = null; draw(); };
     el.append(h('div', { class: 'w-row' }, c, h('div', { style: 'flex:1;min-width:220px' }, pb, info)),
-      h('div', { class: 'w-ctrl' }, btn('map', map, 'accent'), btn('another digit', next), btn('clear map', () => { heat = null; draw(); }),
-        slider('square', 2, 14, 1, size, (v) => v + '×' + v, (v) => { size = v; heat = null; draw(); })));
+      h('div', { class: 'w-ctrl' }, btn('map', map, 'accent'), btn('another digit', next), btn('clear map', () => { mapGen++; heat = null; draw(); }),
+        slider('square', 2, 14, 1, size, (v) => v + '×' + v, (v) => { size = v; mapGen++; heat = null; draw(); })));
     x0 = digit(); draw(); onTheme(draw);
   };
 
@@ -2013,11 +2065,14 @@
         m = p; n = 27;
       }
       const mxv = Math.max(...m.map(Math.abs), 1e-6), c = 224 / n;
-      mx.clearRect(0, 0, 224, 224);
+      const t = document.createElement('canvas'); t.width = t.height = n;
+      const tg = t.getContext('2d'), im = tg.createImageData(n, n), pos = hex(css('--pos')), neg = hex(css('--neg')), mid = hex(css('--card'));
       for (let i = 0; i < n * n; i++) {
-        mx.fillStyle = mode === 'signed' ? div(m[i] / mxv) : `rgb(${Array(3).fill(Math.round(255 * m[i] / mxv)).join(',')})`;
-        mx.fillRect((i % n) * c, ((i / n) | 0) * c, c + 0.4, c + 0.4);
+        const v = m[i] / mxv;
+        const col = mode === 'signed' ? mid.map((q, j) => q + ((v >= 0 ? pos : neg)[j] - q) * Math.min(1, Math.abs(v))) : [255 * v, 255 * v, 255 * v];
+        im.data.set([...col.map(Math.round), 255], i * 4);
       }
+      tg.putImageData(im, 0, 0); mx.imageSmoothingEnabled = false; mx.clearRect(0, 0, 224, 224); mx.drawImage(t, 0, 0, 224, 224);
       info.innerHTML = `filter <b>${pick}</b> of 64 · its map is ${n}×${n}` + (mode === 'ReLU + pool' ? ' after 3×3 pooling with stride 2' : '') + ' · 64 filters like this make AlexNet\'s first layer, 23,232 weights in all';
     }
     const im = new Image();
@@ -2085,7 +2140,7 @@
   /* ---------------- echo: a reservoir continues a signal */
   W.echo = (el) => {
     frame(el, 'A random memory, live',
-      'A reservoir of 200 randomly connected tanh units is fed a signal. Only the readout, one number per unit, is solved for, by least squares on 2,000 steps, so that it predicts the next value. Then the input is cut off and the reservoir runs on its own, fed back by its own predictions (orange). Turn the <b>strength</b> of the random connections down and the memory is too short; up and the reservoir starts to make its own chaos. Try a new random reservoir, too.');
+      'A reservoir of 200 randomly connected tanh units is fed a signal. Only the readout, one number per unit, is solved for, by least squares on 2,000 steps, so that it predicts the next value. Then the input is cut off and the reservoir runs on its own, fed back by its own predictions (orange). With 200 units it drifts sooner than the book\'s 500. On Mackey–Glass, turn the <b>strength</b> of the random connections down and the memory is too short; up and the reservoir makes its own chaos. A plain sine needs almost no memory at all. Try a new random reservoir, too.');
     const Nn = 200, Wd = 340, Ht = 150;
     const [c, ctx] = canvas(Wd, Ht);
     const info = h('div', { class: 'w-kv' });
@@ -2132,7 +2187,8 @@
       draw(past, truth, out);
       const err = (n) => { let e = 0; for (let t = 0; t < n; t++) e += Math.abs(truth[t] - out[t]); return e / n; };
       const e1 = err(100), e3 = err(T2);
-      info.innerHTML = isFinite(e3) ? `average error, first 100 steps on its own: <b>${e1.toExponential(1)}</b> · all 300: <b>${e3.toExponential(1)}</b>` : 'the reservoir blew up running on its own';
+      const off = out.filter((v) => !isFinite(v) || Math.abs(v) > 2.4).length;
+      info.innerHTML = !isFinite(e3) ? 'the reservoir blew up running on its own' : `average error, first 100 steps on its own: <b>${e1.toExponential(1)}</b> · all 300: <b>${e3.toExponential(1)}</b>` + (off > 30 ? ' · it wandered off the chart' : '');
     }
     function draw(past, truth, out) {
       ctx.clearRect(0, 0, Wd, Ht);
@@ -2157,10 +2213,10 @@
   /* ---------------- MENACE: a learning machine made of matchboxes */
   W.menace = (el) => {
     frame(el, 'MENACE, the matchbox learner',
-      'MENACE plays X and you play O. Every position it has seen is a matchbox holding beads, a few for each free square, and it moves by drawing a bead at random. Positions that are rotations or mirror images of each other share a box, as in Michie\'s machine. The small numbers show the beads it had for each square in the box it just drew from. After a game, every box it used gains beads for the move it made: 3 if it won, 1 for a draw, and it loses 3 if it lost. Play it, or let it train against a player who moves at random, and watch it stop losing.');
+      'MENACE plays X; you play O. Each position it has seen is a matchbox of beads, one color per free square, and it moves by drawing a bead at random (the small numbers are the beads in the box it just used). After each game it adds 3 beads for every move it made if it won, 1 for a draw, and takes 3 away if it lost. Play it, or train it against a random player and watch the losses fall.');
     const boxes = new Map(), board = Array(9).fill(' '), used = [];
     let over = false, games = 0;
-    const hist = [];
+    const hist = [], curve = [];   // hist: recent results; curve: losses per 100 games, kept from the very first game
     const lines = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
     const winner = (b) => { for (const [a, c, d] of lines) if (b[a] !== ' ' && b[a] === b[c] && b[a] === b[d]) return b[a]; return b.includes(' ') ? null : 'draw'; };
     let log = [];
@@ -2179,6 +2235,7 @@
       const d = result === 'X' ? 3 : result === 'draw' ? 1 : -3;
       for (const [key, m] of log) { const bx = boxes.get(key); bx[m] = Math.max(0, bx[m] + d); }
       games++; hist.push(result === 'O' ? 0 : result === 'draw' ? 1 : 2); if (hist.length > 2000) hist.shift();
+      if (games % 100 === 0) curve.push(hist.slice(-100).filter((v) => v === 0).length / 100);
     }
     const cells = Array.from({ length: 9 }, (_, i) => { const b = btn('', () => human(i)); b.className = 'mn-cell'; return b; });
     const grid = h('div', { class: 'mn-board' }, ...cells), say = h('div', { class: 'w-kv' });
@@ -2191,13 +2248,15 @@
       sx.clearRect(0, 0, 300, 70);
       const win = 100, cols = [css('--neg'), css('--ink-2'), css('--accent')];
       const pts = [];
-      for (let e = win; e <= hist.length; e += Math.max(1, Math.floor(hist.length / 150))) { const seg = hist.slice(e - win, e); pts.push([e, seg.filter((v) => v === 0).length / win]); }
+      const stride = Math.max(1, Math.ceil(curve.length / 150)); void win;
+      for (let e = 0; e < curve.length; e += stride) pts.push([e, curve[e]]);
+      if (curve.length && (curve.length - 1) % stride) pts.push([curve.length - 1, curve[curve.length - 1]]);
       sx.strokeStyle = css('--rule'); sx.strokeRect(0.5, 0.5, 299, 69);
       sx.fillStyle = css('--ink-2'); sx.font = fpx(sc, 10) + 'px "JetBrains Mono", monospace';
-      sx.fillText('games lost, of the last 100 (top = 40)', 4, 12);
+      sx.fillText('games lost per 100, since the first (top = 40)', 4, 12);
       if (pts.length > 1) { sx.strokeStyle = cols[0]; sx.lineWidth = 1.6; sx.beginPath(); pts.forEach(([e, v], i) => { const x = (i / (pts.length - 1)) * 296 + 2, y = 67 - Math.min(1, v / 0.4) * 50; i ? sx.lineTo(x, y) : sx.moveTo(x, y); }); sx.stroke(); }
       const last = hist.slice(-100), L = last.filter((v) => v === 0).length, Dd = last.filter((v) => v === 1).length;
-      say.innerHTML = `${games} games · ${boxes.size} matchboxes so far` + (last.length ? ` · last ${last.length}: MENACE won ${last.length - L - Dd}, drew ${Dd}, lost <b>${L}</b>` : '');
+      say.innerHTML = `${games} game${games === 1 ? '' : 's'} · ${boxes.size} matchbox${boxes.size === 1 ? '' : 'es'} so far` + (last.length ? ` · last ${last.length}: MENACE won ${last.length - L - Dd}, drew ${Dd}, lost <b>${L}</b>` : '');
     }
     function start() { board.fill(' '); over = false; log = []; menaceMove(board, log); show(usedBox()); }
     const usedBox = () => {       // the beads of the last box, placed back on the real board
@@ -2229,7 +2288,7 @@
     }
     el.append(h('div', { class: 'w-row' }, grid, h('div', {}, sc, say)),
       h('div', { class: 'w-ctrl' }, btn('new game', start, 'accent'), btn('train 200 games', () => train(200)), btn('train 2000', () => train(2000)),
-        btn('forget everything', () => { boxes.clear(); hist.length = 0; games = 0; start(); })));
+        btn('forget everything', () => { boxes.clear(); hist.length = 0; curve.length = 0; games = 0; start(); })));
     start(); onTheme(() => show(usedBox()));
   };
 
@@ -2301,7 +2360,7 @@
 
   W.layers = (el) => {
     frame(el, 'Inside AlexNet, layer by layer',
-      'A photo flows left to right through AlexNet. Every square is a real feature map, computed from this photo, and each block shows the strongest few of its layer; drag sideways to turn the stack. Click a block to open every map of that layer. Click a map to enlarge it, then point at it: the box on the photo shows the patch that one number can see, which grows from 11 pixels in conv1 to 163 in conv5. For conv5 you also see what that unit <b>wants</b> to see: an image made by gradient ascent to excite it as much as possible. In the spirit of the Deep Visualization Toolbox, every unit also shows the nine pictures from a small gallery that excite it most, and <b>trace</b> runs AlexNet\'s convolutions right here in your browser to show which pixels of this photo made the unit fire. Try <b>your photo</b>, or the <b>camera</b> for live feature maps.');
+      'Pick a photo and watch it flow through AlexNet: each block holds the strongest real feature maps of one layer (drag sideways to turn the stack). <b>Click a block</b> to see all of its maps, <b>click a map</b>, then point at it: the box on the photo is what one unit can see. Below that are the gallery pictures that excite the unit most, and <b>trace</b>, which finds the pixels that made it fire. <b>your photo</b> and <b>camera</b> run AlexNet\'s convolutions right in your browser.');
     const L = [   // name, kernel, stride, pad (pools folded in where they occur)
       { key: 'input', name: 'input', shape: '3×224×224' },
       { key: 'conv1', name: 'conv1', shape: '64×55×55', ops: [[11, 4, 2]] },
@@ -2398,12 +2457,14 @@
       requestAnimationFrame(step);
     }
 
-    async function load(name) {
+    let gen = 0;                                  // the newest choice wins: older loads, uploads and camera frames are dropped
+    async function load(name, my = gen) {
       photo = name; status.textContent = 'loading ' + name + '…';
       await loadScript(`assets/alexnet/photo_${name}.js`);
       const r = window.ALEXNET['photo_' + name];
-      r.photoIm = await loadImage(r.jpg);
-      for (const k of Object.keys(r.layers)) r.layers[k].im = await loadImage(r.layers[k].img);
+      r.photoIm = r.photoIm || await loadImage(r.jpg);
+      for (const k of Object.keys(r.layers)) r.layers[k].im = r.layers[k].im || await loadImage(r.layers[k].img);
+      if (my !== gen) return;
       rec = r; maps = {}; top5.style.display = '';
       top5.set(r.top.map((t) => t[1]), (v) => (v * 100).toFixed(1) + '%', 1);
       top5.querySelectorAll('.bar b').forEach((b, i) => { b.textContent = r.top[i][0]; });
@@ -2413,7 +2474,7 @@
 
     // your own picture, or a camera frame: the five conv layers computed right here
     let busy = false, traceOn = false, lastForward = null;
-    async function useImage(src, w, h, live) {
+    async function useImage(src, w, h, live, my = gen) {
       if (busy) return; busy = true;
       try {
         if (!live) status.textContent = 'loading AlexNet\'s convolution layers (3 MB, once)…';
@@ -2421,28 +2482,31 @@
         const photoIm = squareCrop(src, w, h), x = tensorOf(photoIm);
         if (!live) status.textContent = 'running five convolution layers in your browser…';
         const t0 = performance.now(), outs = await E.forward(x), ms = performance.now() - t0;
+        if (my !== gen) return;
         const layers = {}; for (const k of Object.keys(outs)) layers[k] = atlasOf(outs[k]);
         rec = { photoIm, layers, custom: true, x }; lastForward = rec; traceOn = true; maps = {}; top5.style.display = 'none';
         status.innerHTML = `computed in your browser in <b>${(ms / 1000).toFixed(1)} s</b> · only the convolution layers: the fully connected ones hold 58 of AlexNet's 61 million weights, too many to send to a web page, so there is no guess`;
         if (live) { reveal = 1; draw(); } else flow();
-        openLayer(sel == null || sel === 0 || sel > 5 ? 1 : sel, true);
+        if (live && detail.refresh && detail.layer === sel) detail.refresh();   // a camera frame: update the open maps in place
+        else openLayer(sel == null || sel === 0 || sel > 5 ? 1 : sel, true);
       } catch (e) { status.textContent = 'could not run AlexNet here: ' + e.message; } finally { busy = false; }
     }
     const file = h('input', { type: 'file', accept: 'image/*', style: 'display:none' });
     file.addEventListener('change', async () => {
       const f = file.files[0]; if (!f) return;
-      const im = await loadImage(URL.createObjectURL(f)); useImage(im, im.naturalWidth, im.naturalHeight);
+      const my = ++gen, im = await loadImage(URL.createObjectURL(f)); useImage(im, im.naturalWidth, im.naturalHeight, false, my);
       file.value = '';
     });
     let cam = null;
-    async function startCam() {
+    async function startCam(my) {
       try {
         const st = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 640 } }, audio: false });
+        if (my !== gen) { st.getTracks().forEach((t) => t.stop()); return; }   // another photo was chosen while the browser asked
         const v = document.createElement('video'); v.srcObject = st; v.muted = true; v.playsInline = true; await v.play();
         cam = { st, v }; const me = cam;
-        while (cam === me) {
+        while (cam === me && my === gen) {
           if (!el.isConnected || document.hidden) { await new Promise((r) => setTimeout(r, 500)); if (!el.isConnected) stopCam(); continue; }
-          await useImage(v, v.videoWidth, v.videoHeight, true);
+          await useImage(v, v.videoWidth, v.videoHeight, true, my);
           await new Promise((r) => setTimeout(r, 60));
         }
       } catch (e) { status.textContent = 'no camera here: ' + e.message; }
@@ -2463,6 +2527,7 @@
       const same = keep && sel === li;
       sel = li; draw();
       const l = L[li];
+      detail.refresh = null; detail.layer = li;
       if (li >= 6 && rec.custom) {
         detail.replaceChildren(h('p', { class: 'w-kv', style: 'max-width:640px' }, `${l.name} is not computed for your own pictures: the fully connected layers hold 58 of AlexNet's 61 million weights, too many to send to a web page.`));
         return;
@@ -2476,7 +2541,7 @@
         if (li === 8) showClasses();
         return;
       }
-      const a = rec.layers[l.key];
+      let a = rec.layers[l.key];
       const scale = Math.min(2, 340 / a.im.width);
       const [ac, actx] = canvas(Math.round(a.im.width * scale), Math.round(a.im.height * scale));
       const [mc, mctx] = canvas(208, 208), [pc, pctx] = canvas(208, 208);
@@ -2520,9 +2585,13 @@
       }
       // guided backpropagation: which pixels of this photo drive the unit
       const [tc, tx] = canvas(208, 208), traceNote = h('div', { class: 'w-kv', style: 'max-width:208px' });
+      detail.refresh = () => { a = rec.layers[l.key]; drawAtlas(); drawMap(cellNow); };
       let tracing = traceOn;
       const traceBtn = btn('trace it to the pixels', () => { tracing = traceOn = true; traceBtn.remove(); trace(); }, 'accent');
+      let tBusy = false, tAgain = false;
       async function trace() {
+        if (tBusy) { tAgain = true; return; }    // one trace at a time; a burst of clicks traces only the last
+        tBusy = true;
         const me = pick, li0 = li;
         traceNote.textContent = 'tracing…';
         try {
@@ -2547,6 +2616,7 @@
           tx.strokeStyle = css('--accent'); tx.lineWidth = 1.5; tx.strokeRect((q0 - cx0) * k, (r0 - cy0) * k, (q1 - q0 + 1) * k, (r1 - r0 + 1) * k);
           traceNote.innerHTML = `unit (${cell[0]}, ${cell[1]}) of map ${pick}: the ${side}×${side} pixels around what it sees: gray is no effect, color marks the pixels that push it up` + (s2 === 0 ? ' (this unit is silent here, so nothing does)' : '');
         } catch (e) { traceNote.textContent = 'could not trace: ' + e.message; }
+        finally { tBusy = false; if (tAgain) { tAgain = false; trace(); } }
       }
       function showFilter() {
         const [fc, fx] = canvas(110, 110), Wt = new Int8Array(b64(D.alexnet.w).buffer), o = pick * 363;
@@ -2579,7 +2649,7 @@
         h('div', { class: 'w-row', style: 'margin-top:14px' },
           h('div', { style: 'max-width:208px' }, h('div', { class: 'w-kv' }, 'the nine gallery pictures it likes most'), gc),
           h('div', { style: 'max-width:208px' }, h('div', { class: 'w-kv' }, 'the pixels behind it'), tracing ? tc : h('div', {}, tc, traceBtn), traceNote)));
-      if (!tracing) { tx.fillStyle = css('--paper-2'); tx.fillRect(0, 0, 208, 208); traceNote.textContent = 'runs AlexNet in your browser (3 MB, once)'; }
+      if (!tracing) { tx.fillStyle = css('--rule'); tx.globalAlpha = 0.5; tx.fillRect(0, 0, 208, 208); tx.globalAlpha = 1; traceNote.textContent = 'runs AlexNet in your browser (3 MB, once)'; }
       choose(pick);
     }
 
@@ -2608,12 +2678,13 @@
     c.addEventListener('pointerleave', () => { hoverBlock = -1; draw(); });
     keys(c, 'AlexNet as a stack of layers; left and right choose a layer', (dx) => { if (rec) openLayer(clamp((sel == null ? 0 : sel) + dx, 0, L.length - 1)); });
 
-    el.append(h('div', { class: 'w-ctrl', style: 'margin-top:0' }, chips(PHOTOS, photo, (n) => { stopCam(); if (n === 'your photo') file.click(); else if (n === 'camera') startCam(); else load(n); }), file, btn('play it through again', flow)),
+    el.append(h('div', { class: 'w-ctrl', style: 'margin-top:0' }, chips(PHOTOS, photo, (n) => { stopCam(); if (n === 'your photo') { file.click(); return; } const my = ++gen; if (n === 'camera') startCam(my); else load(n, my); }), file, btn('play it through again', flow)),
       h('div', { class: 'w-scroll' }, c), h('div', { class: 'w-row' }, h('div', { style: 'flex:1;min-width:260px' }, status, top5)), detail);
     load('cat').then(() => openLayer(1)).catch((e) => { status.textContent = String(e.message); });
     onTheme(() => { draw(); if (sel != null) openLayer(sel); });
   };
 
+  const away = new IntersectionObserver((es) => es.forEach((e) => { if (!e.isIntersecting) e.target.dispatchEvent(new Event('w-offscreen')); }));
   /* ---------------- mount when visible */
   const io = new IntersectionObserver((ents) => ents.forEach((e) => {
     if (!e.isIntersecting) return;
@@ -2621,6 +2692,7 @@
     const f = W[e.target.dataset.widget];
     if (f) {
       try { f(e.target); } catch (err) { console.error(err); e.target.remove(); return; }
+      away.observe(e.target);
       const t = e.target.querySelector('.w-title');
       e.target.querySelectorAll('canvas').forEach((c) => {
         c.setAttribute('role', 'img');

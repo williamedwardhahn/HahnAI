@@ -240,7 +240,9 @@ pre.code code { font-family: inherit; }
 .w-ctrl label { display: flex; align-items: center; gap: 8px; }
 .w-ctrl output, .w-mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .w-btn { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--ink); background: transparent; border: 1px solid var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; transition: background .2s, color .2s; }
-.w-btn:hover, .w-btn.on { background: var(--ink); color: var(--paper); }
+.w-btn.on { background: var(--ink); color: var(--paper); }
+@media (hover: hover) { .w-btn:not(.accent):not(.on):not(:disabled):hover { background: var(--paper-2); } }   /* a tap on a phone must not look like a selection */
+.w-btn:disabled:not(.mh-door) { opacity: .45; cursor: default; }
 .w-btn.accent { background: var(--accent); border-color: var(--accent); color: #fff; }
 .w-btn.accent:hover { filter: brightness(1.08); }
 .w-chips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -432,3 +434,7 @@ button.mm-cell { cursor: pointer; }
 .lx-classes figure { margin: 0; }
 .lx-classes img { width: 100%; height: auto; border-radius: 6px; display: block; }
 .lx-classes figcaption { font-family: var(--mono); font-size: 12px; color: var(--ink-2); margin-top: 3px; }
+@media (max-width: 600px) { .w-minibox { width: 48px; } .w-table th, .w-table td { padding-right: 6px; } }
+.mm-err { font-family: var(--mono); font-size: 14px; color: var(--accent-ink); border: 1px dashed var(--accent); border-radius: 6px; padding: 8px 12px; }
+@media (max-width: 600px) { .tl-card { min-height: 236px; } }
+.play-step .w-note { display: none; }   /* the Play page says it in its own, simpler words */
