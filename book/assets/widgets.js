@@ -2242,10 +2242,66 @@
     }));
   })();
   const loadImage = (src) => new Promise((ok) => { const im = new Image(); im.onload = () => ok(im); im.src = src; });
+  // AlexNet's five conv layers, run in the browser (a Web Worker when allowed): loads engine.js and 3 MB of int8 weights once
+  const alexRun = (() => {
+    let ready = null;
+    return () => ready || (ready = (async () => {
+      await loadScript('assets/alexnet/engine.js'); await loadScript('assets/alexnet/weights.js');
+      const ws = window.ALEXNET.weights;
+      let worker = null;
+      try {
+        const shim = `const E = (${window.alexEngine.toString()})();
+          self.onmessage = (e) => { const m = e.data;
+            if (m.weights) { E.setWeights(m.weights); self.postMessage({ ready: true }); }
+            else if (m.img) self.postMessage({ id: m.id, outs: E.forward(m.img) });
+            else self.postMessage({ id: m.id, grad: E.guided(...m.guided) }); };`;
+        worker = new Worker(URL.createObjectURL(new Blob([shim], { type: 'text/javascript' })));
+        await new Promise((ok, bad) => { worker.onmessage = (e) => e.data.ready && ok(); worker.onerror = bad; worker.postMessage({ weights: ws }); setTimeout(() => bad(new Error('worker timeout')), 15000); });
+      } catch (e) { if (worker) worker.terminate(); worker = null; }
+      if (!worker) { const E = window.alexEngine(); E.setWeights(ws); return { forward: async (x) => E.forward(x), guided: async (...a) => E.guided(...a) }; }
+      let id = 0; const wait = {};
+      worker.onmessage = (e) => { const f = wait[e.data.id]; delete wait[e.data.id]; if (f) f(e.data); };
+      const call = (m) => new Promise((ok) => { m.id = ++id; wait[id] = ok; worker.postMessage(m); });
+      // the worker keeps one forward pass in memory for tracing, so calls are serialized
+      let chain = Promise.resolve();
+      const queue = (f) => (chain = chain.then(f, f));
+      return { forward: (x) => queue(async () => (await call({ img: x })).outs), guided: (...a) => queue(async () => (await call({ guided: a })).grad) };
+    })());
+  })();
+  function squareCrop(src, w, h) {               // the central square of any picture, as a 224x224 canvas
+    const t = document.createElement('canvas'); t.width = t.height = 224;
+    const side = Math.min(w, h);
+    t.getContext('2d').drawImage(src, (w - side) / 2, (h - side) / 2, side, side, 0, 0, 224, 224);
+    return t;
+  }
+  function tensorOf(c224) {                      // ImageNet normalization, channels first
+    const d = c224.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, 224, 224).data, x = new Float32Array(3 * 50176);
+    const mean = [0.485, 0.456, 0.406], sd = [0.229, 0.224, 0.225];
+    for (let i = 0; i < 50176; i++) for (let ch = 0; ch < 3; ch++) x[ch * 50176 + i] = (d[i * 4 + ch] / 255 - mean[ch]) / sd[ch];
+    return x;
+  }
+  function atlasOf({ data, C, H }) {             // the same layout export_alexnet_layers.py uses
+    let cols = Math.ceil(Math.sqrt(C)); while (C % cols) cols++;
+    const rows = C / cols, Wa = cols * (H + 1) - 1, Ha = rows * (H + 1) - 1;
+    const t = document.createElement('canvas'); t.width = Wa; t.height = Ha;
+    const g = t.getContext('2d'), im = g.createImageData(Wa, Ha), peak = [], mean = [];
+    for (let c = 0; c < C; c++) {
+      let m = 0, s = 0; const o = c * H * H;
+      for (let i = 0; i < H * H; i++) { m = Math.max(m, data[o + i]); s += data[o + i]; }
+      peak.push(m); mean.push(s / (H * H));
+      const r = (c / cols) | 0, q = c % cols;
+      for (let y = 0; y < H; y++) for (let x = 0; x < H; x++) {
+        const v = Math.round(255 * data[o + y * H + x] / (m + 1e-6)), j = ((r * (H + 1) + y) * Wa + q * (H + 1) + x) * 4;
+        im.data[j] = im.data[j + 1] = im.data[j + 2] = v; im.data[j + 3] = 255;
+      }
+    }
+    g.putImageData(im, 0, 0);
+    return { im: t, C, H, cols, peak, mean };
+  }
 
   W.layers = (el) => {
     frame(el, 'Inside AlexNet, layer by layer',
-      'A photo flows left to right through AlexNet. Every square is a real feature map, computed from this photo, and each block shows the strongest few of its layer; drag sideways to turn the stack. Click a block to open every map of that layer. Click a map to enlarge it, then point at it: the box on the photo shows the patch that one number can see, which grows from 11 pixels in conv1 to 163 in conv5. For conv5 you also see what that unit <b>wants</b> to see: an image made by gradient ascent to excite it as much as possible.');
+      'A photo flows left to right through AlexNet. Every square is a real feature map, computed from this photo, and each block shows the strongest few of its layer; drag sideways to turn the stack. Click a block to open every map of that layer. Click a map to enlarge it, then point at it: the box on the photo shows the patch that one number can see, which grows from 11 pixels in conv1 to 163 in conv5. For conv5 you also see what that unit <b>wants</b> to see: an image made by gradient ascent to excite it as much as possible. In the spirit of the Deep Visualization Toolbox, every unit also shows the nine pictures from a small gallery that excite it most, and <b>trace</b> runs AlexNet\'s convolutions right here in your browser to show which pixels of this photo made the unit fire. Try <b>your photo</b>, or the <b>camera</b> for live feature maps.');
     const L = [   // name, kernel, stride, pad (pools folded in where they occur)
       { key: 'input', name: 'input', shape: '3×224×224' },
       { key: 'conv1', name: 'conv1', shape: '64×55×55', ops: [[11, 4, 2]] },
@@ -2256,7 +2312,7 @@
       { key: 'fc6', name: 'fc6', shape: '4096', note: 'pool5 →' },
       { key: 'fc7', name: 'fc7', shape: '4096' },
       { key: 'out', name: 'fc8', shape: '1000' }];
-    const PHOTOS = ['cat', 'coffee', 'rocket', 'astronaut', 'motorcycle'];
+    const PHOTOS = ['cat', 'coffee', 'rocket', 'astronaut', 'motorcycle', 'your photo', 'camera'];
     const narrow = (el.clientWidth || 800) < 600;            // a phone: smaller canvas, names only
     const Wd = narrow ? 400 : 760, Ht = narrow ? 210 : 290, room = narrow ? 14 : 120;
     const [c, ctx] = canvas(Wd, Ht);
@@ -2325,7 +2381,7 @@
       const want = clamp(fitK * (Wd - room) / x, 0.3, 1);
       if (Math.abs(want - fitK) > 0.01 && !draw.again) { fitK = want; draw.again = true; draw(t); draw.again = false; return; }
       // the answer
-      if (reveal >= 1 && rec && !narrow) {
+      if (reveal >= 1 && rec && rec.top && !narrow) {
         ctx.textAlign = 'left'; ctx.fillStyle = acc; ctx.font = '600 ' + fpx(c, 12.5) + 'px "JetBrains Mono", monospace';
         const [name, p] = rec.top[0];
         ctx.fillText(name, x - 8, cy - 6); ctx.fillStyle = ink2; ctx.font = fpx(c, 10.5) + 'px "JetBrains Mono", monospace';
@@ -2348,12 +2404,52 @@
       const r = window.ALEXNET['photo_' + name];
       r.photoIm = await loadImage(r.jpg);
       for (const k of Object.keys(r.layers)) r.layers[k].im = await loadImage(r.layers[k].img);
-      rec = r; maps = {};
+      rec = r; maps = {}; top5.style.display = '';
       top5.set(r.top.map((t) => t[1]), (v) => (v * 100).toFixed(1) + '%', 1);
       top5.querySelectorAll('.bar b').forEach((b, i) => { b.textContent = r.top[i][0]; });
       status.innerHTML = `AlexNet's top five guesses for this photo` + (name === 'rocket' || name === 'astronaut' ? ' · ImageNet has no class for this, so it reaches for the nearest thing it knows' : '');
       flow(); if (sel != null) openLayer(sel);
     }
+
+    // your own picture, or a camera frame: the five conv layers computed right here
+    let busy = false, traceOn = false, lastForward = null;
+    async function useImage(src, w, h, live) {
+      if (busy) return; busy = true;
+      try {
+        if (!live) status.textContent = 'loading AlexNet\'s convolution layers (3 MB, once)…';
+        const E = await alexRun();
+        const photoIm = squareCrop(src, w, h), x = tensorOf(photoIm);
+        if (!live) status.textContent = 'running five convolution layers in your browser…';
+        const t0 = performance.now(), outs = await E.forward(x), ms = performance.now() - t0;
+        const layers = {}; for (const k of Object.keys(outs)) layers[k] = atlasOf(outs[k]);
+        rec = { photoIm, layers, custom: true, x }; lastForward = rec; traceOn = true; maps = {}; top5.style.display = 'none';
+        status.innerHTML = `computed in your browser in <b>${(ms / 1000).toFixed(1)} s</b> · only the convolution layers: the fully connected ones hold 58 of AlexNet's 61 million weights, too many to send to a web page, so there is no guess`;
+        if (live) { reveal = 1; draw(); } else flow();
+        openLayer(sel == null || sel === 0 || sel > 5 ? 1 : sel, true);
+      } catch (e) { status.textContent = 'could not run AlexNet here: ' + e.message; } finally { busy = false; }
+    }
+    const file = h('input', { type: 'file', accept: 'image/*', style: 'display:none' });
+    file.addEventListener('change', async () => {
+      const f = file.files[0]; if (!f) return;
+      const im = await loadImage(URL.createObjectURL(f)); useImage(im, im.naturalWidth, im.naturalHeight);
+      file.value = '';
+    });
+    let cam = null;
+    async function startCam() {
+      try {
+        const st = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 640 } }, audio: false });
+        const v = document.createElement('video'); v.srcObject = st; v.muted = true; v.playsInline = true; await v.play();
+        cam = { st, v }; const me = cam;
+        while (cam === me) {
+          if (!el.isConnected || document.hidden) { await new Promise((r) => setTimeout(r, 500)); if (!el.isConnected) stopCam(); continue; }
+          await useImage(v, v.videoWidth, v.videoHeight, true);
+          await new Promise((r) => setTimeout(r, 60));
+        }
+      } catch (e) { status.textContent = 'no camera here: ' + e.message; }
+    }
+    function stopCam() { if (cam) { cam.st.getTracks().forEach((t) => t.stop()); cam = null; } }
+    const io2 = new IntersectionObserver((es) => es.forEach((e) => { if (!e.isIntersecting) stopCam(); }));
+    io2.observe(el);
 
     // receptive field: which input pixels can one unit of a layer see?
     function field(li, r, q) {
@@ -2363,9 +2459,14 @@
       return [clamp(a0, 0, 223), clamp(a1, 0, 223), clamp(b0, 0, 223), clamp(b1, 0, 223), a1 - a0 + 1];
     }
 
-    function openLayer(li) {
+    function openLayer(li, keep) {
+      const same = keep && sel === li;
       sel = li; draw();
       const l = L[li];
+      if (li >= 6 && rec.custom) {
+        detail.replaceChildren(h('p', { class: 'w-kv', style: 'max-width:640px' }, `${l.name} is not computed for your own pictures: the fully connected layers hold 58 of AlexNet's 61 million weights, too many to send to a web page.`));
+        return;
+      }
       if (li === 0 || li >= 6) {
         const txt = li === 0 ? 'The input: 224×224 pixels in three colors, 150,528 numbers.'
           : li === 8 ? `fc8 holds one score per ImageNet class. Softmax turns the 1,000 scores into probabilities; the top five are the bars above.`
@@ -2380,7 +2481,8 @@
       const [ac, actx] = canvas(Math.round(a.im.width * scale), Math.round(a.im.height * scale));
       const [mc, mctx] = canvas(208, 208), [pc, pctx] = canvas(208, 208);
       const info = h('div', { class: 'w-kv' }), wantBox = h('div', {});
-      pick = strongest(l.key, 1)[0];
+      if (!same) pick = strongest(l.key, 1)[0];
+      let cellNow = null;
       function drawAtlas() {
         actx.imageSmoothingEnabled = false; actx.clearRect(0, 0, ac.W, ac.H); actx.drawImage(a.im, 0, 0, ac.W, ac.H);
         const r = (pick / a.cols) | 0, q = pick % a.cols, s = (a.H + 1) * scale;
@@ -2396,11 +2498,55 @@
           pctx.drawImage(rec.photoIm, q0, r0, q1 - q0 + 1, r1 - r0 + 1, q0 * k, r0 * k, (q1 - q0 + 1) * k, (r1 - r0 + 1) * k);
           pctx.strokeStyle = css('--accent'); pctx.lineWidth = 2; pctx.strokeRect(q0 * k, r0 * k, (q1 - q0 + 1) * k, (r1 - r0 + 1) * k);
           info.innerHTML = `${l.name}, map <b>${pick}</b> of ${a.C} · unit (${cell[0]}, ${cell[1]}) of ${a.H}×${a.H} sees a <b>${span}×${span}</b> patch of the photo` + (span > 224 ? ' (more than the whole photo, padding included)' : '');
-        } else info.innerHTML = `${l.name}, map <b>${pick}</b> of ${a.C} · its strongest response here is ${a.peak[pick].toFixed(1)} · point at the map`;
+        } else info.innerHTML = `${l.name}, map <b>${pick}</b> of ${a.C} · its strongest response here is ${a.peak[pick].toFixed(1)} · point at the map, click to trace that unit`;
       }
       function choose(k) {
-        pick = clamp(k, 0, a.C - 1); drawAtlas(); drawMap(null);
+        pick = clamp(k, 0, a.C - 1); drawAtlas(); drawMap(null); cellNow = null;
         if (l.key === 'conv5') showWant(); else if (l.key === 'conv1') showFilter(); else wantBox.replaceChildren();
+        showGallery(); if (tracing) trace();
+      }
+      // the nine gallery pictures that excite this unit most, each cropped to what the unit can see
+      const [gc, gx] = canvas(204, 204);
+      async function showGallery() {
+        const me = pick;
+        await ensureGallery(); if (me !== pick) return;
+        gx.clearRect(0, 0, 204, 204);
+        const best = galleryData.top[l.key][pick];
+        for (let i = 0; i < best.length; i++) {
+          const [g, r, q] = best[i], im = await galleryImage(g); if (me !== pick) return;
+          const [r0, r1, q0, q1] = field(li, r, q);
+          gx.drawImage(im, q0, r0, q1 - q0 + 1, r1 - r0 + 1, (i % 3) * 68, ((i / 3) | 0) * 68, 66, 66);
+        }
+      }
+      // guided backpropagation: which pixels of this photo drive the unit
+      const [tc, tx] = canvas(208, 208), traceNote = h('div', { class: 'w-kv', style: 'max-width:208px' });
+      let tracing = traceOn;
+      const traceBtn = btn('trace it to the pixels', () => { tracing = traceOn = true; traceBtn.remove(); trace(); }, 'accent');
+      async function trace() {
+        const me = pick, li0 = li;
+        traceNote.textContent = 'tracing…';
+        try {
+          const E = await alexRun();
+          if (lastForward !== rec) { const r0 = rec; await E.forward(rec.x || (rec.x = tensorOf(squareCrop(rec.photoIm, rec.photoIm.width, rec.photoIm.height)))); lastForward = r0; }
+          let cell = cellNow;
+          if (!cell) {                            // the unit's strongest spot in this map
+            const t = mapTile(l.key, pick), d = t.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, t.width, t.height).data;
+            let bi = 0; for (let i = 0; i < t.width * t.height; i++) if (d[i * 4] > d[bi * 4]) bi = i;
+            cell = [(bi / t.width) | 0, bi % t.width];
+          }
+          const g = await E.guided(l.key, pick, cell[0], cell[1]);
+          if (me !== pick || li0 !== sel) return;
+          let s2 = 0; for (let i = 0; i < g.length; i++) s2 += g[i] * g[i];
+          const sd = Math.sqrt(s2 / g.length) || 1, im = tx.createImageData(224, 224);
+          for (let i = 0; i < 50176; i++) { for (let ch = 0; ch < 3; ch++) im.data[i * 4 + ch] = clamp(128 + 40 * g[ch * 50176 + i] / sd, 0, 255); im.data[i * 4 + 3] = 255; }
+          const t = document.createElement('canvas'); t.width = t.height = 224; t.getContext('2d').putImageData(im, 0, 0);
+          // zoom to what the unit can see (at least 56 pixels across), so small early units are visible too
+          const [r0, r1, q0, q1] = field(li, cell[0], cell[1]), side = clamp(Math.max(r1 - r0, q1 - q0) + 1, 56, 224);
+          const cy0 = clamp((r0 + r1) / 2 - side / 2, 0, 224 - side), cx0 = clamp((q0 + q1) / 2 - side / 2, 0, 224 - side), k = 208 / side;
+          tx.imageSmoothingEnabled = side > 120; tx.clearRect(0, 0, 208, 208); tx.drawImage(t, cx0, cy0, side, side, 0, 0, 208, 208);
+          tx.strokeStyle = css('--accent'); tx.lineWidth = 1.5; tx.strokeRect((q0 - cx0) * k, (r0 - cy0) * k, (q1 - q0 + 1) * k, (r1 - r0 + 1) * k);
+          traceNote.innerHTML = `unit (${cell[0]}, ${cell[1]}) of map ${pick}: the ${side}×${side} pixels around what it sees: gray is no effect, color marks the pixels that push it up` + (s2 === 0 ? ' (this unit is silent here, so nothing does)' : '');
+        } catch (e) { traceNote.textContent = 'could not trace: ' + e.message; }
       }
       function showFilter() {
         const [fc, fx] = canvas(110, 110), Wt = new Int8Array(b64(D.alexnet.w).buffer), o = pick * 363;
@@ -2423,16 +2569,23 @@
       keys(ac, `all ${a.C} maps of ${l.name}; arrow keys choose one`, (dx, dy) => choose(pick + dx + dy * a.cols));
       const at = (e) => { const r = mc.getBoundingClientRect(); return [clamp(Math.floor((e.clientY - r.top) / r.height * a.H), 0, a.H - 1), clamp(Math.floor((e.clientX - r.left) / r.width * a.H), 0, a.H - 1)]; };
       mc.addEventListener('pointermove', (e) => drawMap(at(e)));
-      mc.addEventListener('pointerdown', (e) => drawMap(at(e)));
+      mc.addEventListener('pointerdown', (e) => { cellNow = at(e); drawMap(cellNow); if (tracing) trace(); });
       mc.style.cursor = 'crosshair';
       detail.replaceChildren(
         h('div', { class: 'w-kv' }, `all ${a.C} maps of ${l.name} for this photo, each scaled to its own brightest point · click one`), ac,
         h('div', { class: 'w-row', style: 'margin-top:12px' },
           h('div', {}, h('div', { class: 'w-kv' }, 'the map, enlarged'), mc),
-          h('div', {}, h('div', { class: 'w-kv' }, 'what one unit sees'), pc), wantBox), info);
+          h('div', {}, h('div', { class: 'w-kv' }, 'what one unit sees'), pc), wantBox), info,
+        h('div', { class: 'w-row', style: 'margin-top:14px' },
+          h('div', { style: 'max-width:208px' }, h('div', { class: 'w-kv' }, 'the nine gallery pictures it likes most'), gc),
+          h('div', { style: 'max-width:208px' }, h('div', { class: 'w-kv' }, 'the pixels behind it'), tracing ? tc : h('div', {}, tc, traceBtn), traceNote)));
+      if (!tracing) { tx.fillStyle = css('--paper-2'); tx.fillRect(0, 0, 208, 208); traceNote.textContent = 'runs AlexNet in your browser (3 MB, once)'; }
       choose(pick);
     }
 
+    let galleryData = null; const galleryIms = {};
+    async function ensureGallery() { if (!galleryData) { await loadScript('assets/alexnet/gallery.js'); galleryData = window.ALEXNET.gallery; } }
+    const galleryImage = (g) => galleryIms[g] || (galleryIms[g] = loadImage(galleryData.images[g]));
     async function ensureWants() { if (!wantsData) { await loadScript('assets/alexnet/wants.js'); wantsData = window.ALEXNET.wants; } }
     const classBox = h('div', {});
     async function showClasses() {
@@ -2455,7 +2608,7 @@
     c.addEventListener('pointerleave', () => { hoverBlock = -1; draw(); });
     keys(c, 'AlexNet as a stack of layers; left and right choose a layer', (dx) => { if (rec) openLayer(clamp((sel == null ? 0 : sel) + dx, 0, L.length - 1)); });
 
-    el.append(h('div', { class: 'w-ctrl', style: 'margin-top:0' }, chips(PHOTOS, photo, (n) => load(n)), btn('play it through again', flow)),
+    el.append(h('div', { class: 'w-ctrl', style: 'margin-top:0' }, chips(PHOTOS, photo, (n) => { stopCam(); if (n === 'your photo') file.click(); else if (n === 'camera') startCam(); else load(n); }), file, btn('play it through again', flow)),
       h('div', { class: 'w-scroll' }, c), h('div', { class: 'w-row' }, h('div', { style: 'flex:1;min-width:260px' }, status, top5)), detail);
     load('cat').then(() => openLayer(1)).catch((e) => { status.textContent = String(e.message); });
     onTheme(() => { draw(); if (sel != null) openLayer(sel); });
